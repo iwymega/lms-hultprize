@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { publicApi } from '../../api/api';
 import { useAuth } from '../context/AuthProvider';
-import loginDataSchema from '../schemas/loginDataSchema';
-import loginResponseSchema from '../schemas/loginResponseSchema';
+import loginDataSchema from '../schema/loginDataSchema';
+import loginResponseSchema from '../response/loginResponseSchema';
 import { z } from 'zod';
 import { useNavigate } from 'react-router';
 import { AxiosError } from 'axios';
@@ -16,7 +16,7 @@ export const useLogin = () => {
 
     return useMutation<LoginResponse, AxiosError, LoginData>({
         mutationFn: async (data) => {
-            const response = await publicApi.post<LoginResponse>('/v3/login', data);
+            const response = await publicApi.post<LoginResponse>('/v1/login', data);
             return response.data;
         },
         onSuccess: (data) => {

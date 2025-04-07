@@ -1,23 +1,18 @@
-import { useForm } from 'react-hook-form';
+import React, { useCallback, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import loginDataSchema from '../schemas/loginDataSchema';
+import loginDataSchema, { LoginData } from '../schema/loginDataSchema';
 import { useLogin } from '../hooks/useLogin';
-import { useCallback, useState } from 'react';
-
-type LoginFormValues = {
-    email: string;
-    password: string;
-};
+import { useForm } from 'react-hook-form';
 
 const LoginForm: React.FC = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginData>({
         resolver: zodResolver(loginDataSchema),
     });
 
     const { mutate, isPending } = useLogin();
     const [apiError, setApiError] = useState<string | null>(null);
 
-    const onSubmit = useCallback((data: LoginFormValues) => {
+    const onSubmit = useCallback((data: LoginData) => {
         setApiError(null);
         mutate(data, {
             onError: (err: any) => {
@@ -30,21 +25,22 @@ const LoginForm: React.FC = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {apiError && <div>{apiError}</div>}
+
             <div>
-                <input placeholder="Email" autoComplete="off" disabled={isPending} {...register('email')} />
-                {errors.email && <div>{errors.email.message}</div>}
-            </div>
-            <div>
-                <input type="password" placeholder="Password" autoComplete="off" disabled={isPending} {...register('password')} />
-                {errors.password && <div>{errors.password.message}</div>}
+                <label htmlFor="email">Username or Email</label>
+                <input id="email" type="email" {...register("email")} aria-label="Email input" />
+                {errors.email && <p>{errors.email.message}</p>}
             </div>
 
-            {/* Login Button */}
             <div>
-                <button type="submit" disabled={isPending}>
-                    {isPending ? 'Loading...' : 'Login'}
-                </button>
+                <label htmlFor="password">Password</label>
+                <input id="password" type="password" {...register("password")} aria-label="Password input" />
+                {errors.password && <p>{errors.password.message}</p>}
             </div>
+
+            <button type="submit" disabled={isPending}>
+                {isPending ? 'Logging in...' : 'Login'}
+            </button>
         </form>
     );
 };

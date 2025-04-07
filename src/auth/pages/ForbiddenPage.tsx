@@ -5,6 +5,10 @@ const ForbiddenPage: React.FC = () => {
         <div>
             <h1>403 - Forbidden</h1>
             <p>You do not have permission to access this page.</p>
+            <button
+                onClick={() => window.location.href = "/"}>
+                Go Home
+            </button>
         </div>
     );
 };

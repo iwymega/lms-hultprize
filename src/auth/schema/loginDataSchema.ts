@@ -7,3 +7,4 @@ const loginDataSchema = z.object({
 });
 
 export default loginDataSchema;
+export type LoginData = z.infer<typeof loginDataSchema>;

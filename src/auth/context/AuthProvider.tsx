@@ -30,11 +30,11 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
 
     const hasRole = (role: string): boolean => {
-        return user?.role.includes(role) ?? false;
+        return user?.roles.some(r => r.name === role) ?? false;
     };
 
     const hasPermission = (permission: string): boolean => {
-        return user?.permissions.includes(permission) ?? false;
+        return user?.permissions.some(p => p.name === permission) ?? false;
     };
 
     return (
