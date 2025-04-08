@@ -1,23 +1,23 @@
-interface Roles {
-    id: string;
+export interface Role {
+    id: number; // dari API: number
     name: string;
     display_name: string;
 }
 
-interface Permissions {
-    id: string;
+export interface Permission {
+    id: number; // dari API: number
     name: string;
     display_name: string;
     group: string;
 }
 
-export type User = {
+export interface User {
     id: string;
     name: string;
     email: string;
-    roles: Roles[];
-    permissions: Permissions[];
-    properties: Record<string, string>;
-    active_property_id: string;
-    active_property: string;
-};
+    phone: string;
+    created_at: string;
+    updated_at: string;
+    roles: Role[];
+    permissions: Permission[];
+}

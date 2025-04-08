@@ -1,31 +1,31 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import loginDataSchema, { LoginData } from '../schema/loginDataSchema';
 import { useLogin } from '../hooks/useLogin';
 import { useForm } from 'react-hook-form';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+// import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useFormSubmit } from '@/shared/hooks/useFormSubmit';
 
 const LoginForm: React.FC = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<LoginData>({
+    const { register, handleSubmit, formState: { errors }, setError } = useForm<LoginData>({
         resolver: zodResolver(loginDataSchema),
     });
 
-    const { mutate, isPending } = useLogin();
-    const [apiError, setApiError] = useState<string | null>(null);
+    const { mutateAsync, isPending } = useLogin();
 
-    const onSubmit = useCallback((data: LoginData) => {
-        setApiError(null);
-        mutate(data, {
-            onError: (err: any) => {
-                const errorMessage = err.response?.data?.message || "Something went wrong, please try again";
-                setApiError(errorMessage);
-            },
-        });
-    }, [mutate]);
+    // Use the form submit handler
+    const { onSubmit } = useFormSubmit({
+        mutate: mutateAsync,
+        isPending: isPending,
+        setError: setError,
+        successMessage: "Login Successfull!",
+        errorMessage: "Failed to Login.",
+        queryKeyToRefetch: ["auth"], // Assuming you want to refetch the `users` query
+    });
 
     return (
         <Card className="w-full max-w-md mx-auto">
@@ -34,13 +34,17 @@ const LoginForm: React.FC = () => {
             </CardHeader>
 
             <form onSubmit={handleSubmit(onSubmit)}>
-                <CardContent className="space-y-4">
-                    {apiError && (
+                <CardContent className="space-y-4 mb-4">
+                    {/* {errors && (
                         <Alert variant="destructive">
                             <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>{apiError}</AlertDescription>
+                            <AlertDescription>
+                                {Object.values(errors).map((error, index) => (
+                                    <p key={index}>{error?.message}</p>
+                                ))}
+                            </AlertDescription>
                         </Alert>
-                    )}
+                    )} */}
 
                     <div className="space-y-1">
                         <Label htmlFor="email">Email</Label>

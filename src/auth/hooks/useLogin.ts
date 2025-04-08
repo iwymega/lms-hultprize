@@ -20,24 +20,7 @@ export const useLogin = () => {
             return response.data;
         },
         onSuccess: (data) => {
-            const { role, permissions, ...rest } = data.data;
-
-            const user = {
-                ...rest,
-                roles: role.map((r) => ({
-                    id: r,
-                    name: r,
-                    display_name: r,
-                })),
-                permissions: permissions.map((p) => ({
-                    id: p,
-                    name: p,
-                    display_name: p,
-                    group: '', // Atau isi sesuai backend
-                })),
-            };
-
-            login(user, data.token);
+            login(data.data, data.token);
             navigate('/');
         },
     });
