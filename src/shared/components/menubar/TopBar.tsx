@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { RefreshCw, Share2 } from 'lucide-react'
+import { RefreshCw } from 'lucide-react'
 import React from 'react'
 
 const TopBar: React.FC = () => {
@@ -8,16 +8,12 @@ const TopBar: React.FC = () => {
             <h1 className="text-xl font-semibold">Dashboard</h1>
             <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" className="gap-2">
-                    <Share2 className="h-4 w-4" />
-                    Share
-                </Button>
-                <Button variant="outline" size="sm" className="gap-2">
                     <RefreshCw className="h-4 w-4" />
                     Refresh Data
                 </Button>
-                <Button size="sm" className="gap-2 bg-indigo-600 hover:bg-indigo-700">
+                {/* <Button size="sm" className="gap-2 bg-indigo-600 hover:bg-indigo-700">
                     Export
-                </Button>
+                </Button> */}
             </div>
         </header>
     )
