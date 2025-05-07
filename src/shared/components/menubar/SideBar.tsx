@@ -9,8 +9,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import React, { useState } from 'react'
 import SearchBar from './SearchBar'
+import { useAuth } from '@/auth/context/AuthProvider'
 
 const SideBar: React.FC = () => {
+    const { logout } = useAuth()
     const [collapsed, setCollapsed] = useState(false)
 
     const toggleSidebar = () => {
@@ -191,7 +193,7 @@ const SideBar: React.FC = () => {
                             <DropdownMenuItem onClick={() => console.log('Change password clicked')}>Change Password</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => console.log('Settings clicked')}>Settings</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => console.log('Logout clicked')}>Logout</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}
