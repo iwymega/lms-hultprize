@@ -7,10 +7,10 @@ export const menuSections = [
         items: [
             { icon: Clock as ElementType, text: 'Dashboard', bg: 'bg-gray-100', textColor: 'text-gray-900' },
             { icon: Computer as ElementType, text: 'Sales Transactions' },
-            { icon: BarChart3 as ElementType, text: 'Analytics' },
-            { icon: CreditCard as ElementType, text: 'Transaction' },
-            { icon: Users as ElementType, text: 'Customers' },
-            { icon: FileText as ElementType, text: 'Reports' },
+            { icon: BarChart3 as ElementType, text: 'Inventory Stock' },
+            { icon: CreditCard as ElementType, text: 'Hutang Piutang' },
+            { icon: Users as ElementType, text: 'Penjualan' },
+            { icon: FileText as ElementType, text: 'Pelanggan' },
         ],
     },
     {

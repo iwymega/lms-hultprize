@@ -7,6 +7,8 @@ import { Toaster } from 'sonner';
 import AppRouter from './router/AppRouter';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+import './i18n';
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
