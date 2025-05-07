@@ -14,8 +14,8 @@ export default function DashboardMainContent() {
     const dashboardCards = [
         {
             title: "Total Sales Today",
-            icon: <ShoppingCart className="h-4 w-4 text-green-600" />,
-            iconBg: "bg-green-100",
+            icon: <ShoppingCart className="h-4 w-4 text-blue-600" />,
+            iconBg: "bg-blue-100",
             value: "$1,204.00",
             change: "+12% vs yesterday",
             changeType: "up" as "up",
@@ -30,16 +30,16 @@ export default function DashboardMainContent() {
         },
         {
             title: "Low Stock Warning",
-            icon: <AlertTriangle className="h-4 w-4 text-yellow-600" />,
-            iconBg: "bg-yellow-100",
+            icon: <AlertTriangle className="h-4 w-4 text-blue-600" />,
+            iconBg: "bg-blue-100",
             value: "8 Items",
             change: "2 new warnings",
             changeType: "down" as "down",
         },
         {
             title: "New Customers Today",
-            icon: <UserPlus className="h-4 w-4 text-indigo-600" />,
-            iconBg: "bg-indigo-100",
+            icon: <UserPlus className="h-4 w-4 text-blue-600" />,
+            iconBg: "bg-blue-100",
             value: "24",
             change: "+9% vs yesterday",
             changeType: "up" as "up",
