@@ -31,10 +31,10 @@ const LoginFormWithGraphic: React.FC = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-400">
-            <div className="bg-white rounded-3xl w-full max-w-5xl shadow-lg overflow-hidden">
+            <div className="bg-white rounded-3xl w-full max-w-5xl shadow-lg overflow-hidden mx-4 md:mx-0">
                 <div className="flex flex-col md:flex-row">
                     {/* Left side with illustration */}
-                    <div className="relative w-full md:w-2/3 bg-blue-200 p-6" style={{ backgroundImage: 'url(/bg-login.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', height: '100%', minHeight: '700px' }}>
+                    <div className="relative w-full md:w-2/3 bg-blue-200 p-6 hidden md:block" style={{ backgroundImage: 'url(/bg-login.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', height: '100%', minHeight: '700px' }}>
                         <div className="flex justify-between items-start">
                             <h1 className="text-blue-600 font-bold text-4xl hover:text-blue-400 transition-all duration-300 ease-in-out">SuperApp.</h1>
                             <button className="md:hidden text-gray-700">
