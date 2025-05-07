@@ -1,5 +1,5 @@
-import SideBar from '@/shared/components/menubar/SideBar'
-import TopBar from '@/shared/components/menubar/TopBar'
+import SideBar from '@/shared/components/sidebar/SideBar'
+import TopBar from '@/shared/components/topbar/TopBar'
 import React from 'react'
 
 interface Props {
