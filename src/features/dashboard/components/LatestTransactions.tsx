@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { ArrowRight, ChevronDown, Clock, CreditCard, Filter, MoreHorizontal, PieChart } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { ArrowRight, ChevronDown, Clock, CreditCard, Filter, MoreHorizontal, PieChart, X } from 'lucide-react'
 import React from 'react'
 
 const LatestTransactions: React.FC = () => {
@@ -9,55 +9,56 @@ const LatestTransactions: React.FC = () => {
             <div className="flex items-center justify-between p-6 border-b">
                 <h2 className="text-lg font-medium">Transaction History</h2>
                 <div className="flex items-center gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="gap-2">
-                                <CreditCard className="h-4 w-4" />
-                                Transaction
-                                <ChevronDown className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>All Transactions</DropdownMenuItem>
-                            <DropdownMenuItem>Income</DropdownMenuItem>
-                            <DropdownMenuItem>Expense</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    {/* Dropdowns visible only on md and up */}
+                    <div className="hidden md:flex items-center gap-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm" className="gap-2">
+                                    <CreditCard className="h-4 w-4" />
+                                    Transaction
+                                    <ChevronDown className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>All Transactions</DropdownMenuItem>
+                                <DropdownMenuItem>Income</DropdownMenuItem>
+                                <DropdownMenuItem>Expense</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="gap-2">
-                                <Clock className="h-4 w-4" />
-                                Timeframe
-                                <ChevronDown className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>Last 7 days</DropdownMenuItem>
-                            <DropdownMenuItem>Last 30 days</DropdownMenuItem>
-                            <DropdownMenuItem>Last 90 days</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm" className="gap-2">
+                                    <Clock className="h-4 w-4" />
+                                    Timeframe
+                                    <ChevronDown className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>Last 7 days</DropdownMenuItem>
+                                <DropdownMenuItem>Last 30 days</DropdownMenuItem>
+                                <DropdownMenuItem>Last 90 days</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="gap-2">
-                                <Filter className="h-4 w-4" />
-                                Status
-                                <ChevronDown className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>All Status</DropdownMenuItem>
-                            <DropdownMenuItem>Completed</DropdownMenuItem>
-                            <DropdownMenuItem>Pending</DropdownMenuItem>
-                            <DropdownMenuItem>Canceled</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm" className="gap-2">
+                                    <Filter className="h-4 w-4" />
+                                    Status
+                                    <ChevronDown className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>All Status</DropdownMenuItem>
+                                <DropdownMenuItem>Completed</DropdownMenuItem>
+                                <DropdownMenuItem>Pending</DropdownMenuItem>
+                                <DropdownMenuItem>Canceled</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
 
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+                    <IconDropdownWithMenus />
                 </div>
             </div>
 
@@ -233,3 +234,67 @@ const LatestTransactions: React.FC = () => {
 }
 
 export default LatestTransactions
+
+function IconDropdownWithMenus() {
+    const handleClose = () => {
+        console.log("Dropdown closed");
+        // Tambahkan logika untuk close action jika diperlukan
+    };
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreHorizontal className="h-4 w-4" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                {/* Tampilkan submenus hanya di mobile */}
+                <div className="md:hidden">
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            Transaction
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                            <DropdownMenuItem>All Transactions</DropdownMenuItem>
+                            <DropdownMenuItem>Income</DropdownMenuItem>
+                            <DropdownMenuItem>Expense</DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                            <Clock className="mr-2 h-4 w-4" />
+                            Timeframe
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                            <DropdownMenuItem>Last 7 days</DropdownMenuItem>
+                            <DropdownMenuItem>Last 30 days</DropdownMenuItem>
+                            <DropdownMenuItem>Last 90 days</DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                            <Filter className="mr-2 h-4 w-4" />
+                            Status
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                            <DropdownMenuItem>All Status</DropdownMenuItem>
+                            <DropdownMenuItem>Completed</DropdownMenuItem>
+                            <DropdownMenuItem>Pending</DropdownMenuItem>
+                            <DropdownMenuItem>Canceled</DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                </div>
+
+                {/* Item "Close" */}
+                <DropdownMenuItem onClick={handleClose}>
+                    <X className="mr-2 h-4 w-4 text-red-500" />
+                    <span className="text-red-500">Close</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}

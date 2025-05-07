@@ -38,7 +38,7 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ menuSections }) => {
     return (
         <>
             {/* Mobile: Drawer trigger */}
-            <div className="md:hidden p-2">
+            <div className="md:hidden">
                 <Sheet open={openDrawer} onOpenChange={setOpenDrawer}>
                     <header className="flex items-center justify-between p-4 border-b bg-white">
                         <div className="flex items-center gap-2">

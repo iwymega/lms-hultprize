@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from '@/components/ui/dropdown-menu';
 import { formatter } from '@/lib/utils';
-import { ArrowRight, ChevronDown, Clock, MoreHorizontal } from 'lucide-react';
+import { ArrowRight, ChevronDown, Clock, MoreHorizontal, X } from 'lucide-react';
 import React from 'react'
 
 type Customer = {
@@ -57,23 +57,24 @@ const TopCustomers: React.FC = () => {
             <div className="flex items-center justify-between p-6 border-b">
                 <h2 className="text-lg font-medium">Top Customer</h2>
                 <div className="flex items-center gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="gap-2">
-                                <Clock className="h-4 w-4" />
-                                Timeframe
-                                <ChevronDown className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>Last 7 days</DropdownMenuItem>
-                            <DropdownMenuItem>Last 30 days</DropdownMenuItem>
-                            <DropdownMenuItem>Last 90 days</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+                    <div className="hidden md:flex items-center gap-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm" className="gap-2">
+                                    <Clock className="h-4 w-4" />
+                                    Timeframe
+                                    <ChevronDown className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>Last 7 days</DropdownMenuItem>
+                                <DropdownMenuItem>Last 30 days</DropdownMenuItem>
+                                <DropdownMenuItem>Last 90 days</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+
+                    <IconDropdownWithMenus />
                 </div>
             </div>
             <div className="overflow-x-auto">
@@ -129,4 +130,43 @@ const TopCustomersItem: React.FC<TopCustomersItemProps> = ({ customer }) => {
             </td>
         </tr>
     )
+}
+
+function IconDropdownWithMenus() {
+    const handleClose = () => {
+        console.log("Dropdown closed");
+        // Tambahkan logika untuk close action jika diperlukan
+    };
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreHorizontal className="h-4 w-4" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                {/* Tampilkan submenus hanya di mobile */}
+                <div className="md:hidden">
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                            <Clock className="mr-2 h-4 w-4" />
+                            Timeframe
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                            <DropdownMenuItem>Last 7 days</DropdownMenuItem>
+                            <DropdownMenuItem>Last 30 days</DropdownMenuItem>
+                            <DropdownMenuItem>Last 90 days</DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                </div>
+
+                {/* Item "Close" */}
+                <DropdownMenuItem onClick={handleClose}>
+                    <X className="mr-2 h-4 w-4 text-red-500" />
+                    <span className="text-red-500">Close</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
 }

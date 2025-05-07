@@ -49,7 +49,7 @@ export default function DashboardMainContent() {
     return (
         <main className="p-6">
             {/* Stats Cards */}
-            <div className="grid grid-cols-4 gap-6 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
                 {dashboardCards.map((card, idx) => (
                     <DashboardCard
                         key={idx}
@@ -65,7 +65,7 @@ export default function DashboardMainContent() {
             </div>
 
             {/* Top Customer, Latest Transactions */}
-            <div className="grid grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                 {/* Top Customer */}
                 <TopCustomers />
                 {/* Transaction History */}
