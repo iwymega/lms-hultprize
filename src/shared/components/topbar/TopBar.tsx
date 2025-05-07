@@ -19,7 +19,7 @@ const TopBar: React.FC = () => {
             .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize setiap kata
 
     return (
-        <header className="flex items-center justify-between p-4 border-b bg-white">
+        <header className="hidden md:flex items-center justify-between p-4 border-b bg-white">
             <h1 className="text-xl font-semibold">{dynamicPageTitle}</h1>
             <span className="text-sm text-gray-500">
                 {t('welcome', { name: 'Komang Gede' })}
