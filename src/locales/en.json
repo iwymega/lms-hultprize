@@ -1,6 +1,11 @@
 {
     "common": {
-        "close": "Close"
+        "close": "Close",
+        "sort": {
+            "title": "Sort By",
+            "asc": "Ascending",
+            "desc": "Descending"
+        }
     },
     "sidebar": {
         "title": "Sidebar",
