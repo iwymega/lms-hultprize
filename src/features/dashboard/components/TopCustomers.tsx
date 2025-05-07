@@ -3,6 +3,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuIte
 import { formatter } from '@/lib/utils';
 import { ArrowRight, ChevronDown, Clock, MoreHorizontal, X } from 'lucide-react';
 import React from 'react'
+import { useTranslation } from 'react-i18next';
 
 type Customer = {
     id: number;
@@ -52,24 +53,26 @@ export const topCustomers: Customer[] = [
 
 
 const TopCustomers: React.FC = () => {
+    const { t } = useTranslation();
+
     return (
         <div className="bg-white rounded-lg border">
             <div className="flex items-center justify-between p-6 border-b">
-                <h2 className="text-lg font-medium">Top Customer</h2>
+                <h2 className="text-lg font-medium">{t("dashboard.top-customers.title")}</h2>
                 <div className="flex items-center gap-2">
                     <div className="hidden md:flex items-center gap-2">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="sm" className="gap-2">
                                     <Clock className="h-4 w-4" />
-                                    Timeframe
+                                    {t("dashboard.top-customers.timeframe.title")}
                                     <ChevronDown className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem>Last 7 days</DropdownMenuItem>
-                                <DropdownMenuItem>Last 30 days</DropdownMenuItem>
-                                <DropdownMenuItem>Last 90 days</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.top-customers.timeframe.last-7-days")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.top-customers.timeframe.last-30-days")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.top-customers.timeframe.last-90-days")}</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -82,19 +85,19 @@ const TopCustomers: React.FC = () => {
                     <thead>
                         <tr className="border-b">
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                User Name
+                                {t("dashboard.top-customers.table.user-name")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Total Spent
+                                {t("dashboard.top-customers.table.total-spent")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Total Transactions
+                                {t("dashboard.top-customers.table.total-transactions")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Last Transactions
+                                {t("dashboard.top-customers.table.last-transaction")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Action
+                                {t("dashboard.top-customers.table.action.title")}
                             </th>
                         </tr>
                     </thead>
@@ -116,6 +119,7 @@ interface TopCustomersItemProps {
 }
 
 const TopCustomersItem: React.FC<TopCustomersItemProps> = ({ customer }) => {
+    const { t } = useTranslation();
     return (
         <tr className="border-b">
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{customer.name}</td>
@@ -124,7 +128,7 @@ const TopCustomersItem: React.FC<TopCustomersItemProps> = ({ customer }) => {
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{customer.lastTransaction}</td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <Button variant="ghost" size="sm" className="h-6 px-2">
-                    <span className="text-sm text-gray-500">See Detail</span>
+                    <span className="text-sm text-gray-500">{t("dashboard.top-customers.table.action.see-detail")}</span>
                     <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
             </td>
@@ -133,6 +137,8 @@ const TopCustomersItem: React.FC<TopCustomersItemProps> = ({ customer }) => {
 }
 
 function IconDropdownWithMenus() {
+    const { t } = useTranslation();
+
     const handleClose = () => {
         console.log("Dropdown closed");
         // Tambahkan logika untuk close action jika diperlukan
@@ -151,12 +157,12 @@ function IconDropdownWithMenus() {
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
                             <Clock className="mr-2 h-4 w-4" />
-                            Timeframe
+                            {t("dashboard.top-customers.timeframe.title")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
-                            <DropdownMenuItem>Last 7 days</DropdownMenuItem>
-                            <DropdownMenuItem>Last 30 days</DropdownMenuItem>
-                            <DropdownMenuItem>Last 90 days</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.top-customers.timeframe.last-7-days")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.top-customers.timeframe.last-30-days")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.top-customers.timeframe.last-90-days")}</DropdownMenuItem>
                         </DropdownMenuSubContent>
                     </DropdownMenuSub>
                 </div>
@@ -164,7 +170,7 @@ function IconDropdownWithMenus() {
                 {/* Item "Close" */}
                 <DropdownMenuItem onClick={handleClose}>
                     <X className="mr-2 h-4 w-4 text-red-500" />
-                    <span className="text-red-500">Close</span>
+                    <span className="text-red-500">{t("common.close")}</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

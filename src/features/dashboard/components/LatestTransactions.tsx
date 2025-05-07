@@ -2,12 +2,14 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { ArrowRight, ChevronDown, Clock, CreditCard, Filter, MoreHorizontal, PieChart, X } from 'lucide-react'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 const LatestTransactions: React.FC = () => {
+    const { t } = useTranslation()
     return (
         <div className="bg-white rounded-lg border">
             <div className="flex items-center justify-between p-6 border-b">
-                <h2 className="text-lg font-medium">Transaction History</h2>
+                <h2 className="text-lg font-medium">{t("dashboard.transactions-history.title")}</h2>
                 <div className="flex items-center gap-2">
                     {/* Dropdowns visible only on md and up */}
                     <div className="hidden md:flex items-center gap-2">
@@ -15,14 +17,14 @@ const LatestTransactions: React.FC = () => {
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="sm" className="gap-2">
                                     <CreditCard className="h-4 w-4" />
-                                    Transaction
+                                    {t("dashboard.transactions-history.transactions.title")}
                                     <ChevronDown className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem>All Transactions</DropdownMenuItem>
-                                <DropdownMenuItem>Income</DropdownMenuItem>
-                                <DropdownMenuItem>Expense</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.transactions.all-transactions")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.transactions.income")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.transactions.expenses")}</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
 
@@ -30,14 +32,14 @@ const LatestTransactions: React.FC = () => {
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="sm" className="gap-2">
                                     <Clock className="h-4 w-4" />
-                                    Timeframe
+                                    {t("dashboard.transactions-history.timeframe.title")}
                                     <ChevronDown className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem>Last 7 days</DropdownMenuItem>
-                                <DropdownMenuItem>Last 30 days</DropdownMenuItem>
-                                <DropdownMenuItem>Last 90 days</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.timeframe.last-7-days")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.timeframe.last-30-days")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.timeframe.last-90-days")}</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
 
@@ -45,15 +47,15 @@ const LatestTransactions: React.FC = () => {
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="sm" className="gap-2">
                                     <Filter className="h-4 w-4" />
-                                    Status
+                                    {t("dashboard.transactions-history.status.title")}
                                     <ChevronDown className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem>All Status</DropdownMenuItem>
-                                <DropdownMenuItem>Completed</DropdownMenuItem>
-                                <DropdownMenuItem>Pending</DropdownMenuItem>
-                                <DropdownMenuItem>Canceled</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.status.all-status")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.status.completed")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.status.pending")}</DropdownMenuItem>
+                                <DropdownMenuItem>{t("dashboard.transactions-history.status.cancelled")}</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -67,22 +69,22 @@ const LatestTransactions: React.FC = () => {
                     <thead>
                         <tr className="border-b">
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Transaction Type
+                                {t("dashboard.transactions-history.table.transaction-type")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                User Name
+                                {t("dashboard.transactions-history.table.user-name")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Time
+                                {t("dashboard.transactions-history.table.time")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Amount
+                                {t("dashboard.transactions-history.table.amount")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
+                                {t("dashboard.transactions-history.table.status")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Action
+                                {t("dashboard.transactions-history.table.action.title")}
                             </th>
                         </tr>
                     </thead>
@@ -109,7 +111,7 @@ const LatestTransactions: React.FC = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <Button variant="ghost" size="sm" className="h-6 px-2">
-                                    <span className="text-sm text-gray-500">See Detail</span>
+                                    <span className="text-sm text-gray-500">{t("dashboard.transactions-history.table.action.see-detail")}</span>
                                     <ArrowRight className="h-3 w-3 ml-1" />
                                 </Button>
                             </td>
@@ -137,7 +139,7 @@ const LatestTransactions: React.FC = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <Button variant="ghost" size="sm" className="h-6 px-2">
-                                    <span className="text-sm text-gray-500">See Detail</span>
+                                    <span className="text-sm text-gray-500">{t("dashboard.transactions-history.table.action.see-detail")}</span>
                                     <ArrowRight className="h-3 w-3 ml-1" />
                                 </Button>
                             </td>
@@ -165,7 +167,7 @@ const LatestTransactions: React.FC = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <Button variant="ghost" size="sm" className="h-6 px-2">
-                                    <span className="text-sm text-gray-500">See Detail</span>
+                                    <span className="text-sm text-gray-500">{t("dashboard.transactions-history.table.action.see-detail")}</span>
                                     <ArrowRight className="h-3 w-3 ml-1" />
                                 </Button>
                             </td>
@@ -193,7 +195,7 @@ const LatestTransactions: React.FC = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <Button variant="ghost" size="sm" className="h-6 px-2">
-                                    <span className="text-sm text-gray-500">See Detail</span>
+                                    <span className="text-sm text-gray-500">{t("dashboard.transactions-history.table.action.see-detail")}</span>
                                     <ArrowRight className="h-3 w-3 ml-1" />
                                 </Button>
                             </td>
@@ -221,7 +223,7 @@ const LatestTransactions: React.FC = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <Button variant="ghost" size="sm" className="h-6 px-2">
-                                    <span className="text-sm text-gray-500">See Detail</span>
+                                    <span className="text-sm text-gray-500">{t("dashboard.transactions-history.table.action.see-detail")}</span>
                                     <ArrowRight className="h-3 w-3 ml-1" />
                                 </Button>
                             </td>
@@ -236,6 +238,8 @@ const LatestTransactions: React.FC = () => {
 export default LatestTransactions
 
 function IconDropdownWithMenus() {
+    const { t } = useTranslation();
+
     const handleClose = () => {
         console.log("Dropdown closed");
         // Tambahkan logika untuk close action jika diperlukan
@@ -254,37 +258,37 @@ function IconDropdownWithMenus() {
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
                             <CreditCard className="mr-2 h-4 w-4" />
-                            Transaction
+                            {t("dashboard.transactions-history.transactions.title")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
-                            <DropdownMenuItem>All Transactions</DropdownMenuItem>
-                            <DropdownMenuItem>Income</DropdownMenuItem>
-                            <DropdownMenuItem>Expense</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.transactions.all-transactions")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.transactions.income")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.transactions.expenses")}</DropdownMenuItem>
                         </DropdownMenuSubContent>
                     </DropdownMenuSub>
 
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
                             <Clock className="mr-2 h-4 w-4" />
-                            Timeframe
+                            {t("dashboard.transactions-history.timeframe.title")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
-                            <DropdownMenuItem>Last 7 days</DropdownMenuItem>
-                            <DropdownMenuItem>Last 30 days</DropdownMenuItem>
-                            <DropdownMenuItem>Last 90 days</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.timeframe.last-7-days")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.timeframe.last-30-days")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.timeframe.last-90-days")}</DropdownMenuItem>
                         </DropdownMenuSubContent>
                     </DropdownMenuSub>
 
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
                             <Filter className="mr-2 h-4 w-4" />
-                            Status
+                            {t("dashboard.transactions-history.status.title")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
-                            <DropdownMenuItem>All Status</DropdownMenuItem>
-                            <DropdownMenuItem>Completed</DropdownMenuItem>
-                            <DropdownMenuItem>Pending</DropdownMenuItem>
-                            <DropdownMenuItem>Canceled</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.status.all-status")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.status.completed")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.status.pending")}</DropdownMenuItem>
+                            <DropdownMenuItem>{t("dashboard.transactions-history.status.cancelled")}</DropdownMenuItem>
                         </DropdownMenuSubContent>
                     </DropdownMenuSub>
                 </div>
@@ -292,7 +296,7 @@ function IconDropdownWithMenus() {
                 {/* Item "Close" */}
                 <DropdownMenuItem onClick={handleClose}>
                     <X className="mr-2 h-4 w-4 text-red-500" />
-                    <span className="text-red-500">Close</span>
+                    <span className="text-red-500">{t("common.close")}</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

@@ -3,10 +3,10 @@ import { RefreshCw } from 'lucide-react'
 import React from 'react'
 import { useLocation } from 'react-router'
 import LanguageDropdown from './LanguageDropdown'
-import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const TopBar: React.FC = () => {
-    const { t } = useTranslation();
     const location = useLocation()
 
     // Ambil bagian terakhir dari path dan formatnya
@@ -18,15 +18,19 @@ const TopBar: React.FC = () => {
             ?.replace(/-/g, ' ') // Ganti hyphen dengan spasi
             .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize setiap kata
 
+    const queryClient = useQueryClient();
+
+    const handleRefreshData = async () => {
+        await queryClient.refetchQueries();
+        toast.success('Data refreshed successfully!')
+    }
+
     return (
         <header className="hidden md:flex items-center justify-between p-4 border-b bg-white">
             <h1 className="text-xl font-semibold">{dynamicPageTitle}</h1>
-            <span className="text-sm text-gray-500">
-                {t('welcome', { name: 'Komang Gede' })}
-            </span>
             <div className="flex items-center gap-2">
                 {/* Button Refresh Data */}
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2" onClick={handleRefreshData}>
                     <RefreshCw className="h-4 w-4" />
                     Refresh Data
                 </Button>

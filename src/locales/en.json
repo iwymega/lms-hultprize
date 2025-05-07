@@ -1,9 +1,11 @@
 {
-    "welcome": "Welcome to our application",
-    "goodbye": "Goodbye!",
+    "common": {
+        "close": "Close"
+    },
     "sidebar": {
-        "main": "Main Features",
-        "master": "Master Data"
+        "title": "Sidebar",
+        "main": "Main",
+        "master": "Master"
     },
     "menu": {
         "dashboard": "Dashboard",
@@ -14,5 +16,88 @@
         "laporan-analitik": "Reports & Analytics",
         "user-management": "User Management",
         "setting-konfigurasi": "Settings & Configuration"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "total-sales-today": "Total Sales Today",
+        "total-transactions": "Total Transactions",
+        "low-stock-warning": "Low Stock Warning",
+        "new-customers-today": "New Customers Today",
+        "yesterday": "yesterday",
+        "new-warning": "new warning",
+        "sales": {
+            "title": "Sales",
+            "this-month": "Sales This Month",
+            "last-month": "Sales Last Month",
+            "this-week": "Sales This Week",
+            "last-week": "Sales Last Week"
+        },
+        "top-customers": {
+            "title": "Top Customers",
+            "timeframe": {
+                "title": "Timeframe",
+                "last-90-days": "Last 90 Days",
+                "last-30-days": "Last 30 Days",
+                "last-7-days": "Last 7 Days",
+                "last-24-hours": "Last 24 Hours"
+            },
+            "table": {
+                "user-name": "User Name",
+                "total-spent": "Total Spent",
+                "total-transactions": "Total Transactions",
+                "last-transaction": "Last Transaction",
+                "action": {
+                    "title": "Action",
+                    "see-detail": "See Detail"
+                }
+            }
+        },
+        "transactions-history": {
+            "title": "Transactions History",
+            "transactions": {
+                "title": "Transactions",
+                "all-transactions": "All Transactions",
+                "income": "Income",
+                "expenses": "Expenses"
+            },
+            "timeframe": {
+                "title": "Timeframe",
+                "last-90-days": "Last 90 Days",
+                "last-30-days": "Last 30 Days",
+                "last-7-days": "Last 7 Days",
+                "last-24-hours": "Last 24 Hours"
+            },
+            "status": {
+                "title": "Status",
+                "all-status": "All Status",
+                "completed": "Completed",
+                "pending": "Pending",
+                "cancelled": "Cancelled"
+            },
+            "table": {
+                "transaction-type": "Transaction Type",
+                "user-name": "User Name",
+                "time": "Time",
+                "amount": "Amount",
+                "status": "Status",
+                "action": {
+                    "title": "Action",
+                    "see-detail": "See Detail"
+                }
+            }
+        },
+        "notification": {
+            "title": "Notification",
+            "table": {
+                "type": "Type",
+                "title": "Title",
+                "message": "Message",
+                "date": "Date",
+                "action": {
+                    "title": "Action",
+                    "see-detail": "See Detail"
+                }
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type Notification = {
     id: number;
@@ -87,29 +88,30 @@ export const notifications: Notification[] = [
 ];
 
 const Notifications: React.FC = () => {
+    const { t } = useTranslation();
     return (
         <div className="bg-white rounded-lg border">
             <div className="flex items-center justify-between p-6 border-b">
-                <h2 className="text-lg font-medium">Notifications</h2>
+                <h2 className="text-lg font-medium">{t("dashboard.notification.title")}</h2>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead>
                         <tr className="border-b">
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Type
+                                {t("dashboard.notification.table.type")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Title
+                                {t("dashboard.notification.table.title")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Message
+                                {t("dashboard.notification.table.message")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Date
+                                {t("dashboard.notification.table.date")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Action
+                                {t("dashboard.notification.table.action.title")}
                             </th>
                         </tr>
                     </thead>
@@ -131,6 +133,7 @@ interface NotificationsItemProps {
 }
 
 const NotificationsItem: React.FC<NotificationsItemProps> = ({ notification }) => {
+    const { t } = useTranslation();
     return (
         <tr className="border-b">
             <td className={cn("px-6 py-4 whitespace-nowrap text-sm", notification.color)}>{notification.type}</td>
@@ -139,7 +142,7 @@ const NotificationsItem: React.FC<NotificationsItemProps> = ({ notification }) =
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{notification.date}</td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <Button variant="ghost" size="sm" className="h-6 px-2">
-                    <span className="text-sm text-gray-500">See Detail</span>
+                    <span className="text-sm text-gray-500">{t("dashboard.notification.table.action.see-detail")}</span>
                     <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
             </td>

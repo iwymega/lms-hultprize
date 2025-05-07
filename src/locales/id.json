@@ -1,9 +1,11 @@
 {
-    "welcome": "Selamat datang di aplikasi kami",
-    "goodbye": "Selamat tinggal!",
+    "common": {
+        "close": "Tutup"
+    },
     "sidebar": {
-        "main": "Fitur Utama",
-        "master": "Data Master"
+        "title": "Sidebar",
+        "main": "Main",
+        "master": "Master"
     },
     "menu": {
         "dashboard": "Dasbor",
@@ -14,5 +16,86 @@
         "laporan-analitik": "Laporan & Analitik",
         "user-management": "Manajemen Pengguna",
         "setting-konfigurasi": "Pengaturan & Konfigurasi"
+    },
+    "dashboard": {
+        "title": "Dasbor",
+        "total-sales-today": "Total Penjualan Hari Ini",
+        "total-transactions": "Total Transaksi",
+        "low-stock-warning": "Peringatan Stok Rendah",
+        "new-customers-today": "Pelanggan Baru Hari Ini",
+        "yesterday": "kemarin",
+        "new-warning": "peringatan baru",
+        "sales": {
+            "title": "Penjualan",
+            "this-month": "Penjualan Bulan Ini",
+            "last-month": "Penjualan Bulan Lalu",
+            "this-week": "Penjualan Minggu Ini",
+            "last-week": "Penjualan Minggu Lalu"
+        },
+        "top-customers": {
+            "title": "Pelanggan Teratas",
+            "timeframe": {
+                "title": "Rentang Waktu",
+                "last-90-days": "90 Hari Terakhir",
+                "last-30-days": "30 Hari Terakhir",
+                "last-7-days": "7 Hari Terakhir",
+                "last-24-hours": "24 Jam Terakhir"
+            },
+            "table": {
+                "user-name": "Nama Pengguna",
+                "total-spent": "Total Dibelanjakan",
+                "total-transactions": "Total Transaksi",
+                "last-transaction": "Transaksi Terakhir",
+                "action": {
+                    "title": "Aksi",
+                    "see-detail": "Lihat Detail"
+                }
+            }
+        },
+        "transactions-history": {
+            "title": "Riwayat Transaksi",
+            "transactions": {
+                "all-transactions": "Semua Transaksi",
+                "income": "Pendapatan",
+                "expenses": "Pengeluaran"
+            },
+            "timeframe": {
+                "title": "Rentang Waktu",
+                "last-90-days": "90 Hari Terakhir",
+                "last-30-days": "30 Hari Terakhir",
+                "last-7-days": "7 Hari Terakhir",
+                "last-24-hours": "24 Jam Terakhir"
+            },
+            "status": {
+                "all-status": "Semua Status",
+                "completed": "Selesai",
+                "pending": "Menunggu",
+                "cancelled": "Dibatalkan"
+            },
+            "table": {
+                "transaction-type": "Tipe Transaksi",
+                "user-name": "Nama Pengguna",
+                "time": "Waktu",
+                "amount": "Jumlah",
+                "status": "Status",
+                "action": {
+                    "title": "Aksi",
+                    "see-detail": "Lihat Detail"
+                }
+            }
+        },
+        "notification": {
+            "title": "Notifikasi",
+            "table": {
+                "type": "Tipe",
+                "title": "Judul",
+                "message": "Pesan",
+                "date": "Tanggal",
+                "action": {
+                    "title": "Aksi",
+                    "see-detail": "Lihat Detail"
+                }
+            }
+        }
     }
 }

@@ -9,39 +9,41 @@ import SalesChart from "./SalesChart"
 import TopCustomers from "./TopCustomers"
 import LatestTransactions from "./LatestTransactions"
 import Notifications from "./Notifications"
+import { useTranslation } from "react-i18next"
 
 export default function DashboardMainContent() {
+    const { t } = useTranslation();
     const dashboardCards = [
         {
-            title: "Total Sales Today",
-            icon: <ShoppingCart className="h-4 w-4 text-blue-600" />,
-            iconBg: "bg-blue-100",
+            title: t("dashboard.total-sales-today"),
+            icon: <ShoppingCart className="h-4 w-4 text-green-600" />,
+            iconBg: "bg-green-100",
             value: "$1,204.00",
-            change: "+12% vs yesterday",
+            change: "+12% vs " + t("dashboard.yesterday"),
             changeType: "up" as "up",
         },
         {
-            title: "Total Transactions",
+            title: t("dashboard.total-transactions"),
             icon: <CreditCard className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
             value: "342",
-            change: "+5% vs yesterday",
+            change: "+5% vs " + t("dashboard.yesterday"),
             changeType: "up" as "up",
         },
         {
-            title: "Low Stock Warning",
-            icon: <AlertTriangle className="h-4 w-4 text-blue-600" />,
-            iconBg: "bg-blue-100",
+            title: t("dashboard.low-stock-warning"),
+            icon: <AlertTriangle className="h-4 w-4 text-yellow-600" />,
+            iconBg: "bg-yellow-100",
             value: "8 Items",
-            change: "2 new warnings",
+            change: "2 " + t("dashboard.new-warning"),
             changeType: "down" as "down",
         },
         {
-            title: "New Customers Today",
-            icon: <UserPlus className="h-4 w-4 text-blue-600" />,
-            iconBg: "bg-blue-100",
+            title: t("dashboard.new-customers-today"),
+            icon: <UserPlus className="h-4 w-4 text-indigo-600" />,
+            iconBg: "bg-indigo-100",
             value: "24",
-            change: "+9% vs yesterday",
+            change: "+9% vs " + t("dashboard.yesterday"),
             changeType: "up" as "up",
         },
     ]

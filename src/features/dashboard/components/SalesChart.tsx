@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { formatter } from '@/lib/utils';
 import { ChevronDown, MoreHorizontal } from 'lucide-react'
 import React, { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next';
 
 type SalesData = { total: number };
 
@@ -100,7 +101,14 @@ export const salesDataLastMonth = [
 ];
 
 const SalesChart: React.FC = () => {
-    const [timeframe, setTimeframe] = useState("This Months")
+    const { t } = useTranslation();
+
+    const timeframeOptions = [
+        { label: t('dashboard.sales.this-month'), value: 'this-month' },
+        { label: t('dashboard.sales.this-week'), value: 'last-month' },
+    ];
+
+    const [timeframe, setTimeframe] = useState("this-month")
 
     const { labels: yLabels, max } = generateYAxisLabels(salesDataThisMonth, salesDataLastMonth, 5);
 
@@ -115,18 +123,18 @@ const SalesChart: React.FC = () => {
     return (
         <div className="bg-white p-6 rounded-lg border">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium">Sales</h2>
+                <h2 className="text-lg font-medium">{t('dashboard.sales.title')}</h2>
                 <div className="flex items-center gap-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm" className="gap-2">
-                                {timeframe}
+                                {timeframeOptions.find(option => option.value === timeframe)?.label}
                                 <ChevronDown className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem onClick={() => setTimeframe("This Months")}>This Months</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTimeframe("This Weeks")}>This Weeks</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTimeframe("this-month")}>{t('dashboard.sales.this-month')}</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTimeframe("this-week")}>{t('dashboard.sales.this-week')}</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -220,11 +228,11 @@ const SalesChart: React.FC = () => {
             <div className="flex items-center justify-center gap-8 mt-4">
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-indigo-500"></div>
-                    <span className="text-sm">This Month : {formatter.format(totalThisMonth)}</span>
+                    <span className="text-sm">{t('dashboard.sales.this-month')} : {formatter.format(totalThisMonth)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-gray-800"></div>
-                    <span className="text-sm">Last Month : {formatter.format(totalLastMonth)}</span>
+                    <span className="text-sm">{t('dashboard.sales.last-month')} : {formatter.format(totalLastMonth)}</span>
                 </div>
             </div>
         </div>
