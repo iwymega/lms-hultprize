@@ -24,7 +24,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({ collapse
                 >
                     <div className="flex items-center space-x-2">
                         <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-                            <img src="/placeholder-user.jpg" alt="User" className="w-full h-full object-cover" />
+                            <img src="/profile.jpg" alt="User" className="w-full h-full object-cover" />
                         </div>
                     </div>
                 </Button>
