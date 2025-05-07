@@ -9,8 +9,7 @@ import { useLocation } from 'react-router'
 interface MenuItem {
     icon: React.ElementType;
     text: string;
-    bg?: string;
-    textColor?: string;
+    url: string;
 };
 
 interface MenuSection {

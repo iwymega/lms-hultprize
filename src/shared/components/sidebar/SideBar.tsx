@@ -4,8 +4,7 @@ import SidebarContent from './SidebarContent'
 interface MenuItem {
     icon: React.ElementType;
     text: string;
-    bg?: string;
-    textColor?: string;
+    url: string;
 };
 
 interface MenuSection {

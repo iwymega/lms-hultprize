@@ -16,19 +16,19 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
         {
             label: t('sidebar.main'),
             items: [
-                { icon: Clock as ElementType, text: t('menu.dashboard'), bg: 'bg-gray-100', textColor: 'text-gray-900' },
-                { icon: Computer as ElementType, text: t('menu.penjualan') },
-                { icon: BarChart3 as ElementType, text: t('menu.inventory-stock') },
-                { icon: CreditCard as ElementType, text: t('menu.hutang-piutang') },
-                { icon: ChartBar as ElementType, text: t('menu.laporan-analitik') },
+                { icon: Clock as ElementType, text: t('menu.dashboard'), url: '/' },
+                { icon: Computer as ElementType, text: t('menu.penjualan'), url: '/penjualan' },
+                { icon: BarChart3 as ElementType, text: t('menu.inventory-stock'), url: '/inventory-stock' },
+                { icon: CreditCard as ElementType, text: t('menu.hutang-piutang'), url: '/hutang-piutang' },
+                { icon: ChartBar as ElementType, text: t('menu.laporan-analitik'), url: '/laporan-analitik' },
             ],
         },
         {
             label: t('sidebar.master'),
             items: [
-                { icon: Users as ElementType, text: t('menu.pelanggan') },
-                { icon: Users as ElementType, text: t('menu.user-management') },
-                { icon: Settings as ElementType, text: t('menu.setting-konfigurasi') },
+                { icon: Users as ElementType, text: t('menu.pelanggan'), url: '/pelanggan' },
+                { icon: Users as ElementType, text: t('menu.user-management'), url: '/user-management' },
+                { icon: Settings as ElementType, text: t('menu.setting-konfigurasi'), url: '/setting-konfigurasi' },
             ],
         },
     ];

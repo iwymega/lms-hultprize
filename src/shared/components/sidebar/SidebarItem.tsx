@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useLocation, useNavigate } from 'react-router';
 
 interface MenuItem {
     icon: React.ElementType;
     text: string;
-    bg?: string;
-    textColor?: string;
+    url: string;
 };
 
 interface MenuSection {
@@ -36,6 +36,9 @@ const SidebarItem: React.FC<SidebarProps> = ({ collapsed, sections }) => {
         return labelMap[label] || label.slice(0, 3);
     };
 
+    const location = useLocation();
+    const navigate = useNavigate();
+
     return (
         <div>
             {sections.map((section) => (
@@ -53,6 +56,7 @@ const SidebarItem: React.FC<SidebarProps> = ({ collapsed, sections }) => {
                     <div className="mt-2 space-y-1">
                         {section.items.map((item) => {
                             const Icon = item.icon;
+                            const isActive = location.pathname === item.url;
                             return (
                                 <TooltipProvider>
                                     <Tooltip>
@@ -62,10 +66,11 @@ const SidebarItem: React.FC<SidebarProps> = ({ collapsed, sections }) => {
                                                 variant="ghost"
                                                 className={`
                                                     w-full justify-start overflow-hidden text-ellipsis whitespace-nowrap
-                                                    ${item.bg ?? ''} 
-                                                    ${item.textColor ?? 'text-gray-700'} 
+                                                    ${isActive ? 'bg-gray-100' : ''}
+                                                    ${isActive ? 'text-gray-900' : 'text-gray-700'}
                                                     ${collapsed ? 'flex justify-center' : ''}
                                                 `}
+                                                onClick={() => navigate(item.url)}
                                             >
                                                 <Icon className={`${collapsed ? '' : 'mr-2'} h-4 w-4`} />
                                                 {!collapsed && (
