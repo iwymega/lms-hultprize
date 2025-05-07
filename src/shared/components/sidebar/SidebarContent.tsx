@@ -30,7 +30,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ collapsed, toggleSideba
             <div className="flex items-center gap-2 p-4 border-b">
                 {!collapsed && (
                     <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-md">
-                        <Computer className="w-5 h-5 text-indigo-600" />
+                        <Computer className="w-5 h-5 text-blue-600" />
                     </div>
                 )}
                 {!collapsed && <span className="text-xl font-bold">POS</span>}
