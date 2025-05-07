@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button'
-import { AlignJustify, Computer } from 'lucide-react'
-import React, { useState } from 'react'
+import { AlignJustify, BarChart3, ChartBar, Clock, Computer, CreditCard, Settings, Users } from 'lucide-react'
+import React, { ElementType, useState } from 'react'
 import SearchBar from './SearchBar'
-import { menuSections } from './menuSections'
 import SidebarItem from './SidebarItem'
 import { SidebarUserSection } from './SidebarUserSection'
+import { useTranslation } from 'react-i18next'
 
 const SideBar: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false)
@@ -12,6 +12,29 @@ const SideBar: React.FC = () => {
     const toggleSidebar = () => {
         setCollapsed(prev => !prev)
     }
+
+    const { t } = useTranslation();
+
+    const menuSections = [
+        {
+            label: t('sidebar.main'),
+            items: [
+                { icon: Clock as ElementType, text: t('menu.dashboard'), bg: 'bg-gray-100', textColor: 'text-gray-900' },
+                { icon: Computer as ElementType, text: t('menu.penjualan') },
+                { icon: BarChart3 as ElementType, text: t('menu.inventory-stock') },
+                { icon: CreditCard as ElementType, text: t('menu.hutang-piutang') },
+                { icon: ChartBar as ElementType, text: t('menu.laporan-analitik') },
+            ],
+        },
+        {
+            label: t('sidebar.master'),
+            items: [
+                { icon: Users as ElementType, text: t('menu.pelanggan') },
+                { icon: Users as ElementType, text: t('menu.user-management') },
+                { icon: Settings as ElementType, text: t('menu.setting-konfigurasi') },
+            ],
+        },
+    ];
 
     return (
         <div className={`flex flex-col transition-all duration-300 ease-in-out ${collapsed ? 'w-20' : 'w-64'} border-r bg-white relative h-screen`}>
@@ -35,45 +58,6 @@ const SideBar: React.FC = () => {
                 <SidebarItem collapsed={collapsed} sections={menuSections} />
             </div>
 
-            {/* <div className={`${collapsed ? 'absolute w-full' : 'w-full'} bottom-0 p-4 border-t`}>
-                {collapsed ? (
-                    <Button
-                        variant="ghost"
-                        className="w-full px-2 py-1.5 flex items-center justify-between"
-                        onClick={() => setCollapsed(false)}
-                    >
-                        <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-                                <img src="/placeholder-user.jpg" alt="User" className="w-full h-full object-cover" />
-                            </div>
-                        </div>
-                    </Button>
-                ) : (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="w-full px-2 py-1.5 flex items-center justify-between">
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-                                        <img src="/profile.jpg" alt="User" className="w-full h-full object-cover" />
-                                    </div>
-                                    <div className="text-left">
-                                        <p className="text-sm font-medium leading-none">Komang Gede</p>
-                                        <p className="text-xs text-gray-500">komanggede@gmail.com</p>
-                                    </div>
-                                </div>
-                                <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
-                            <DropdownMenuItem onClick={() => console.log('Profile clicked')}>Profile</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => console.log('Change password clicked')}>Change Password</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => console.log('Settings clicked')}>Settings</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => console.log('Logout clicked')}>Logout</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                )}
-            </div> */}
             <SidebarUserSection collapsed={collapsed} setCollapsed={setCollapsed} />
         </div>
     )

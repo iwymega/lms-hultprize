@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface MenuItem {
     icon: React.ElementType;
@@ -43,8 +44,8 @@ const SidebarItem: React.FC<SidebarProps> = ({ collapsed, sections }) => {
                         className={`
                 text-xs font-medium uppercase text-gray-500
                 transition-all duration-200
-                h-10
-                ${collapsed ? 'flex justify-center items-center px-0' : 'px-3'}
+                h-10 flex items-center
+                ${collapsed ? 'justify-center px-0' : 'px-3'}
               `}
                     >
                         {collapsed ? shortenLabel(section.label) : section.label}
@@ -53,14 +54,30 @@ const SidebarItem: React.FC<SidebarProps> = ({ collapsed, sections }) => {
                         {section.items.map((item) => {
                             const Icon = item.icon;
                             return (
-                                <Button
-                                    key={item.text}
-                                    variant="ghost"
-                                    className={`w-full justify-start ${item.bg ?? ''} ${item.textColor ?? 'text-gray-700'} ${collapsed ? 'flex justify-center' : ''}`}
-                                >
-                                    <Icon className={`${collapsed ? '' : 'mr-2'} h-4 w-4`} />
-                                    {!collapsed && item.text}
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                key={item.text}
+                                                variant="ghost"
+                                                className={`
+                                                    w-full justify-start overflow-hidden text-ellipsis whitespace-nowrap
+                                                    ${item.bg ?? ''} 
+                                                    ${item.textColor ?? 'text-gray-700'} 
+                                                    ${collapsed ? 'flex justify-center' : ''}
+                                                `}
+                                            >
+                                                <Icon className={`${collapsed ? '' : 'mr-2'} h-4 w-4`} />
+                                                {!collapsed && (
+                                                    <span className="truncate max-w-[140px]">{item.text}</span>
+                                                )}
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="right">
+                                            {item.text}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             );
                         })}
                     </div>

@@ -1,4 +1,18 @@
 {
     "welcome": "Welcome to our application",
-    "goodbye": "Goodbye!"
+    "goodbye": "Goodbye!",
+    "sidebar": {
+        "main": "Main Features",
+        "master": "Master Data"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "inventory-stock": "Inventory Stock",
+        "hutang-piutang": "Accounts Payable & Receivable",
+        "penjualan": "Sales",
+        "pelanggan": "Customers",
+        "laporan-analitik": "Reports & Analytics",
+        "user-management": "User Management",
+        "setting-konfigurasi": "Settings & Configuration"
+    }
 }

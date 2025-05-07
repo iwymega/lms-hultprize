@@ -1,4 +1,18 @@
 {
     "welcome": "Selamat datang di aplikasi kami",
-    "goodbye": "Selamat tinggal!"
+    "goodbye": "Selamat tinggal!",
+    "sidebar": {
+        "main": "Fitur Utama",
+        "master": "Data Master"
+    },
+    "menu": {
+        "dashboard": "Dasbor",
+        "inventory-stock": "Stok Inventaris",
+        "hutang-piutang": "Hutang Piutang",
+        "penjualan": "Penjualan",
+        "pelanggan": "Pelanggan",
+        "laporan-analitik": "Laporan & Analitik",
+        "user-management": "Manajemen Pengguna",
+        "setting-konfigurasi": "Pengaturan & Konfigurasi"
+    }
 }
