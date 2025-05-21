@@ -8,6 +8,7 @@ import {
     DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu'
 import { truncateText } from '@/lib/utils'
+import { ROUTES } from '@/router/AppRouter'
 import { ChevronDown } from 'lucide-react'
 import { useNavigate } from 'react-router'
 
@@ -51,7 +52,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({ collapse
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
-                        <DropdownMenuItem onClick={() => navigate('/profile')}>Profile</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(ROUTES.PROFILE.path)}>Profile</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => console.log('Change password clicked')}>Change Password</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => console.log('Settings clicked')}>Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />

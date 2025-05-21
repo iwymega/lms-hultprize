@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { Routes, Route, BrowserRouter } from "react-router";
 import LoginPage from "../auth/pages/LoginPage";
 import ForbiddenPage from "../auth/pages/ForbiddenPage";
@@ -8,56 +8,78 @@ import GuestOnly from "@/auth/middleware/GuestOnly";
 import UserManagementPage from "@/features/user-management/pages/UserManagementPage";
 import ProfilePage from "@/features/profile/pages/ProfilePage";
 
-export const appUrl = [
-    {
+type ProtectedRoute = {
+    path: string;
+    element: JSX.Element;
+    protected: true;
+    roles: string[];
+    permissions?: string[];
+};
+
+type GuestOnlyRoute = {
+    path: string;
+    element: JSX.Element;
+    guestOnly: true;
+};
+
+type PublicRoute = {
+    path: string;
+    element: JSX.Element;
+};
+
+type AppRoute = ProtectedRoute | GuestOnlyRoute | PublicRoute;
+
+
+export const ROUTES: Record<string, AppRoute> = {
+    DASHBOARD: {
         path: "/",
         element: <DashboardPage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],
     },
-    {
+    USER_MANAGEMENT: {
         path: "/user-management",
         element: <UserManagementPage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],
     },
-    {
+    PROFILE: {
         path: "/profile",
         element: <ProfilePage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],
     },
-    {
+    LOGIN: {
         path: "/login",
         element: <LoginPage />,
         guestOnly: true,
     },
-    {
+    FORBIDDEN: {
         path: "/forbidden",
         element: <ForbiddenPage />,
     },
-];
+};
 
 const AppRouter: React.FC = () => (
     <BrowserRouter>
         <Routes>
-            {appUrl.map(({ path, element, protected: isProtected, guestOnly, roles, permissions }, index) => {
-                let wrappedElement = element;
+            {Object.entries(ROUTES).map(([_key, config], index) => {
+                let wrappedElement = config.element;
 
-                if (isProtected) {
+                if ("protected" in config && config.protected) {
                     wrappedElement = (
-                        <RequireAuth requiredRoles={roles} requiredPermissions={permissions}>
-                            {element}
+                        <RequireAuth requiredRoles={config.roles} requiredPermissions={config.permissions ?? []}>
+                            {config.element}
                         </RequireAuth>
                     );
-                } else if (guestOnly) {
-                    wrappedElement = <GuestOnly>{element}</GuestOnly>;
+                } else if ("guestOnly" in config && config.guestOnly) {
+                    wrappedElement = <GuestOnly>{config.element}</GuestOnly>;
                 }
 
-                return <Route key={index} path={path} element={wrappedElement} />;
+                return <Route key={index} path={config.path} element={wrappedElement} />;
             })}
         </Routes>
     </BrowserRouter>
