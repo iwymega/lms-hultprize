@@ -4,6 +4,7 @@ import { User } from "../types/User";
 type AuthContextType = {
     user: User | null;
     login: (userData: User, token: string) => void;
+    relogin: (userData?: User, token?: string) => void;
     logout: () => void;
     hasRole: (role: string) => boolean;
     hasPermission: (permission: string) => boolean;
@@ -23,6 +24,18 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         localStorage.setItem('authToken', token);
     };
 
+    const relogin = (userData?: User, token?: string) => {
+        if (userData) {
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+        }
+    
+        if (token) {
+            localStorage.setItem('authToken', token);
+        }
+    };
+    
+
     const logout = () => {
         setUser(null);
         localStorage.removeItem('user');
@@ -38,7 +51,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, hasRole, hasPermission }}>
+        <AuthContext.Provider value={{ user, login, relogin, logout, hasRole, hasPermission }}>
             {children}
         </AuthContext.Provider>
     );

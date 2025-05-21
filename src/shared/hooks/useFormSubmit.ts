@@ -10,7 +10,7 @@ interface UseFormSubmitProps<T extends FieldValues> {
     successMessage: string;
     errorMessage: string;
     queryKeyToRefetch: string[];
-    onSuccess?: () => void; // Optional onSuccess callback
+    onSuccess?: (result: any) => void; // Kirim hasil dari mutate
 }
 
 export function useFormSubmit<T extends FieldValues>({
@@ -29,14 +29,14 @@ export function useFormSubmit<T extends FieldValues>({
             toast.loading("Submitting...", { id: "submit" });
             try {
                 // Call mutate directly
-                await mutate(data);  // Mutate function passed as prop
+                const result = await mutate(data);  // Mutate function passed as prop
                 await queryClient.refetchQueries({
                     predicate: (query) =>
                         query.queryKey.some((key) => queryKeyToRefetch.includes(key as string)),
                 });
                 toast.success(successMessage, { id: "submit" });
                 if (onSuccess) {
-                    onSuccess();
+                    onSuccess(result);
                 }
             } catch (mutationError: any) {
                 // Handling 422 error and validation errors
