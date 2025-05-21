@@ -53,7 +53,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({ collapse
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
                         <DropdownMenuItem onClick={() => navigate(ROUTES.PROFILE.path)}>Profile</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log('Change password clicked')}>Change Password</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(ROUTES.CHANGE_PASSWORD.path)}>Change Password</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => console.log('Settings clicked')}>Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>

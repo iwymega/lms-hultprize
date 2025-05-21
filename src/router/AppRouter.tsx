@@ -52,6 +52,13 @@ export const ROUTES: Record<string, AppRoute> = {
         roles: ["superadmin"],
         permissions: [],
     },
+    CHANGE_PASSWORD: {
+        path: "/profile/change-password",
+        element: <ProfilePage />,
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
     LOGIN: {
         path: "/login",
         element: <LoginPage />,
