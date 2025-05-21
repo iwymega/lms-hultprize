@@ -26,3 +26,23 @@ export function truncateText(text: string, maxLength: number, suffix = "..."): s
   return text.slice(0, maxLength - suffix.length) + suffix;
 }
 
+export function getInitials(name: string): string {
+  if (!name) return "";
+
+  const words = name.trim().split(/\s+/);
+  const initials = words
+    .slice(0, 2)
+    .map((word) => word[0].toUpperCase())
+    .join("");
+
+  return initials;
+}
+
+export function formatDateToLong(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
