@@ -8,6 +8,7 @@ import GuestOnly from "@/auth/middleware/GuestOnly";
 import UserManagementPage from "@/features/user-management/pages/UserManagementPage";
 import ProfilePage from "@/features/profile/pages/ProfilePage";
 import PermissionsPage from "@/features/permission/pages/PermissionsPage";
+import RolePage from "@/features/role/pages/RolePage";
 
 type ProtectedRoute = {
     path: string;
@@ -49,6 +50,13 @@ export const ROUTES: Record<string, AppRoute> = {
     PERMISSIONS: {
         path: "/permissions",
         element: <PermissionsPage />,
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    ROLES: {
+        path: "/roles",
+        element: <RolePage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],
