@@ -117,6 +117,7 @@
             "recently-added": "Recently Added"
         },
         "table": {
+            "title": "User List",
             "name": "Name",
             "email": "Email",
             "phone": "Phone",

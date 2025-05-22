@@ -16,7 +16,7 @@ const UserManagementTable: React.FC<Props> = ({ users }) => {
     return (
         <div className="bg-white rounded-lg border">
             <div className="flex items-center justify-between p-6 border-b">
-                <h2 className="text-lg font-medium">{t("dashboard.top-customers.title")}</h2>
+                <h2 className="text-lg font-medium">{t("user-management.table.title")}</h2>
                 <div className="flex items-center gap-2">
                     <div className="hidden md:flex items-center gap-2">
                         <SortByDropdown />

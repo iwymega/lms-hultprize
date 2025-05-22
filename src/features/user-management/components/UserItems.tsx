@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SingleUserResponse } from '@/services/user/response/IndexUserResponse';
-import { ArrowRight } from 'lucide-react';
+import { Pencil, Trash } from 'lucide-react';
 import React from 'react'
 import { useTranslation } from 'react-i18next';
 
@@ -27,10 +27,25 @@ const UserItems: React.FC<Props> = ({ user }) => {
                     <span className="text-gray-500">{t("user-management.table.no-role")}</span>
                 )}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <Button variant="ghost" size="sm" className="h-6 px-2">
-                    <span className="text-sm text-gray-500">{t("dashboard.top-customers.table.action.see-detail")}</span>
-                    <ArrowRight className="h-3 w-3 ml-1" />
+
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex space-x-2">
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2"
+                    onClick={() => {}}
+                    aria-label="Edit"
+                >
+                    <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-red-600 hover:text-red-800"
+                    onClick={() => {}}
+                    aria-label="Delete"
+                >
+                    <Trash className="h-4 w-4" />
                 </Button>
             </td>
         </tr>

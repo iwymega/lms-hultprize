@@ -110,6 +110,7 @@
             "recently-added": "Baru Ditambahkan"
         },
         "table": {
+            "title": "Daftar Pengguna",
             "name": "Nama",
             "email": "Email",
             "phone": "Telepon",

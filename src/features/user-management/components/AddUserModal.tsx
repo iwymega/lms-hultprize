@@ -1,33 +1,36 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
-import useCreateUser from '@/services/user/hooks/useCreateUser'
-import { CreateUser } from '@/services/user/schema/CreateUserSchema'
 import { Modal } from '@/shared/components/modal/Modal'
-import { useFormSubmit } from '@/shared/hooks/useFormSubmit'
 import { Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import useCreateUser from '@/services/user/hooks/useCreateUser'
+import { CreateUser } from '@/services/user/schema/CreateUserSchema'
+import { useFormSubmit } from '@/shared/hooks/useFormSubmit'
+import { FormField } from '@/shared/components/form/Formfield'
 
 const AddUserModal: React.FC = () => {
     const [open, setOpen] = useState(false)
 
-    const { mutateAsync, isPending } = useCreateUser();  // Assuming `useCreateUser` is a hook for creating the user
-    const { register, setError, handleSubmit, formState: { errors }, reset } = useForm<CreateUser>();  // Setup react-hook-form with typed form data
+    const { mutateAsync, isPending } = useCreateUser()
+    const {
+        register,
+        setError,
+        handleSubmit,
+        formState: { errors },
+        reset,
+    } = useForm<CreateUser>()
 
-    // Use the form submit handler
     const { onSubmit } = useFormSubmit({
         mutate: mutateAsync,
-        isPending: isPending,
-        setError: setError,
+        isPending,
+        setError,
         successMessage: "User created successfully!",
         errorMessage: "Failed to create user.",
-        queryKeyToRefetch: ["user-list"], // Assuming you want to refetch the `users` query
+        queryKeyToRefetch: ["user-list"],
         onSuccess: () => {
-            setOpen(false);  // Close the modal on success
-        }
-    });
+            setOpen(false)
+        },
+    })
 
     useEffect(() => {
         if (!open) {
@@ -36,9 +39,16 @@ const AddUserModal: React.FC = () => {
                 email: "",
                 phone: "",
                 password: "",
-            });
+            })
         }
-    }, [open, reset]);
+    }, [open, reset])
+
+    const fields = [
+        { name: "name", label: "Full Name", placeholder: "Enter full name" },
+        { name: "email", label: "Email", type: "email", placeholder: "Enter email" },
+        { name: "phone", label: "WhatsApp", placeholder: "Enter WhatsApp number" },
+        { name: "password", label: "Password", type: "password", placeholder: "Enter password" },
+    ]
 
     return (
         <Modal
@@ -55,50 +65,15 @@ const AddUserModal: React.FC = () => {
             }
         >
             <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid gap-2">
-                    <Label htmlFor="full-name">Full Name</Label>
-                    <Input
-                        id="full-name"
-                        type="text"
-                        placeholder="Enter full name"
-                        className={cn("selection:bg-blue-300 selection:text-white border", errors.name ? "border-red-500" : "border-gray-300")}
-                        {...register("name")}
+                {fields.map((field) => (
+                    <FormField
+                        key={field.name}
+                        {...field}
+                        register={register}
+                        errors={errors}
                     />
-                    {errors.name && <span className="text-red-500 text-sm">{errors.name.message}</span>}
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter email"
-                        className={cn("selection:bg-blue-300 selection:text-white border", errors.email ? "border-red-500" : "border-gray-300")}
-                        {...register("email")}
-                    />
-                    {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="whatsapp">WhatsApp</Label>
-                    <Input
-                        id="whatsapp"
-                        type="text"
-                        placeholder="Enter WhatsApp number"
-                        className={cn("selection:bg-blue-300 selection:text-white border", errors.phone ? "border-red-500" : "border-gray-300")}
-                        {...register("phone")}
-                    />
-                    {errors.phone && <span className="text-red-500 text-sm">{errors.phone.message}</span>}
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        placeholder="Enter password"
-                        className={cn("selection:bg-blue-300 selection:text-white border", errors.password ? "border-red-500" : "border-gray-300")}
-                        {...register("password")}
-                    />
-                    {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
-                </div>
+                ))}
+
                 <div className="flex items-center justify-end mt-4 gap-2">
                     <Button variant="outline" onClick={() => setOpen(false)}>
                         Cancel
