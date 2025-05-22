@@ -1,8 +1,12 @@
+import AdminLayout from '@/layouts/AdminLayout'
 import React from 'react'
+import RolePageContent from '../components/RolePageContent'
 
 const RolePage: React.FC = () => {
     return (
-        <div>RolePage</div>
+        <AdminLayout>
+            <RolePageContent />
+        </AdminLayout>
     )
 }
 

@@ -8,7 +8,7 @@ const UserRoleSchema = z.object({
     name: z.string(),
 });
 
-const SingleUserSchema = z.object({
+export const SingleUserSchema = z.object({
     id: z.string(),
     name: z.string(),
     email: z.string().email("Invalid email address"),
