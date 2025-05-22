@@ -1,5 +1,5 @@
-import { useBaseShow } from "@/services/base/hooks/useBaseShow";
-import { ShowUserResponseSchema } from "@/services/user/response/ShowUserResponseSchema";
+import useBaseShow from "@/services/base/hooks/useBaseShow";
+import { ShowUserResponseSchema } from "@/services/user/response/ShowUserResponse";
 
 const API_VERSION = "v1";
 

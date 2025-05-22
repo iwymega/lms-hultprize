@@ -1,6 +1,6 @@
 import { useBaseUpdate } from "@/services/base/hooks/useBaseUpdate";
 import { UpdateUser } from "@/services/user/schema/UpdateUserSchema";
-import { UpdateUserResponse, UpdateUserResponseSchema } from "@/services/user/response/UpdateUserResponseSchema";
+import { UpdateUserResponse, UpdateUserResponseSchema } from "@/services/user/response/UpdateUserResponse";
 
 const API_VERSION = "v1";
 

@@ -1,9 +1,10 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SingleUserResponse } from '@/services/user/response/IndexUserResponse';
-import { Pencil, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import React from 'react'
 import { useTranslation } from 'react-i18next';
+import EditUserModal from './EditUserModal';
 
 type Props = {
     user: SingleUserResponse;
@@ -29,20 +30,12 @@ const UserItems: React.FC<Props> = ({ user }) => {
             </td>
 
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex space-x-2">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2"
-                    onClick={() => {}}
-                    aria-label="Edit"
-                >
-                    <Pencil className="h-4 w-4" />
-                </Button>
+                <EditUserModal user={user} />
                 <Button
                     variant="ghost"
                     size="sm"
                     className="h-6 px-2 text-red-600 hover:text-red-800"
-                    onClick={() => {}}
+                    onClick={() => { }}
                     aria-label="Delete"
                 >
                     <Trash className="h-4 w-4" />
