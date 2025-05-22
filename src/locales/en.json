@@ -115,6 +115,18 @@
             "active-users": "Active Users",
             "inactive-users": "Inactive Users",
             "recently-added": "Recently Added"
+        },
+        "table": {
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "role": "Role",
+            "action": {
+                "title": "Action",
+                "edit": "Edit",
+                "delete": "Delete"
+            },
+            "no-role": "No Role"
         }
     }
 }

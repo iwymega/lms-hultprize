@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { DashboardCard } from '@/shared/components/card/DashboardCard';
 import { Download, Filter, Plus, Search, UserRoundCheck, UserRoundPlus, UserRoundX, Users } from 'lucide-react';
 import React, { useState } from 'react'
@@ -8,6 +7,9 @@ import { useTranslation } from 'react-i18next';
 import UserManagementTable from './UserManagementTable';
 import { Checkbox } from '@/components/ui/checkbox';
 import PaginationWithShow from '@/shared/components/pagination/PaginationWithShow';
+import useIndexUser from '@/services/user/hooks/useIndexUser';
+import DebouncedSearchInput from '@/shared/components/search/DebouncedSearchInput';
+import SectionLoader from '@/shared/components/loader/SectionLoader';
 
 const UserManagementContent: React.FC = () => {
     const { t } = useTranslation();
@@ -42,6 +44,16 @@ const UserManagementContent: React.FC = () => {
         },
     ]
 
+    const [search, setSearch] = useState("");
+    const [entriesPerPage, setEntriesPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const { data: users, isFetching, isSuccess } = useIndexUser({
+        search: search,
+        paginate: entriesPerPage,
+        page: currentPage,
+    });
+
     return (
         <main className="p-6">
             {/* Stats Cards */}
@@ -65,13 +77,15 @@ const UserManagementContent: React.FC = () => {
 
                 {/* Right - Search, Filter, Download */}
                 <div className="flex items-center gap-2">
-                    <div className="relative max-w-sm">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                        <Input
-                            placeholder="Search"
-                            className="pl-10"
-                        />
-                    </div>
+                    <DebouncedSearchInput
+                        value={search}
+                        onChange={setSearch}
+                        debounceTime={400}
+                        icon={<Search className="h-4 w-4" />}
+                        className="my-4"
+                        inputClassName="text-sm"
+                        placeholder="Search here..."
+                    />
 
                     {/* Filter Dropdown */}
                     <FilterDropdown />
@@ -85,15 +99,19 @@ const UserManagementContent: React.FC = () => {
             </div>
 
             {/* Table User Management */}
-            <UserManagementTable />
+            {isFetching ? (
+                <SectionLoader text="Please wait..." time={1200} className="bg-gray-50" />
+            ) : isSuccess && (
+                <UserManagementTable users={users} />
+            )}
 
             {/* Pagination */}
             <PaginationWithShow
                 totalItems={100}
                 itemsPerPage={10}
                 currentPage={1}
-                onPageChange={(page) => console.log(`Page changed to: ${page}`)}
-                onItemsPerPageChange={(items) => console.log(`Items per page changed to: ${items}`)}
+                onPageChange={(page) => setCurrentPage(page)}
+                onItemsPerPageChange={(items) => setEntriesPerPage(items)}
             />
         </main>
     )

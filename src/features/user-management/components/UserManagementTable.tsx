@@ -1,57 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { formatter } from '@/lib/utils';
-import { ArrowRight, SortAsc, SortDesc } from 'lucide-react';
+import { IndexUserResponse } from '@/services/user/response/IndexUserResponse';
+import { SortAsc, SortDesc } from 'lucide-react';
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next';
+import UserItems from './UserItems';
 
-type Customer = {
-    id: number;
-    name: string;
-    totalSpent: number;
-    totalTransactions: number;
-    lastTransaction: string; // ISO date string
-};
+type Props = {
+    users: IndexUserResponse;
+}
 
-export const topCustomers: Customer[] = [
-    {
-        id: 1,
-        name: "Budi Santoso",
-        totalSpent: 120000000,
-        totalTransactions: 25,
-        lastTransaction: "2025-04-28",
-    },
-    {
-        id: 2,
-        name: "Sari Wijaya",
-        totalSpent: 98500000,
-        totalTransactions: 18,
-        lastTransaction: "2025-04-25",
-    },
-    {
-        id: 3,
-        name: "PT Amanah Sejahtera",
-        totalSpent: 85000000,
-        totalTransactions: 10,
-        lastTransaction: "2025-04-27",
-    },
-    {
-        id: 4,
-        name: "Lina Permata",
-        totalSpent: 74200000,
-        totalTransactions: 20,
-        lastTransaction: "2025-04-29",
-    },
-    {
-        id: 5,
-        name: "Dedi Gunawan",
-        totalSpent: 70750000,
-        totalTransactions: 22,
-        lastTransaction: "2025-04-26",
-    },
-];
-
-const UserManagementTable: React.FC = () => {
+const UserManagementTable: React.FC<Props> = ({ users }) => {
     const { t } = useTranslation();
 
     return (
@@ -69,25 +28,25 @@ const UserManagementTable: React.FC = () => {
                     <thead>
                         <tr className="border-b">
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {t("dashboard.top-customers.table.user-name")}
+                                {t("user-management.table.name")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {t("dashboard.top-customers.table.total-spent")}
+                                {t("user-management.table.email")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {t("dashboard.top-customers.table.total-transactions")}
+                                {t("user-management.table.phone")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {t("dashboard.top-customers.table.last-transaction")}
+                                {t("user-management.table.role")}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {t("dashboard.top-customers.table.action.title")}
+                                {t("user-management.table.action.title")}
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {topCustomers.map((customer) => (
-                            <TopCustomersItem customer={customer} key={customer.id} />
+                        {users.data.map((user) => (
+                            <UserItems user={user} key={user.id} />
                         ))}
                     </tbody>
                 </table>
@@ -97,28 +56,6 @@ const UserManagementTable: React.FC = () => {
 }
 
 export default UserManagementTable
-
-interface TopCustomersItemProps {
-    customer: Customer;
-}
-
-const TopCustomersItem: React.FC<TopCustomersItemProps> = ({ customer }) => {
-    const { t } = useTranslation();
-    return (
-        <tr className="border-b">
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{customer.name}</td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{formatter.format(customer.totalSpent)}</td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{customer.totalTransactions}</td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{customer.lastTransaction}</td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <Button variant="ghost" size="sm" className="h-6 px-2">
-                    <span className="text-sm text-gray-500">{t("dashboard.top-customers.table.action.see-detail")}</span>
-                    <ArrowRight className="h-3 w-3 ml-1" />
-                </Button>
-            </td>
-        </tr>
-    )
-}
 
 const SortByDropdown = () => {
     const { t } = useTranslation();

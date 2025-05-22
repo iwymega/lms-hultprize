@@ -1,6 +1,31 @@
 import { z } from "zod";
 import { BaseResponseSchema } from "@/services/base/response/BaseResponseSchema";
 
-export const UserSchema = z.object({});
+const UserRoleSchema = z.object({
+    id: z.string(),
+    display_name: z.string(),
+    name: z.string(),
+});
+
+const UserPermissionSchema = z.object({
+    id: z.string(),
+    display_name: z.string(),
+    name: z.string(),
+    group: z.string(),
+});
+
+const SingleUserSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string().email("Invalid email address"),
+    phone: z.string().optional(),
+    created_at: z.string(),
+    updated_at: z.string(),
+    roles: z.nullable(z.array(UserRoleSchema).nonempty()).optional(),
+    permissions: z.nullable(z.array(UserPermissionSchema).nonempty()).optional(),
+});
+
+export const UserSchema = z.array(SingleUserSchema);
 export const IndexUserResponseSchema = BaseResponseSchema(UserSchema);
 export type IndexUserResponse = z.infer<typeof IndexUserResponseSchema>;
+export type SingleUserResponse = z.infer<typeof SingleUserSchema>;

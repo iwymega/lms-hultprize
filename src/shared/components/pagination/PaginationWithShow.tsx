@@ -15,9 +15,10 @@ interface PaginationProps {
     currentPage: number;
     onPageChange: (page: number) => void;
     onItemsPerPageChange: (itemsPerPage: number) => void;
+    maxButtonsToShow?: number; // Optional prop to limit the number of page buttons shown
 }
 
-const PaginationWithShow: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, currentPage, onPageChange, onItemsPerPageChange }) => {
+const PaginationWithShow: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, currentPage, onPageChange, onItemsPerPageChange, maxButtonsToShow }) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -39,7 +40,7 @@ const PaginationWithShow: React.FC<PaginationProps> = ({ totalItems, itemsPerPag
 
     // Logic untuk hanya menampilkan max 5 halaman
     const getVisiblePages = () => {
-        const maxPagesToShow = 5;
+        const maxPagesToShow = maxButtonsToShow || 5; // Default to 5 if not provided
         const half = Math.floor(maxPagesToShow / 2);
 
         let start = Math.max(currentPage - half, 1);

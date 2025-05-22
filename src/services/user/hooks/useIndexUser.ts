@@ -1,5 +1,5 @@
-import { useBaseIndex } from "@/services/base/hooks/useBaseIndex";
-import { IndexUserResponseSchema } from "@/services/user/response/IndexUserResponseSchema";
+import useBaseIndex from "@/services/base/hooks/useBaseIndex";
+import { IndexUserResponseSchema } from "@/services/user/response/IndexUserResponse";
 
 const API_VERSION = "v1";
 

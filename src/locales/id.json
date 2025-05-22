@@ -108,6 +108,18 @@
             "active-users": "Pengguna Aktif",
             "inactive-users": "Pengguna Tidak Aktif",
             "recently-added": "Baru Ditambahkan"
+        },
+        "table": {
+            "name": "Nama",
+            "email": "Email",
+            "phone": "Telepon",
+            "role": "Peran",
+            "action": {
+                "title": "Aksi",
+                "edit": "Edit",
+                "delete": "Hapus"
+            },
+            "no-role": "Tidak Ada Peran"
         }
     }
 }
