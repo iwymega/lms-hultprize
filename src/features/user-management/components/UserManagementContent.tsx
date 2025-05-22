@@ -98,21 +98,24 @@ const UserManagementContent: React.FC = () => {
                 </div>
             </div>
 
-            {/* Table User Management */}
             {isFetching ? (
                 <SectionLoader text="Please wait..." time={1200} className="bg-gray-50" />
             ) : isSuccess && (
-                <UserManagementTable users={users} />
+                <>
+                    {/* Table User Management */}
+                    <UserManagementTable users={users} />
+                    {/* Pagination */}
+                    {users.pagination && (
+                        <PaginationWithShow
+                            totalItems={users.pagination.total}
+                            itemsPerPage={entriesPerPage}
+                            currentPage={currentPage}
+                            onPageChange={(page) => setCurrentPage(page)}
+                            onItemsPerPageChange={(items) => setEntriesPerPage(items)}
+                        />
+                    )}
+                </>
             )}
-
-            {/* Pagination */}
-            <PaginationWithShow
-                totalItems={100}
-                itemsPerPage={10}
-                currentPage={1}
-                onPageChange={(page) => setCurrentPage(page)}
-                onItemsPerPageChange={(items) => setEntriesPerPage(items)}
-            />
         </main>
     )
 }
