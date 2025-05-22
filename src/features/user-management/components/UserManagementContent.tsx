@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { DashboardCard } from '@/shared/components/card/DashboardCard';
-import { Download, Filter, Plus, Search, UserRoundCheck, UserRoundPlus, UserRoundX, Users } from 'lucide-react';
+import { Download, Filter, Search, UserRoundCheck, UserRoundPlus, UserRoundX, Users } from 'lucide-react';
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import UserManagementTable from './UserManagementTable';
@@ -10,6 +10,7 @@ import PaginationWithShow from '@/shared/components/pagination/PaginationWithSho
 import useIndexUser from '@/services/user/hooks/useIndexUser';
 import DebouncedSearchInput from '@/shared/components/search/DebouncedSearchInput';
 import SectionLoader from '@/shared/components/loader/SectionLoader';
+import AddUserModal from './AddUserModal';
 
 const UserManagementContent: React.FC = () => {
     const { t } = useTranslation();
@@ -18,28 +19,28 @@ const UserManagementContent: React.FC = () => {
             title: t("user-management.card.total-users"),
             icon: <Users className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
-            value: "1000",
+            value: "0",
             changeType: "up" as "up",
         },
         {
             title: t("user-management.card.active-users"),
             icon: <UserRoundCheck className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
-            value: "1000",
+            value: "0",
             changeType: "up" as "up",
         },
         {
             title: t("user-management.card.inactive-users"),
             icon: <UserRoundX className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
-            value: "10",
+            value: "0",
             changeType: "down" as "down",
         },
         {
             title: t("user-management.card.recently-added"),
             icon: <UserRoundPlus className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
-            value: "2",
+            value: "0",
             changeType: "up" as "up",
         },
     ]
@@ -54,6 +55,7 @@ const UserManagementContent: React.FC = () => {
         page: currentPage,
         include: "roles,permissions"
     });
+
 
     return (
         <main className="p-6">
@@ -71,10 +73,7 @@ const UserManagementContent: React.FC = () => {
             {/* Action Bar */}
             <div className="flex justify-between items-center mb-6 flex-wrap gap-y-4">
                 {/* Left - Add Button */}
-                <Button onClick={() => console.log("Add clicked")} className="flex items-center gap-2 bg-blue-600">
-                    <Plus className="h-4 w-4" />
-                    Add User
-                </Button>
+                <AddUserModal />
 
                 {/* Right - Search, Filter, Download */}
                 <div className="flex items-center gap-2">
