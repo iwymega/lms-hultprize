@@ -37,10 +37,26 @@ const PaginationWithShow: React.FC<PaginationProps> = ({ totalItems, itemsPerPag
         }
     };
 
+    // Logic untuk hanya menampilkan max 5 halaman
+    const getVisiblePages = () => {
+        const maxPagesToShow = 5;
+        const half = Math.floor(maxPagesToShow / 2);
+
+        let start = Math.max(currentPage - half, 1);
+        let end = start + maxPagesToShow - 1;
+
+        if (end > totalPages) {
+            end = totalPages;
+            start = Math.max(end - maxPagesToShow + 1, 1);
+        }
+
+        return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    };
+
     return (
-        <div className="flex justify-between items-center p-4">
+        <div className="flex flex-col p-4 gap-4 lg:flex-row lg:items-center lg:justify-between">
             {/* Left Side - Show Selection */}
-            <div className="text-sm text-gray-700 flex items-center gap-2">
+            <div className="order-2 lg:order-1 w-full flex justify-center lg:justify-start text-sm text-gray-700 items-center gap-2">
                 <span>Show</span>
                 <select
                     value={itemsPerPage}
@@ -55,7 +71,7 @@ const PaginationWithShow: React.FC<PaginationProps> = ({ totalItems, itemsPerPag
             </div>
 
             {/* Right Side - Pagination */}
-            <Pagination>
+            <Pagination className="order-1 lg:order-2 justify-center lg:justify-end">
                 <PaginationContent>
                     <PaginationItem>
                         <PaginationPrevious
@@ -66,20 +82,18 @@ const PaginationWithShow: React.FC<PaginationProps> = ({ totalItems, itemsPerPag
                     </PaginationItem>
 
                     {/* Page Number Links */}
-                    {Array.from({ length: totalPages }, (_, index) => {
-                        const page = index + 1;
-                        return (
-                            <PaginationItem key={page}>
-                                <PaginationLink
-                                    href="#"
-                                    onClick={() => onPageChange(page)}
-                                    isActive={page === currentPage}
-                                >
-                                    {page}
-                                </PaginationLink>
-                            </PaginationItem>
-                        );
-                    })}
+                    {getVisiblePages().map((page) => (
+                        <PaginationItem key={page}>
+                            <PaginationLink
+                                href="#"
+                                onClick={() => onPageChange(page)}
+                                isActive={page === currentPage}
+                            >
+                                {page}
+                            </PaginationLink>
+                        </PaginationItem>
+                    ))}
+
 
                     {/* Ellipsis if there are more pages */}
                     {totalPages > 5 && (

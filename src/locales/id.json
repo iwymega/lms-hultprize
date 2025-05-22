@@ -97,5 +97,17 @@
                 }
             }
         }
+    },
+    "user-management": {
+        "title": "Manajemen Pengguna",
+        "add-user": "Tambah Pengguna",
+        "edit-user": "Edit Pengguna",
+        "user-list": "Daftar Pengguna",
+        "card": {
+            "total-users": "Total Pengguna",
+            "active-users": "Pengguna Aktif",
+            "inactive-users": "Pengguna Tidak Aktif",
+            "recently-added": "Baru Ditambahkan"
+        }
     }
 }

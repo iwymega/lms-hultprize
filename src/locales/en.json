@@ -104,5 +104,17 @@
                 }
             }
         }
+    },
+    "user-management": {
+        "title": "User Management",
+        "add-user": "Add User",
+        "edit-user": "Edit User",
+        "user-list": "User List",
+        "card" : {
+            "total-users": "Total Users",
+            "active-users": "Active Users",
+            "inactive-users": "Inactive Users",
+            "recently-added": "Recently Added"
+        }
     }
 }

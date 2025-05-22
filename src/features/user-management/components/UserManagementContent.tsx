@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { DashboardCard } from '@/shared/components/card/DashboardCard';
-import { AlertTriangle, CreditCard, Download, Filter, Plus, Search, ShoppingCart, UserPlus } from 'lucide-react';
+import { Download, Filter, Plus, Search, UserRoundCheck, UserRoundPlus, UserRoundX, Users } from 'lucide-react';
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import UserManagementTable from './UserManagementTable';
@@ -13,35 +13,31 @@ const UserManagementContent: React.FC = () => {
     const { t } = useTranslation();
     const dashboardCards = [
         {
-            title: t("dashboard.total-sales-today"),
-            icon: <ShoppingCart className="h-4 w-4 text-blue-600" />,
+            title: t("user-management.card.total-users"),
+            icon: <Users className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
-            value: "$1,204.00",
-            change: "+12% vs " + t("dashboard.yesterday"),
+            value: "1000",
             changeType: "up" as "up",
         },
         {
-            title: t("dashboard.total-transactions"),
-            icon: <CreditCard className="h-4 w-4 text-blue-600" />,
+            title: t("user-management.card.active-users"),
+            icon: <UserRoundCheck className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
-            value: "342",
-            change: "+5% vs " + t("dashboard.yesterday"),
+            value: "1000",
             changeType: "up" as "up",
         },
         {
-            title: t("dashboard.low-stock-warning"),
-            icon: <AlertTriangle className="h-4 w-4 text-blue-600" />,
+            title: t("user-management.card.inactive-users"),
+            icon: <UserRoundX className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
-            value: "8 Items",
-            change: "2 " + t("dashboard.new-warning"),
+            value: "10",
             changeType: "down" as "down",
         },
         {
-            title: t("dashboard.new-customers-today"),
-            icon: <UserPlus className="h-4 w-4 text-blue-600" />,
+            title: t("user-management.card.recently-added"),
+            icon: <UserRoundPlus className="h-4 w-4 text-blue-600" />,
             iconBg: "bg-blue-100",
-            value: "24",
-            change: "+9% vs " + t("dashboard.yesterday"),
+            value: "2",
             changeType: "up" as "up",
         },
     ]
