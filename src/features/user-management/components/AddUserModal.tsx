@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import useCreateUser from '@/services/user/hooks/useCreateUser'
 import { CreateUser } from '@/services/user/schema/CreateUserSchema'
 import { useFormSubmit } from '@/shared/hooks/useFormSubmit'
-import { FormField } from '@/shared/components/form/Formfield'
+import { FormField } from '@/shared/components/form/FormField'
 
 const AddUserModal: React.FC = () => {
     const [open, setOpen] = useState(false)
@@ -75,7 +75,7 @@ const AddUserModal: React.FC = () => {
                 ))}
 
                 <div className="flex items-center justify-end mt-4 gap-2">
-                    <Button variant="outline" onClick={() => setOpen(false)}>
+                    <Button type='button' variant="outline" onClick={() => setOpen(false)}>
                         Cancel
                     </Button>
                     <Button type="submit" className="bg-blue-600 hover:bg-blue-700" disabled={isPending}>

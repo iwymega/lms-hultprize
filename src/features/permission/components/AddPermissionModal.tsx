@@ -1,61 +1,51 @@
 import { Button } from '@/components/ui/button'
 import { Modal } from '@/shared/components/modal/Modal'
-import { Pencil } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useFormSubmit } from '@/shared/hooks/useFormSubmit'
 import { FormField } from '@/shared/components/form/FormField'
-import { SingleUserResponse } from '@/services/user/response/IndexUserResponse'
-import { useUpdateUser } from '@/services/user/hooks/useUpdateUser'
-import { UpdateUser } from '@/services/user/schema/UpdateUserSchema'
+import useCreatePermission from '@/services/permission/hooks/useCreatePermission'
+import { CreatePermission } from '@/services/permission/schema/CreatePermissionSchema'
 
-type Props = {
-    user: SingleUserResponse
-}
-
-const EditUserModal: React.FC<Props> = ({ user }) => {
+const AddPermissionModal: React.FC = () => {
     const [open, setOpen] = useState(false)
 
-    const { mutateAsync, isPending } = useUpdateUser()
+    const { mutateAsync, isPending } = useCreatePermission()
     const {
         register,
         setError,
         handleSubmit,
         formState: { errors },
         reset,
-    } = useForm<{ user_id: string; data: UpdateUser }>()
+    } = useForm<CreatePermission>()
 
     const { onSubmit } = useFormSubmit({
         mutate: mutateAsync,
         isPending,
         setError,
-        successMessage: "User created successfully!",
-        errorMessage: "Failed to create user.",
-        queryKeyToRefetch: ["user-list"],
+        successMessage: "Permission created successfully!",
+        errorMessage: "Failed to create permission.",
+        queryKeyToRefetch: ["permission-list"],
         onSuccess: () => {
             setOpen(false)
         },
     })
 
     useEffect(() => {
-        if (open && user) {
+        if (!open) {
             reset({
-                user_id: user.id,
-                data: {
-                    name: user.name,
-                    email: user.email,
-                    phone: user.phone,
-                    password: "",
-                },
-            });
+                display_name: "",
+                group: "",
+                name: "",
+            })
         }
-    }, [open, user]);
+    }, [open, reset])
 
     const fields = [
-        { name: "data.name", label: "Full Name", placeholder: "Enter full name" },
-        { name: "data.email", label: "Email", type: "email", placeholder: "Enter email" },
-        { name: "data.phone", label: "WhatsApp", placeholder: "Enter WhatsApp number" },
-        { name: "data.password", label: "Password", type: "password", placeholder: "Enter password" },
+        { name: "display_name", label: "Display Name", placeholder: "Enter display name" },
+        { name: "group", label: "Group", placeholder: "Enter group" },
+        { name: "name", label: "Name", placeholder: "Enter name" },
     ]
 
     return (
@@ -63,17 +53,12 @@ const EditUserModal: React.FC<Props> = ({ user }) => {
             open={open}
             onOpenChange={setOpen}
             size="lg"
-            title="Create User"
-            description="Fill the form to create a new user."
+            title="Create Permission"
+            description="Fill the form to create a new permission."
             trigger={
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2"
-                    onClick={() => setOpen(true)}
-                    aria-label="Edit"
-                >
-                    <Pencil className="h-4 w-4" />
+                <Button onClick={() => setOpen(true)} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700">
+                    <Plus className="h-4 w-4" />
+                    Add Permission
                 </Button>
             }
         >
@@ -100,4 +85,4 @@ const EditUserModal: React.FC<Props> = ({ user }) => {
     )
 }
 
-export default EditUserModal
+export default AddPermissionModal

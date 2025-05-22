@@ -1,17 +1,11 @@
 import { z } from "zod";
 import { BaseResponseSchema } from "@/services/base/response/BaseResponseSchema";
+import { PermissionSchema } from "@/services/permission/response/IndexPermissionResponse";
 
 const UserRoleSchema = z.object({
     id: z.number(),
     display_name: z.string(),
     name: z.string(),
-});
-
-const UserPermissionSchema = z.object({
-    id: z.number(),
-    display_name: z.string(),
-    name: z.string(),
-    group: z.string(),
 });
 
 const SingleUserSchema = z.object({
@@ -22,7 +16,7 @@ const SingleUserSchema = z.object({
     created_at: z.string(),
     updated_at: z.string(),
     roles: z.array(UserRoleSchema).optional(),
-    permissions: z.array(UserPermissionSchema).optional()
+    permissions: z.array(PermissionSchema).optional()
 });
 
 export const UserSchema = z.array(SingleUserSchema);

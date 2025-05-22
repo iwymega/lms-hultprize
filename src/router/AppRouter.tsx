@@ -7,6 +7,7 @@ import DashboardPage from "../features/dashboard/pages/DashboardPage";
 import GuestOnly from "@/auth/middleware/GuestOnly";
 import UserManagementPage from "@/features/user-management/pages/UserManagementPage";
 import ProfilePage from "@/features/profile/pages/ProfilePage";
+import PermissionsPage from "@/features/permission/pages/PermissionsPage";
 
 type ProtectedRoute = {
     path: string;
@@ -41,6 +42,13 @@ export const ROUTES: Record<string, AppRoute> = {
     USER_MANAGEMENT: {
         path: "/user-management",
         element: <UserManagementPage />,
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    PERMISSIONS: {
+        path: "/permissions",
+        element: <PermissionsPage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],

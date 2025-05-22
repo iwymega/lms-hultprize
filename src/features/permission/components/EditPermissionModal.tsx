@@ -5,57 +5,53 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useFormSubmit } from '@/shared/hooks/useFormSubmit'
 import { FormField } from '@/shared/components/form/FormField'
-import { SingleUserResponse } from '@/services/user/response/IndexUserResponse'
-import { useUpdateUser } from '@/services/user/hooks/useUpdateUser'
-import { UpdateUser } from '@/services/user/schema/UpdateUserSchema'
+import { SinglePermissionResponse } from '@/services/permission/response/IndexPermissionResponse'
+import { useUpdatePermission } from '@/services/permission/hooks/useUpdatePermission'
+import { UpdatePermission } from '@/services/permission/schema/UpdatePermissionSchema'
 
 type Props = {
-    user: SingleUserResponse
+    permission: SinglePermissionResponse
 }
 
-const EditUserModal: React.FC<Props> = ({ user }) => {
+const EditPermissionModal: React.FC<Props> = ({ permission }) => {
     const [open, setOpen] = useState(false)
 
-    const { mutateAsync, isPending } = useUpdateUser()
+    const { mutateAsync, isPending } = useUpdatePermission()
     const {
         register,
         setError,
         handleSubmit,
         formState: { errors },
         reset,
-    } = useForm<{ user_id: string; data: UpdateUser }>()
+    } = useForm<{ permission_id: number; data: UpdatePermission }>()
 
     const { onSubmit } = useFormSubmit({
         mutate: mutateAsync,
         isPending,
         setError,
-        successMessage: "User created successfully!",
-        errorMessage: "Failed to create user.",
-        queryKeyToRefetch: ["user-list"],
+        successMessage: "Permission created successfully!",
+        errorMessage: "Failed to create permission.",
+        queryKeyToRefetch: ["permission-list"],
         onSuccess: () => {
             setOpen(false)
         },
     })
 
     useEffect(() => {
-        if (open && user) {
+        if (open && permission) {
             reset({
-                user_id: user.id,
+                permission_id: permission.id,
                 data: {
-                    name: user.name,
-                    email: user.email,
-                    phone: user.phone,
-                    password: "",
+                    display_name: permission.display_name,
+                    group: permission.group,
                 },
             });
         }
-    }, [open, user]);
+    }, [open, permission]);
 
     const fields = [
-        { name: "data.name", label: "Full Name", placeholder: "Enter full name" },
-        { name: "data.email", label: "Email", type: "email", placeholder: "Enter email" },
-        { name: "data.phone", label: "WhatsApp", placeholder: "Enter WhatsApp number" },
-        { name: "data.password", label: "Password", type: "password", placeholder: "Enter password" },
+        { name: "data.display_name", label: "Display Name", placeholder: "Enter display name" },
+        { name: "data.group", label: "Group", placeholder: "Enter group" },
     ]
 
     return (
@@ -63,8 +59,8 @@ const EditUserModal: React.FC<Props> = ({ user }) => {
             open={open}
             onOpenChange={setOpen}
             size="lg"
-            title="Create User"
-            description="Fill the form to create a new user."
+            title="Edit Permission"
+            description="Fill the form to edit the permission."
             trigger={
                 <Button
                     variant="ghost"
@@ -100,4 +96,4 @@ const EditUserModal: React.FC<Props> = ({ user }) => {
     )
 }
 
-export default EditUserModal
+export default EditPermissionModal

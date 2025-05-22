@@ -56,7 +56,6 @@ const UserManagementContent: React.FC = () => {
         include: "roles,permissions"
     });
 
-
     return (
         <main className="p-6">
             {/* Stats Cards */}
