@@ -4,11 +4,11 @@ import { IndexUserResponseSchema } from "@/services/user/response/IndexUserRespo
 const API_VERSION = "v1";
 
 interface IndexUserProps {
-    filters?: {};
+    filters?: { [key: string]: any };
     search?: string;
     paginate?: number;
     page?: number;
-    include?: string;
+    [key: string]: any;
 }
 
 const useIndexUser = (query: IndexUserProps) =>

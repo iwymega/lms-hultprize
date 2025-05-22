@@ -52,6 +52,7 @@ const UserManagementContent: React.FC = () => {
         search: search,
         paginate: entriesPerPage,
         page: currentPage,
+        include: "roles,permissions"
     });
 
     return (
