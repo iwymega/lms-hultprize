@@ -1,5 +1,5 @@
 import { useBaseDelete } from "@/services/base/hooks/useBaseDelete";
-import { DeleteUserResponse, DeleteUserResponseSchema } from "@/services/user/response/CreateUserResponseSchema";
+import { DeleteUserResponse, DeleteUserResponseSchema } from "@/services/user/response/DeleteUserResponse";
 
 const API_VERSION = "v1";
 
