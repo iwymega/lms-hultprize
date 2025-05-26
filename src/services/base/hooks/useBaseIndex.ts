@@ -19,7 +19,7 @@ const useBaseIndex = <T>({
     queryKey,
     filters,
     search,
-    paginate = 10,
+    paginate,
     page,
     endpoint,
     schema,

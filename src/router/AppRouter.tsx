@@ -9,6 +9,7 @@ import UserManagementPage from "@/features/user-management/pages/UserManagementP
 import ProfilePage from "@/features/profile/pages/ProfilePage";
 import PermissionsPage from "@/features/permission/pages/PermissionsPage";
 import RolePage from "@/features/role/pages/RolePage";
+import RoleUsersAssignedPage from "@/features/role/pages/RoleUsersAssignedPage";
 
 type ProtectedRoute = {
     path: string;
@@ -57,6 +58,13 @@ export const ROUTES: Record<string, AppRoute> = {
     ROLES: {
         path: "/roles",
         element: <RolePage />,
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    ROLES_USERS_ASSIGNED: {
+        path: "/roles/:roleId/users",
+        element: <RoleUsersAssignedPage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],

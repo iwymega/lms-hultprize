@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DebouncedSearchInput from '@/shared/components/search/DebouncedSearchInput'
-import { Download, Search } from 'lucide-react';
+import { Download, List, Plus, Search } from 'lucide-react';
 import FilterDropdown from '@/shared/components/utility/FilterDropdown';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,8 @@ import useIndexRole from '@/services/role/hooks/useIndexRole';
 import AddRoleModal from './AddRoleModal';
 import EditRoleModal from './EditRoleModal';
 import RemoveRole from './RemoveRole';
+import { useNavigate } from 'react-router';
+import { getInitials, getRandomTailwindColorClass } from '@/lib/utils';
 
 const RolePageContent: React.FC = () => {
     const [search, setSearch] = useState("");
@@ -20,7 +22,8 @@ const RolePageContent: React.FC = () => {
     const { data: roles, isFetching, isSuccess } = useIndexRole({
         search: search,
         paginate: entriesPerPage,
-        page: currentPage
+        page: currentPage,
+        include: "users",
     });
 
     const [isActive, setIsActive] = useState(false);
@@ -39,6 +42,8 @@ const RolePageContent: React.FC = () => {
     };
 
     const [isAscending, setIsAscending] = useState(true); // State untuk urutan (ascending/descending)
+
+    const navigate = useNavigate();
 
     return (
         <main className="p-6">
@@ -87,10 +92,57 @@ const RolePageContent: React.FC = () => {
                     { title: "Name", key: "name" },
                     { title: "Display Name", key: "display_name" },
                     {
+                        title: "User Assigned",
+                        key: "user_assigned",
+                        render: (item) => {
+                            if (!item.users || item.users.length === 0) return (
+                                <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="w-8 h-8 rounded-full ml-1 border-dashed"
+                                    onClick={() => navigate(`/roles/${item.id}/users`)}
+                                >
+                                    <Plus className="w-4 h-4" />
+                                </Button>
+                            );
+
+                            return (
+                                <div className="flex items-center -space-x-2 cursor-pointer">
+                                    {item.users.map((user, idx) => (
+                                        <div
+                                            key={idx}
+                                            className={`w-8 h-8 rounded-full ${getRandomTailwindColorClass('bg')} flex items-center justify-center text-xs font-medium border-2 border-white`}
+                                            onClick={() => navigate(`/roles/${item.id}/users`)}
+                                        >
+                                            {getInitials(user.name)}
+                                        </div>
+                                    ))}
+                                    <Button
+                                        size="icon"
+                                        variant="outline"
+                                        className="w-8 h-8 rounded-full ml-1 border-dashed"
+                                        onClick={() => navigate(`/roles/${item.id}/users`)}
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            );
+                        }
+                    },
+                    {
                         title: "Actions",
                         key: "actions", // bebas, karena tidak diakses langsung dari item
                         render: (item) => (
                             <>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 px-2"
+                                    onClick={() => navigate(`/roles/${item.id}`)}
+                                    aria-label="View"
+                                >
+                                    <List className="h-4 w-4" />
+                                </Button>
                                 <EditRoleModal role={item} />
                                 <RemoveRole role={item} />
                             </>
@@ -98,7 +150,7 @@ const RolePageContent: React.FC = () => {
                         className: "text-right",
                     },
                 ]}
-                data={roles?.data || []}
+                data={Array.isArray(roles?.data) ? roles.data : []}
                 isLoading={isFetching}
                 renderHeader={() => (
                     <>

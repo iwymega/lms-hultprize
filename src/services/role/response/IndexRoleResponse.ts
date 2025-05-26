@@ -10,6 +10,9 @@ export const RoleSchema = z.object({
     users: z.nullable(z.array(SingleUserSchema)).optional(),
     permissions: z.nullable(z.array(PermissionSchema)).optional(),
 });
-export const IndexRoleResponseSchema = BaseResponseSchema(z.array(RoleSchema));
+export const IndexRoleResponseSchema = BaseResponseSchema(z.union([
+    z.array(RoleSchema),
+    RoleSchema,
+]));
 export type IndexRoleResponse = z.infer<typeof IndexRoleResponseSchema>;
 export type RoleResponse = z.infer<typeof RoleSchema>;

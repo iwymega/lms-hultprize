@@ -46,3 +46,19 @@ export function formatDateToLong(dateString: string): string {
     year: "numeric",
   });
 }
+
+const tailwindColors = [
+  'red', 'orange', 'amber', 'yellow', 'lime',
+  'green', 'emerald', 'teal', 'cyan', 'sky',
+  'blue', 'indigo', 'violet', 'purple', 'fuchsia',
+  'pink', 'rose'
+];
+
+const colorShades = ['500', '600', '700']; // bisa disesuaikan
+
+export function getRandomTailwindColorClass(type: 'bg' | 'text' = 'bg'): string {
+  const color = tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
+  const shade = colorShades[Math.floor(Math.random() * colorShades.length)];
+  return `${type}-${color}-${shade}`;
+}
+
