@@ -21,9 +21,10 @@ const TopBar: React.FC = () => {
     const queryClient = useQueryClient();
 
     const handleRefreshData = async () => {
-        await queryClient.refetchQueries();
-        toast.success('Data refreshed successfully!')
-    }
+        await queryClient.invalidateQueries();
+        toast.success('Data refreshed successfully!');
+    };
+
 
     return (
         <header className="hidden md:flex items-center justify-between p-4 border-b bg-white">
