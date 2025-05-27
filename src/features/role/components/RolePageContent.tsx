@@ -12,7 +12,7 @@ import AddRoleModal from './AddRoleModal';
 import EditRoleModal from './EditRoleModal';
 import RemoveRole from './RemoveRole';
 import { useNavigate } from 'react-router';
-import { getInitials, getContrastingTailwindColors } from '@/lib/utils';
+import { getInitials, getRandomBgAndTextColor } from '@/lib/utils';
 
 const RolePageContent: React.FC = () => {
     const [search, setSearch] = useState("");
@@ -109,7 +109,7 @@ const RolePageContent: React.FC = () => {
                             return (
                                 <div className="flex items-center -space-x-2 cursor-pointer">
                                     {item.users.map((user, idx) => {
-                                        const { bgColor, textColor } = getContrastingTailwindColors();
+                                        const { bgColor, textColor } = getRandomBgAndTextColor();
                                         return (
                                             <div
                                                 key={idx}
