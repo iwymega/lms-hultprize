@@ -54,24 +54,15 @@ const tailwindBgColorClasses = [
   'bg-fuchsia-500', 'bg-pink-500', 'bg-rose-500'
 ];
 
-// Warna yang lebih baik pakai text-white walaupun shade 500
-const forceWhiteTextForColors = new Set([
-  'red', 'orange', 'amber', 'lime', 'emerald', 'teal', 'cyan', 'sky', 'violet', 'purple', 'fuchsia', 'rose'
-]);
-
+// Fungsi untuk menentukan text color berdasarkan shade (angka di class)
 function getTextColorFromBgClass(bgClass: string): string {
-  const match = bgClass.match(/^bg-([a-z]+)-(\d{3})$/);
-  if (!match) return 'text-black'; // fallback
+  // bgClass contoh: 'bg-red-500'
+  // ambil angka shade-nya (misal '500')
+  const shadeMatch = bgClass.match(/-(\d{3})$/);
+  const shade = shadeMatch ? parseInt(shadeMatch[1], 10) : 500;
 
-  const [, color, shadeStr] = match;
-  const shade = parseInt(shadeStr, 10);
-
-  if (shade >= 600) return 'text-white';
-
-  // Jika warna ada di daftar force white, walau shade 500, pakai text-white
-  if (forceWhiteTextForColors.has(color)) return 'text-white';
-
-  return 'text-black';
+  // Anggap shade >= 600 itu gelap → text putih, lainnya → text hitam
+  return shade >= 600 ? 'text-white' : 'text-black';
 }
 
 export function getRandomBgAndTextColor(): { bgColor: string; textColor: string } {

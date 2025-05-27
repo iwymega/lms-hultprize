@@ -109,11 +109,11 @@ const RolePageContent: React.FC = () => {
                             return (
                                 <div className="flex items-center -space-x-2 cursor-pointer">
                                     {item.users.map((user, idx) => {
-                                        const { bgColor, textColor } = getRandomBgAndTextColor();
+                                        const { bgColor } = getRandomBgAndTextColor();
                                         return (
                                             <div
                                                 key={idx}
-                                                className={`w-8 h-8 rounded-full ${bgColor} ${textColor} flex items-center justify-center text-xs font-medium border-2 border-white`}
+                                                className={`w-8 h-8 rounded-full ${bgColor} text-white flex items-center justify-center text-xs font-medium border-2 border-white`}
                                                 onClick={() => navigate(`/roles/${item.id}/users`)}
                                             >
                                                 {getInitials(user.name)}
