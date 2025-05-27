@@ -47,12 +47,12 @@ export function formatDateToLong(dateString: string): string {
   });
 }
 
-const tailwindColors = [
+const tailwindColors = ['slate', 'gray', 'zinc', 'neutral', 'stone',
   'red', 'orange', 'amber', 'yellow', 'lime',
   'green', 'emerald', 'teal', 'cyan', 'sky',
   'blue', 'indigo', 'violet', 'purple', 'fuchsia',
-  'pink', 'rose'
-];
+  'pink', 'rose']
+
 
 const colorShades = ['500', '600', '700']; // bisa disesuaikan
 
@@ -60,5 +60,19 @@ export function getRandomTailwindColorClass(type: 'bg' | 'text' = 'bg'): string 
   const color = tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
   const shade = colorShades[Math.floor(Math.random() * colorShades.length)];
   return `${type}-${color}-${shade}`;
+}
+
+
+// Fungsi untuk menghasilkan kombinasi bg dan text dengan kontras
+export function getContrastingTailwindColors(): { bgColor: string; textColor: string } {
+  const color = tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
+  const shade = colorShades[Math.floor(Math.random() * colorShades.length)];
+  const bgColor = `bg-${color}-${shade}`;
+
+  // Anggap shade 600+ sebagai gelap → text putih, lainnya → text hitam
+  const isDark = parseInt(shade, 10) >= 600;
+  const textColor = isDark ? 'text-white' : 'text-black';
+
+  return { bgColor, textColor };
 }
 

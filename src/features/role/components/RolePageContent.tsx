@@ -12,7 +12,7 @@ import AddRoleModal from './AddRoleModal';
 import EditRoleModal from './EditRoleModal';
 import RemoveRole from './RemoveRole';
 import { useNavigate } from 'react-router';
-import { getInitials, getRandomTailwindColorClass } from '@/lib/utils';
+import { getInitials, getContrastingTailwindColors } from '@/lib/utils';
 
 const RolePageContent: React.FC = () => {
     const [search, setSearch] = useState("");
@@ -108,15 +108,18 @@ const RolePageContent: React.FC = () => {
 
                             return (
                                 <div className="flex items-center -space-x-2 cursor-pointer">
-                                    {item.users.map((user, idx) => (
-                                        <div
-                                            key={idx}
-                                            className={`w-8 h-8 rounded-full ${getRandomTailwindColorClass('bg')} flex items-center justify-center text-xs font-medium border-2 border-white`}
-                                            onClick={() => navigate(`/roles/${item.id}/users`)}
-                                        >
-                                            {getInitials(user.name)}
-                                        </div>
-                                    ))}
+                                    {item.users.map((user, idx) => {
+                                        const { bgColor, textColor } = getContrastingTailwindColors();
+                                        return (
+                                            <div
+                                                key={idx}
+                                                className={`w-8 h-8 rounded-full ${bgColor} ${textColor} flex items-center justify-center text-xs font-medium border-2 border-white`}
+                                                onClick={() => navigate(`/roles/${item.id}/users`)}
+                                            >
+                                                {getInitials(user.name)}
+                                            </div>
+                                        )
+                                    })}
                                     <Button
                                         size="icon"
                                         variant="outline"
@@ -138,7 +141,7 @@ const RolePageContent: React.FC = () => {
                                     variant="ghost"
                                     size="sm"
                                     className="h-6 px-2"
-                                    onClick={() => navigate(`/roles/${item.id}`)}
+                                    onClick={() => navigate(`/roles/${item.id}/permissions`)}
                                     aria-label="View"
                                 >
                                     <List className="h-4 w-4" />
