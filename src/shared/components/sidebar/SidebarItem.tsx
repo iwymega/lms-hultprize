@@ -58,7 +58,7 @@ const SidebarItem: React.FC<SidebarProps> = ({ collapsed, sections }) => {
                             const Icon = item.icon;
                             const isActive = location.pathname === item.url;
                             return (
-                                <TooltipProvider>
+                                <TooltipProvider key={item.text}>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button
