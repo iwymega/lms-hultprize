@@ -13,7 +13,6 @@ import EditRoleModal from './EditRoleModal';
 import RemoveRole from './RemoveRole';
 import { useNavigate } from 'react-router';
 import { getInitials, getRandomBgAndTextColor } from '@/lib/utils';
-import ExampleForm from './Example';
 
 const RolePageContent: React.FC = () => {
     const [search, setSearch] = useState("");
