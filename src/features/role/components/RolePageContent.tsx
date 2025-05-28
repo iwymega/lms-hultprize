@@ -48,7 +48,6 @@ const RolePageContent: React.FC = () => {
 
     return (
         <main className="p-6">
-            <ExampleForm />
             {/* Action Bar */}
             <div className="flex justify-between items-center mb-6 flex-wrap gap-y-4">
                 {/* Left - Add Button */}
