@@ -1,4 +1,6 @@
 import { CurrencyInput } from "@/shared/components/form/CurrencyInput";
+import { DigitalSignatureInput } from "@/shared/components/form/DigitalSignatureInput";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 const ExampleForm = () => {
@@ -9,6 +11,8 @@ const ExampleForm = () => {
     const onSubmit = (data: any) => {
         console.log("Submit:", data); // { price: 1000000 }
     };
+
+    const [signature, setSignature] = React.useState<string>("");
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -26,6 +30,12 @@ const ExampleForm = () => {
                     />
                 )}
             />
+            <DigitalSignatureInput
+                value={signature}
+                onChange={(val) => setSignature(val)}
+                height={180}
+            />
+
             <button type="submit">Submit</button>
         </form>
     );
