@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { BaseTable } from "@/shared/components/table/BaseTable";
 import { Controller, useForm } from "react-hook-form";
 import { CreateRolePermission, CreateRolePermissionSchema } from "@/services/role-permission/schema/CreateRolePermissionSchema";
@@ -14,6 +13,9 @@ import { ROUTES } from "@/router/AppRouter";
 import useIndexRole from "@/services/role/hooks/useIndexRole";
 import SectionLoader from "@/shared/components/loader/SectionLoader";
 import { SinglePermissionResponse } from "@/services/permission/response/IndexPermissionResponse";
+import { CheckboxAllToggle } from "@/shared/components/form/CheckboxAllToggle";
+import { CheckboxItemList } from "@/shared/components/form/CheckboxItemList";
+import { useCheckboxSelectCrossRow } from "@/shared/hooks/useCheckboxSelectCrossRow";
 
 const GroupedPermissions = () => {
     const { data: permissions, isFetching, isSuccess } = useIndexPermission({
@@ -129,42 +131,52 @@ const RolePermissionManagementTable: React.FC<Props> = ({ roleName, roleDisplayN
                         { title: "No", key: "index", render: (_, index) => index + 1, className: "w-12" },
                         { title: "Group", key: "group" },
                         {
+                            title: "Select All", key: "selectAll", render: (item) => (
+                                <Controller
+                                    control={control}
+                                    name="permissions"
+                                    render={({ field }) => {
+                                        const allKeys = item.permissions.map((d) => d.key);
+                                        const { allSelected, toggleAll } = useCheckboxSelectCrossRow(field.value || [], allKeys);
+
+                                        return (
+                                            <CheckboxAllToggle
+                                                allSelected={allSelected}
+                                                toggleAll={() => field.onChange(toggleAll())}
+                                                label={'Select All'}
+                                            />
+                                        );
+                                    }}
+                                />
+                            )
+                        },
+                        {
                             title: "Permissions",
                             key: "permissions",
                             render: (item) => (
                                 <div className="flex flex-wrap gap-2">
-                                    {item.permissions.map((permission) => (
-                                        <React.Fragment key={permission.key}>
-                                            <Controller
-                                                control={control}
-                                                name="permissions"
-                                                render={({ field }) => {
-                                                    const isChecked = field.value?.includes(permission.key);
-                                                    return (
-                                                        <Checkbox
-                                                            id={`checkbox-${permission.key}`}
-                                                            aria-label={`Select ${permission.display_name}`}
-                                                            checked={isChecked}
-                                                            onCheckedChange={(checked) => {
-                                                                if (checked) {
-                                                                    field.onChange([...(field.value ?? []), permission.key]);
-                                                                } else {
-                                                                    field.onChange((field.value ?? []).filter((id) => id !== permission.key));
-                                                                }
-                                                            }}
-                                                        />
-                                                    );
-                                                }}
-                                            />
-                                            <label
-                                                key={permission.key}
-                                                htmlFor={`checkbox-${permission.key}-${permission.display_name}`}
-                                                className="text-sm text-gray-700"
-                                            >
-                                                {permission.display_name}
-                                            </label>
-                                        </React.Fragment>
-                                    ))}
+                                    <Controller
+                                        control={control}
+                                        name="permissions"
+                                        render={({ field }) => {
+                                            const toggleItem = (key: string) => {
+                                                const newValue = field.value?.includes(key)
+                                                    ? field.value.filter((k) => k !== key)
+                                                    : [...(field.value ?? []), key];
+                                                field.onChange(newValue);
+                                            };
+                                            return (
+                                                <CheckboxItemList
+                                                    data={item.permissions}
+                                                    selectedKeys={field.value ?? []}
+                                                    toggleItem={toggleItem}
+                                                    keySelector={(item) => item.key}
+                                                    labelSelector={(item) => item.display_name}
+                                                    className="flex flex-row gap-2"
+                                                />
+                                            )
+                                        }}
+                                    />
                                 </div>
                             )
                         }
