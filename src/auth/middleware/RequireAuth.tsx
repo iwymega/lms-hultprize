@@ -25,9 +25,6 @@ const RequireAuth: React.FC<RequireAuthProps> = ({
         hasPermission(permission)
     );
 
-    console.log("User roles:", user.roles);
-    console.log("User permissions:", user.permissions);
-
     if (!hasRequiredRoles || !hasRequiredPermissions) {
         return <Navigate to="/forbidden" replace />;
     }
