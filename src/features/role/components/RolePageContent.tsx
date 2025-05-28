@@ -13,6 +13,7 @@ import EditRoleModal from './EditRoleModal';
 import RemoveRole from './RemoveRole';
 import { useNavigate } from 'react-router';
 import { getInitials, getRandomBgAndTextColor } from '@/lib/utils';
+import ExampleForm from './Example';
 
 const RolePageContent: React.FC = () => {
     const [search, setSearch] = useState("");
@@ -47,6 +48,7 @@ const RolePageContent: React.FC = () => {
 
     return (
         <main className="p-6">
+            <ExampleForm />
             {/* Action Bar */}
             <div className="flex justify-between items-center mb-6 flex-wrap gap-y-4">
                 {/* Left - Add Button */}
