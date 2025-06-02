@@ -9,10 +9,12 @@ export default function useCreateUserRole() {
         endpoint: `${API_VERSION}/user-role/sync-users`,
         schema: CreateUserRoleResponseSchema,
         contentType: "application/json",
-        onSuccess: (data) => data,
-        onError: (error) => {
-            console.error("Error creating user:", error);
-            throw error;
-        },
+        query: {
+            onSuccess: (data) => data,
+            onError: (error) => {
+                console.error("Error creating user:", error);
+                throw error;
+            },
+        }
     });
 }

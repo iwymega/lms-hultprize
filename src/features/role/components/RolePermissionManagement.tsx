@@ -19,9 +19,10 @@ import { useCheckboxSelectCrossRow } from "@/shared/hooks/useCheckboxSelectCross
 
 const GroupedPermissions = () => {
     const { data: permissions, isFetching, isSuccess } = useIndexPermission({
-        sort_by: "created_at",
-        sort_order: "desc",
-        paginate: false
+        params: {
+            sort_by: "created_at",
+            sort_order: "desc"
+        }
     });
 
     const groupedPermissions = permissions?.data.reduce((acc: Record<string, { group: string; permissions: { key: string; display_name: string }[] }>, permission) => {
@@ -44,10 +45,12 @@ const RolePermissionManagement: React.FC = () => {
     const params = useParams<{ roleId: string }>();
 
     const { data: role, isSuccess: isRoleSuccess, isError, error } = useIndexRole({
-        filters: {
-            id: params.roleId ? parseInt(params.roleId) : undefined,
-        },
-        include: "permissions",
+        params: {
+            filters: {
+                id: params.roleId ? parseInt(params.roleId) : undefined,
+            },
+            include: "permissions",
+        }
     });
 
     if (isError && (error as any)?.response?.status === 404) {

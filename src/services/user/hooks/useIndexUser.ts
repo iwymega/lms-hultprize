@@ -4,18 +4,18 @@ import { IndexUserResponseSchema } from "@/services/user/response/IndexUserRespo
 const API_VERSION = "v1";
 
 interface IndexUserProps {
-    filters?: { [key: string]: any };
-    search?: string;
-    paginate?: number;
-    page?: number;
-    [key: string]: any;
+    params?: { [key: string]: any };
 }
 
 const useIndexUser = (query: IndexUserProps) =>
     useBaseIndex({
-        ...query,
-        queryKey: "user-list",
-        endpoint: `${API_VERSION}/user`,
+        request: {
+            endpoint: `${API_VERSION}/user`,
+            params: query.params,
+        },
+        query: {
+            key: "user-list"
+        },
         schema: IndexUserResponseSchema,
     });
 

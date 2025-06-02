@@ -19,9 +19,11 @@ const RoleUserManagement: React.FC = () => {
     const params = useParams<{ roleId: string }>();
 
     const { data: role, isSuccess: isRoleSuccess, isError, error } = useIndexRole({
-        filters: {
-            id: params.roleId ? parseInt(params.roleId) : undefined,
-        },
+        params: {
+            filters: {
+                id: params.roleId ? parseInt(params.roleId) : undefined,
+            },
+        }
     });
 
     if (isError && (error as any)?.response?.status === 404) {
@@ -67,10 +69,12 @@ const RoleUserManagementTable: React.FC<RoleUserManagementTableProps> = ({ roleI
     const [currentPage, setCurrentPage] = useState(1);
 
     const { data: users, isSuccess } = useIndexUser({
-        search: search,
-        paginate: entriesPerPage,
-        page: currentPage,
-        include: "roles",
+        params: {
+            search: search,
+            paginate: entriesPerPage,
+            page: currentPage,
+            include: "roles",
+        }
     })
 
     const { handleSubmit, reset, control, setError } = useForm<CreateUserRole>({
