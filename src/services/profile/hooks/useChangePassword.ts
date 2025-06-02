@@ -9,9 +9,11 @@ export const useChangePassword = () => {
         endpoint: () => `${API_VERSION}/change-password`, // Multiple params
         schema: ChangePasswordResponseSchema,
         contentType: "application/json",
-        onSuccess: (data) => data,
-        onError: (error) => {
-            throw error;
-        },
+        query: {
+            onSuccess: (data: ChangePasswordResponse) => data,
+            onError: (error: unknown) => {
+                throw error;
+            },
+        }
     });
 };

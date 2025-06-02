@@ -5,8 +5,12 @@ const API_VERSION = "v1";
 
 const useGetUserLogin = () =>
     useBaseIndex({
-        queryKey: "user",
-        endpoint: `${API_VERSION}/me`,
+        query: {
+            key: 'user',
+        },
+        request: {
+            endpoint: `${API_VERSION}/me`,
+        },
         schema: GetUserLoginResponseSchema,
     });
 

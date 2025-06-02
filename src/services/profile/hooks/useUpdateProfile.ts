@@ -9,9 +9,11 @@ export const useUpdateProfile = () => {
         endpoint: () => `${API_VERSION}/me`, // Multiple params
         schema: UpdateProfileResponseSchema,
         contentType: "application/json",
-        onSuccess: (data) => data,
-        onError: (error) => {
-            throw error;
-        },
+        query: {
+            onSuccess: (data: UpdateProfileResponse) => data,
+            onError: (error: unknown) => {
+                throw error;
+            },
+        }
     });
 };

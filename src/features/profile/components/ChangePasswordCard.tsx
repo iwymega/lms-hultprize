@@ -23,6 +23,7 @@ const ChangePasswordCard: React.FC = () => {
         errorMessage: "Failed to update user.",
         queryKeyToRefetch: ["user"], // Assuming you want to refetch the `users` query
         onSuccess: () => {
+            console.log("Password changed successfully");
             reset(); // Reset the form after successful submission
             logout(); // Call the logout function after successful submission
 

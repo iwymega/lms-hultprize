@@ -4,13 +4,13 @@ import { toast } from "sonner";
 import { useCallback } from "react";
 
 interface UseFormSubmitProps<T extends FieldValues> {
-    mutate: (data: T) => Promise<unknown>;
+    mutate: (data: T) => Promise<any>; // Promise-based mutate (e.g. mutateAsync)
     isPending: boolean;
-    setError: UseFormSetError<T>;  // Ensure it uses T (CreateUser) as the type for setError
+    setError: UseFormSetError<T>;
     successMessage: string;
     errorMessage: string;
     queryKeyToRefetch: string[];
-    onSuccess?: (result: any) => void; // Kirim hasil dari mutate
+    onSuccess?: (result: any) => void;
 }
 
 export function useFormSubmit<T extends FieldValues>({
@@ -27,37 +27,58 @@ export function useFormSubmit<T extends FieldValues>({
     const onSubmit = useCallback(
         async (data: T) => {
             toast.loading("Submitting...", { id: "submit" });
+
             try {
-                // Call mutate directly
-                const result = await mutate(data);  // Mutate function passed as prop
-                await queryClient.refetchQueries({
-                    predicate: (query) =>
-                        query.queryKey.some((key) => queryKeyToRefetch.includes(key as string)),
-                });
-                toast.success(successMessage, { id: "submit" });
+                const result = await mutate(data);
+
+                // Optional logging/debug
+                console.log("Mutation result:", result);
+
+                // Trigger optional success callback
                 if (onSuccess) {
                     onSuccess(result);
                 }
+
+                // Refetch any required queries
+                await queryClient.refetchQueries({
+                    predicate: (query) =>
+                        query.queryKey.some((key) =>
+                            queryKeyToRefetch.includes(key as string)
+                        ),
+                });
+
+                toast.success(successMessage, { id: "submit" });
             } catch (mutationError: any) {
-                // Handling 422 error and validation errors
+                console.error("Mutation error:", mutationError);
+
+                // Handle Laravel 422 validation error
                 if (mutationError?.response?.status === 422) {
-                    const validationErrors = mutationError?.response?.data?.errors;
+                    const validationErrors = mutationError.response.data?.errors;
                     if (validationErrors) {
                         for (const [field, messages] of Object.entries(validationErrors)) {
                             setError(field as Path<T>, {
                                 type: "manual",
-                                message: (messages as string[])[0], // Set first error message
+                                message: (messages as string[])[0],
                             });
                         }
-                        toast.error(errorMessage, { id: "submit" });
                     }
-                } else {
-                    // Handle other errors
-                    toast.error(mutationError?.message || errorMessage, { id: "submit" });
                 }
+
+                toast.error(
+                    mutationError?.message || errorMessage,
+                    { id: "submit" }
+                );
             }
         },
-        [mutate, queryClient, setError, successMessage, errorMessage, queryKeyToRefetch]
+        [
+            mutate,
+            queryClient,
+            setError,
+            successMessage,
+            errorMessage,
+            queryKeyToRefetch,
+            onSuccess,
+        ]
     );
 
     return { onSubmit, isPending };
