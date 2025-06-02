@@ -4,18 +4,18 @@ import { IndexPermissionResponseSchema } from "@/services/permission/response/In
 const API_VERSION = "v1";
 
 interface IndexPermissionProps {
-    filters?: { [key: string]: any };
-    search?: string;
-    paginate?: number | boolean;
-    page?: number;
-    [key: string]: any;
+    params?: { [key: string]: any };
 }
 
 const useIndexPermission = (query: IndexPermissionProps) =>
     useBaseIndex({
-        ...query,
-        queryKey: "permission-list",
-        endpoint: `${API_VERSION}/permission`,
+        request: {
+            endpoint: `${API_VERSION}/permission`,
+            params: query.params,
+        },
+        query: {
+            key: "permission-list",
+        },
         schema: IndexPermissionResponseSchema,
     });
 

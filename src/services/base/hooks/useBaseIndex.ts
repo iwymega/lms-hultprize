@@ -1,78 +1,72 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { privateApi } from "../../../api/api";
+import { AxiosRequestConfig } from "axios";
 import { ZodSchema } from "zod";
 
-interface FilterProps {
-    [key: string]: any; // Dynamic filter keys
+interface RequestConfig extends Partial<AxiosRequestConfig> {
+    endpoint: string;
 }
 
-interface BaseIndexProps {
-    filters?: FilterProps;
-    search?: string;
-    paginate?: number | boolean;
-    queryKey: string;
-    page?: number;
-    [key: string]: any; // <- ✨ Untuk menerima key tambahan seperti `include`, `sort`, etc
+interface QueryConfig<T> extends Omit<
+    UseQueryOptions<T, unknown, T, any[]>,
+    "queryFn" | "queryKey"
+> {
+    key: string;
 }
 
-const useBaseIndex = <T>({
-    queryKey,
-    filters,
-    search,
-    paginate,
-    page,
-    endpoint,
-    schema,
-    ...rest // <- ✨ Tangkap semua key selain yang didefinisikan
-}: BaseIndexProps & { endpoint: string; schema: ZodSchema<T> }) => {
-    // Pisahkan key khusus & key lainnya
-    const reservedKeys = ["filters", "search", "paginate", "page", "queryKey", "endpoint", "schema"];
-    const otherParams = Object.fromEntries(
-        Object.entries(rest).filter(([key]) => !reservedKeys.includes(key))
-    );
+interface UseBaseIndexProps<T> {
+    request: RequestConfig;
+    query: QueryConfig<T>;
+    schema: ZodSchema<T>;
+}
+
+const buildQueryKey = (key: string, params?: Record<string, any>): any[] => {
+    const entries = Object.entries(params || {}).map(([k, v]) => `${k}:${JSON.stringify(v)}`);
+    return [key, ...entries];
+};
+
+const useBaseIndex = <T>({ request, query, schema }: UseBaseIndexProps<T>) => {
+    const {
+        endpoint,
+        method = "get",
+        params,
+        headers,
+        data,
+        timeout = 5000,
+        responseType = "json",
+        ...axiosRest
+    } = request;
+
+    const queryKey = buildQueryKey(query.key, params);
 
     return useQuery({
-        queryKey: [
-            queryKey,
-            ...Object.entries(filters ?? {})
-                .filter(([_, value]) => value !== undefined && value !== null && value !== "")
-                .map(([key, value]) => `${key}:${value}`),
-            search,
-            paginate,
-            page,
-            ...Object.entries(otherParams).map(([key, value]) => `${key}:${value}`),
-        ],
+        queryKey,
         queryFn: async () => {
             try {
-                const params = {
-                    filter: Object.fromEntries(
-                        Object.entries(filters ?? {}).filter(
-                            ([_, value]) => value !== undefined && value !== null && value !== ""
-                        )
-                    ),
-                    search: search || "",
-                    paginate: paginate ? (typeof paginate === "number" ? paginate : 10) : null,
-                    page,
-                    ...otherParams, // <- ✨ Ini yang membuat prop tambahan otomatis masuk ke query
-                };
+                const response = await privateApi.request({
+                    url: `/${endpoint}`,
+                    method,
+                    params,
+                    data,
+                    headers,
+                    timeout,
+                    responseType,
+                    ...axiosRest,
+                });
 
-                const response = await privateApi.get(`/${endpoint}`, { params });
-
-                // Validasi response dengan Zod
-                const validationResult = schema.safeParse(response.data);
-                if (!validationResult.success) {
-                    console.error("Validation failed:", validationResult.error.errors);
-                    throw new Error(`Invalid ${queryKey} data format`);
+                const result = schema.safeParse(response.data);
+                if (!result.success) {
+                    console.error("Validation failed:", result.error.errors);
+                    throw new Error("Invalid response data format");
                 }
 
-                return validationResult.data;
+                return result.data;
             } catch (error) {
-                console.error(`Failed to fetch ${queryKey}`, error);
+                console.error(`Failed to fetch ${query.key}`, error);
                 throw error;
             }
         },
-        retry: import.meta.env.VITE_MAX_RETRY,
-        refetchOnWindowFocus: false,
+        ...query,
     });
 };
 

@@ -18,9 +18,11 @@ const PermissionPageContent: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const { data: permissions, isFetching, isSuccess } = useIndexPermission({
-        search: search,
-        paginate: entriesPerPage,
-        page: currentPage
+        params: {
+            search: search,
+            paginate: entriesPerPage,
+            page: currentPage
+        }
     });
 
     const [isActive, setIsActive] = useState(false);
