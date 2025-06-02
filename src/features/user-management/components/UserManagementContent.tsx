@@ -50,10 +50,12 @@ const UserManagementContent: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const { data: users, isFetching, isSuccess } = useIndexUser({
-        search: search,
-        paginate: entriesPerPage,
-        page: currentPage,
-        include: "roles,permissions"
+        params: {
+            search: search,
+            paginate: entriesPerPage,
+            page: currentPage,
+            include: "roles,permissions"
+        }
     });
 
     return (
