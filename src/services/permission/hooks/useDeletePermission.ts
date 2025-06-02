@@ -7,9 +7,11 @@ export const useDeletePermission = () => {
     return useBaseDelete<{ id: number }, DeletePermissionResponse>({
         endpoint: ({ id }) => `${API_VERSION}/permission/${id}`,
         schema: DeletePermissionResponseSchema,
-        onSuccess: (data) => data,
-        onError: (error) => {
-            throw error;
-        },
+        query: {
+            onSuccess: (data) => data,
+            onError: (error) => {
+                throw error;
+            },
+        }
     });
 };
