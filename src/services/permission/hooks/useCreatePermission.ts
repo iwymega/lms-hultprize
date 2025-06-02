@@ -9,10 +9,12 @@ export default function useCreatePermission() {
         endpoint: `${API_VERSION}/permission`,
         schema: CreatePermissionResponseSchema,
         contentType: "application/json",
-        onSuccess: (data) => data,
-        onError: (error) => {
-            console.error("Error creating user:", error);
-            throw error;
-        },
+        query: {
+            onSuccess: (data) => data,
+            onError: (error) => {
+                console.error("Error creating user:", error);
+                throw error;
+            },
+        }
     });
 }
