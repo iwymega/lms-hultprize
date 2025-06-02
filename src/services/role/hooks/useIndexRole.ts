@@ -4,18 +4,18 @@ import { IndexRoleResponseSchema } from "@/services/role/response/IndexRoleRespo
 const API_VERSION = "v1";
 
 interface IndexRoleProps {
-    filters?: { [key: string]: any };
-    search?: string;
-    paginate?: number;
-    page?: number;
-    [key: string]: any;
+    params?: { [key: string]: any };
 }
 
 const useIndexRole = (query: IndexRoleProps) =>
     useBaseIndex({
-        ...query,
-        queryKey: "role-list",
-        endpoint: `${API_VERSION}/role`,
+        request: {
+            endpoint: `${API_VERSION}/role`,
+            params: query.params,
+        },
+        query: {
+            key: "role-list",
+        },
         schema: IndexRoleResponseSchema,
     });
 

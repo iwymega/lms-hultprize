@@ -20,10 +20,12 @@ const RolePageContent: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const { data: roles, isFetching, isSuccess } = useIndexRole({
-        search: search,
-        paginate: entriesPerPage,
-        page: currentPage,
-        include: "users",
+        params: {
+            search: search,
+            paginate: entriesPerPage,
+            page: currentPage,
+            include: "users",
+        }
     });
 
     const [isActive, setIsActive] = useState(false);

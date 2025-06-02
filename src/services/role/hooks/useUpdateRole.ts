@@ -6,12 +6,14 @@ const API_VERSION = "v1";
 
 export const useUpdateRole = () => {
     return useBaseUpdate<{ role_id: number; data: UpdateRole }, UpdateRoleResponse>({
-        endpoint: ({ role_id }) => `${API_VERSION}/role/${role_id}`, // Multiple params
+        endpoint: ({ role_id }: { role_id: number }) => `${API_VERSION}/role/${role_id}`, // Multiple params
         schema: UpdateRoleResponseSchema,
         contentType: "application/json",
-        onSuccess: (data) => data,
-        onError: (error) => {
-            throw error;
-        },
+        query: {
+            onSuccess: (data: UpdateRoleResponse) => data,
+            onError: (error: unknown) => {
+                throw error;
+            },
+        }
     });
 };

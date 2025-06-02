@@ -7,9 +7,11 @@ export const useDeleteRole = () => {
     return useBaseDelete<{ id: number }, DeleteRoleResponse>({
         endpoint: ({ id }) => `${API_VERSION}/role/${id}`,
         schema: DeleteRoleResponseSchema,
-        onSuccess: (data) => data,
-        onError: (error) => {
-            throw error;
-        },
+        query: {
+            onSuccess: (data) => data,
+            onError: (error) => {
+                throw error;
+            },
+        }
     });
 };
