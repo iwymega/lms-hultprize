@@ -9,6 +9,7 @@ import { CurrencyInputDoc } from "./components/CurrencyInputDoc";
 import { DigitalSignatureInputDoc } from "./components/DigitalSignatureInputDoc";
 import { TextInputDoc } from "./components/TextInputDoc";
 import { ImageUploadWithDropzoneDoc } from "./components/ImageUploadWithDropzoneDoc";
+import { SearchableSelectDoc } from "./components/SearchableSelectDoc";
 
 export default function DocsPage() {
     return (
@@ -25,6 +26,12 @@ export default function DocsPage() {
                         return <CurrencyInputDoc />;
                     case "image-upload-dropzone":
                         return <ImageUploadWithDropzoneDoc />;
+                    case "image-upload-preview":
+                        return;
+                    case "radio-item-list":
+                        return <div>Radio Item List Doc</div>; // Placeholder for RadioItemListDoc
+                    case "searchable-select":
+                        return <SearchableSelectDoc />; // Placeholder for SearchableSelectDoc
                     case "digital-signature":
                         return <DigitalSignatureInputDoc />;
                     case "install":
