@@ -20,6 +20,8 @@ export default function DocsPage() {
                 switch (activeId) {
                     case "overview":
                         return <OverviewDoc />;
+                    case "folder-structure":
+                        return <div>Dalam proses pembuatan...</div>; // Placeholder for FolderStructureDoc
                     case "text-input":
                         return <TextInputDoc />;
                     case "checkbox":
