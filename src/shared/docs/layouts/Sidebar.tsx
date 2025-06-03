@@ -19,19 +19,22 @@ const items = [
             { id: "image-upload-preview", title: "Image Upload with Preview" },
             { id: "radio-item-list", title: "Radio Item List" },
             { id: "searchable-select", title: "Searchable Select" },
-            { id: "digital-signature", title: "Digital Signature"}
+            { id: "digital-signature", title: "Digital Signature" }
         ]
     },
-    { id: "install", title: "Install" },
-    {
-        id: "button",
-        title: "Button",
-        children: [
-            { id: "button-variants", title: "Variants" },
-            { id: "button-icon", title: "With Icon" },
-        ],
-    },
-    { id: "layout", title: "Layout" },
+    { id: "table", title: "Table" },
+    { id: "pagination", title: "Pagination" },
+    { id: "loading", title: "Loading" },
+    // { id: "install", title: "Install" },
+    // {
+    //     id: "button",
+    //     title: "Button",
+    //     children: [
+    //         { id: "button-variants", title: "Variants" },
+    //         { id: "button-icon", title: "With Icon" },
+    //     ],
+    // },
+    // { id: "layout", title: "Layout" },
 ];
 
 export function Sidebar({ activeId, onSelect }: SidebarProps) {
