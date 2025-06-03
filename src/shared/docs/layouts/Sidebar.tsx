@@ -15,6 +15,12 @@ const items = [
             { id: "text-input", title: "Text Input" },
             { id: "checkbox", title: "Checkbox" },
             { id: "currency-input", title: "Currency Input" },
+            { id: "image-upload-dropzone", title: "Image Upload with Dropzone" },
+            { id: "image-upload-preview", title: "Image Upload with Preview" },
+            { id: "radio-item-list", title: "Radio Item List" },
+            { id: "searchable-select", title: "Searchable Select" },
+            { id: "form-field", title: "Form Field" },
+            { id: "example-usage-form", title: "Example Usage Form" },
         ]
     },
     {

@@ -8,6 +8,7 @@ import { CheckboxDoc } from "./components/CheckboxDoc";
 import { CurrencyInputDoc } from "./components/CurrencyInputDoc";
 import { DigitalSignatureInputDoc } from "./components/DigitalSignatureInputDoc";
 import { TextInputDoc } from "./components/TextInputDoc";
+import { ImageUploadWithDropzoneDoc } from "./components/ImageUploadWithDropzoneDoc";
 
 export default function DocsPage() {
     return (
@@ -22,6 +23,8 @@ export default function DocsPage() {
                         return <CheckboxDoc />;
                     case "currency-input":
                         return <CurrencyInputDoc />;
+                    case "image-upload-dropzone":
+                        return <ImageUploadWithDropzoneDoc />;
                     case "digital-signature":
                         return <DigitalSignatureInputDoc />;
                     case "install":
