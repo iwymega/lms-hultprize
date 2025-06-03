@@ -4,6 +4,7 @@ import { InstallDoc } from "./components/InstallDoc";
 import { ButtonDoc } from "./components/ButtonDoc";
 import { LayoutDoc } from "./components/LayoutDoc";
 import { OverviewDoc } from "./components/OverviewDoc";
+import { CheckboxDoc } from "./components/CheckboxDoc";
 
 export default function DocsPage() {
     return (
@@ -12,6 +13,8 @@ export default function DocsPage() {
                 switch (activeId) {
                     case "overview":
                         return <OverviewDoc />;
+                    case "checkbox":
+                        return <CheckboxDoc />;
                     case "install":
                         return <InstallDoc />;
                     case "button":

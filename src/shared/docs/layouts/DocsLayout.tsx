@@ -7,7 +7,7 @@ interface DocsLayoutProps {
 }
 
 export function DocsLayout({ children }: DocsLayoutProps) {
-    const [activeId, setActiveId] = useState("install");
+    const [activeId, setActiveId] = useState("overview");
 
     return (
         <div className="flex h-screen">

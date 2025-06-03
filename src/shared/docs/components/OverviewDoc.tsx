@@ -15,13 +15,6 @@ export function OverviewDoc() {
                 Dokumentasi ini masih terus dikembangkan, jadi jangan ragu untuk menambahkan, menyempurnakan, atau menyesuaikan dengan kebutuhan project kamu sendiri.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8">Navigasi Cepat</h2>
-            <ul className="list-disc pl-5">
-                <li>Lihat halaman <strong>Install</strong> untuk langkah awal setup</li>
-                <li>Pelajari <strong>komponen UI</strong> seperti Button dan Layout</li>
-                <li>Gunakan layout dan struktur folder yang sudah disiapkan</li>
-            </ul>
-
             <p className="mt-8 italic text-sm text-muted-foreground">
                 Semoga template ini bermanfaat dan mempercepat workflow kamu. Happy coding! 🚀
             </p>
