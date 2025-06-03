@@ -7,9 +7,11 @@ export const useDeleteUser = () => {
     return useBaseDelete<{ id: string }, DeleteUserResponse>({
         endpoint: ({ id }) => `${API_VERSION}/user/${id}`,
         schema: DeleteUserResponseSchema,
-        onSuccess: (data) => data,
-        onError: (error) => {
-            throw error;
-        },
+        query: {
+            onSuccess: (data) => data,
+            onError: (error) => {
+                throw error;
+            },
+        }
     });
 };

@@ -9,10 +9,12 @@ export default function useCreateUser() {
         endpoint: `${API_VERSION}/user`,
         schema: CreateUserResponseSchema,
         contentType: "application/json",
-        onSuccess: (data) => data,
-        onError: (error) => {
-            console.error("Error creating user:", error);
-            throw error;
-        },
+        query: {
+            onSuccess: (data) => data,
+            onError: (error) => {
+                console.error("Error creating user:", error);
+                throw error;
+            },
+        }
     });
 }
