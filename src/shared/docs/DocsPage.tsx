@@ -7,6 +7,7 @@ import { OverviewDoc } from "./components/OverviewDoc";
 import { CheckboxDoc } from "./components/CheckboxDoc";
 import { CurrencyInputDoc } from "./components/CurrencyInputDoc";
 import { DigitalSignatureInputDoc } from "./components/DigitalSignatureInputDoc";
+import { TextInputDoc } from "./components/TextInputDoc";
 
 export default function DocsPage() {
     return (
@@ -15,6 +16,8 @@ export default function DocsPage() {
                 switch (activeId) {
                     case "overview":
                         return <OverviewDoc />;
+                    case "text-input":
+                        return <TextInputDoc />;
                     case "checkbox":
                         return <CheckboxDoc />;
                     case "currency-input":
