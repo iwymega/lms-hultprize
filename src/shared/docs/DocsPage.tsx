@@ -10,6 +10,7 @@ import { SearchableSelectDoc } from "./components/SearchableSelectDoc";
 import { ImageUploadWithPreviewDoc } from "./components/ImageUploadWithPreviewDoc";
 import { RadioItemListDoc } from "./components/RadioItemListDoc";
 import { BaseTableDoc } from "./components/BaseTableDoc";
+import { PaginationWithShowDoc } from "./components/PaginationWithShowDoc";
 
 export default function DocsPage() {
     return (
@@ -36,6 +37,8 @@ export default function DocsPage() {
                         return <DigitalSignatureInputDoc />;
                     case "table":
                         return <BaseTableDoc />; // Placeholder for BaseTableDoc
+                    case "pagination":
+                        return <PaginationWithShowDoc />; // Placeholder for PaginationWithShowDoc
                     default:
                         return <div>Page not found</div>;
                 }
