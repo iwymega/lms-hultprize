@@ -11,6 +11,7 @@ import PermissionsPage from "@/features/permission/pages/PermissionsPage";
 import RolePage from "@/features/role/pages/RolePage";
 import RoleUsersAssignedPage from "@/features/role/pages/RoleUsersAssignedPage";
 import RolePermissionsAssignedPage from "@/features/role/pages/RolePermissionsAssignedPage";
+import DocsPage from "@/shared/docs/DocsPage";
 
 type ProtectedRoute = {
     path: string;
@@ -99,6 +100,10 @@ export const ROUTES: Record<string, AppRoute> = {
     FORBIDDEN: {
         path: "/forbidden",
         element: <ForbiddenPage />,
+    },
+    DOCS: {
+        path: "/docs",
+        element: <DocsPage />,
     },
 };
 
