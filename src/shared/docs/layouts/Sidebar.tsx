@@ -14,6 +14,7 @@ const items = [
         id: "form", title: "Form", children: [
             { id: "text-input", title: "Text Input" },
             { id: "checkbox", title: "Checkbox" },
+            { id: "currency-input", title: "Currency Input" },
         ]
     },
     { id: "install", title: "Install" },

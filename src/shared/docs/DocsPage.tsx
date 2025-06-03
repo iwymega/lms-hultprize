@@ -5,6 +5,7 @@ import { ButtonDoc } from "./components/ButtonDoc";
 import { LayoutDoc } from "./components/LayoutDoc";
 import { OverviewDoc } from "./components/OverviewDoc";
 import { CheckboxDoc } from "./components/CheckboxDoc";
+import { CurrencyInputDoc } from "./components/CurrencyInputDoc";
 
 export default function DocsPage() {
     return (
@@ -15,6 +16,8 @@ export default function DocsPage() {
                         return <OverviewDoc />;
                     case "checkbox":
                         return <CheckboxDoc />;
+                    case "currency-input":
+                        return <CurrencyInputDoc />;
                     case "install":
                         return <InstallDoc />;
                     case "button":
