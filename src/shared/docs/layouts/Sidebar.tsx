@@ -52,7 +52,7 @@ const sidebarStructure: SidebarCategory[] = [
             },
             { id: "table", title: "Table" }, // ID unik
             { id: "pagination", title: "Pagination" }, // ID unik
-            { id: "loader", title: "Loading" }, // ID unik
+            { id: "loading", title: "Loading" }, // ID unik
         ],
     },
     // Anda bisa menambahkan kategori lain di sini
