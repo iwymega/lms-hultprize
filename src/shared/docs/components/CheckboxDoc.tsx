@@ -1,10 +1,12 @@
 import { CheckboxAllToggle } from "@/shared/components/form/CheckboxAllToggle";
 import { CheckboxItemList } from "@/shared/components/form/CheckboxItemList";
 import { useCheckboxSelectSingleRow } from "@/shared/hooks/useCheckboxSelectSingleRow";
-import { CheckboxPreviewBlock } from "./CheckboxPreviewBlock";
+import { PreviewBlock } from "./PreviewBlock";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCheckboxSelectCrossRow } from "@/shared/hooks/useCheckboxSelectCrossRow";
+import { Button } from "@/components/ui/button";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 type Item = {
     id: string;
@@ -530,68 +532,414 @@ function CheckboxCrossRowMultiExample() {
     return { code, preview };
 }
 
+// Data dummy
+const allFruits: Item[] = [
+    { id: 'apple', name: 'Apple' },
+    { id: 'banana', name: 'Banana' },
+    { id: 'cherry', name: 'Cherry' },
+];
+
+const allVegetables: Item[] = [
+    { id: 'carrot', name: 'Carrot' },
+    { id: 'lettuce', name: "Lettuce" },
+    { id: 'spinach', name: 'Spinach' },
+];
+
+// Tipe untuk data form kita
+type MyFormValues = {
+    selectedProduce: string[]; // Ini akan menyimpan semua ID item yang terpilih
+};
+
+function CheckboxRHFExample() {
+    const {
+        control,
+        handleSubmit,
+        watch, // Untuk melihat nilai form secara reaktif
+        setValue, // Untuk memperbarui nilai form secara programatik
+        formState: { errors },
+    } = useForm<MyFormValues>({
+        defaultValues: {
+            selectedProduce: ['apple', 'carrot'], // Nilai default
+        },
+    });
+
+    // Ambil nilai 'selectedProduce' saat ini dari RHF
+    const currentSelectedProduce = watch('selectedProduce') || [];
+
+    // --- Logika untuk Grup Buah ---
+    const fruitKeys = allFruits.map(f => f.id);
+    const fruitsSelection = useCheckboxSelectCrossRow(currentSelectedProduce, fruitKeys);
+
+    const handleToggleAllFruits = () => {
+        const newSelected = fruitsSelection.toggleAll();
+        setValue('selectedProduce', newSelected, { shouldValidate: true, shouldDirty: true });
+    };
+
+    const handleToggleFruitItem = (key: string) => {
+        const newSelected = fruitsSelection.toggleItem(key);
+        setValue('selectedProduce', newSelected, { shouldValidate: true, shouldDirty: true });
+    };
+
+    // --- Logika untuk Grup Sayuran ---
+    const vegetableKeys = allVegetables.map(v => v.id);
+    const vegetablesSelection = useCheckboxSelectCrossRow(currentSelectedProduce, vegetableKeys);
+
+    const handleToggleAllVegetables = () => {
+        const newSelected = vegetablesSelection.toggleAll();
+        setValue('selectedProduce', newSelected, { shouldValidate: true, shouldDirty: true });
+    };
+
+    const handleToggleVegetableItem = (key: string) => {
+        const newSelected = vegetablesSelection.toggleItem(key);
+        setValue('selectedProduce', newSelected, { shouldValidate: true, shouldDirty: true });
+    };
+
+    // Handler untuk submit form
+    const onSubmit: SubmitHandler<MyFormValues> = data => {
+        console.log('Form Submitted:', data);
+        alert(`Selected Produce: ${data.selectedProduce.join(', ')}`);
+    };
+
+    const preview = (
+        <div className="p-6 max-w-lg mx-auto space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                {/* Bagian Buah */}
+                <section>
+                    <h3 className="text-xl font-semibold mb-3 text-green-700">Fruits</h3>
+                    <Controller
+                        name="selectedProduce" // Nama field di RHF
+                        control={control}
+                        rules={{
+                            validate: (value) => value && value.length > 0 || "Please select at least one produce item."
+                        }} // Contoh validasi
+                        render={({ field }) => ( // field.value adalah currentSelectedProduce
+                            <>
+                                <CheckboxAllToggle
+                                    allSelected={fruitsSelection.allSelected}
+                                    toggleAll={handleToggleAllFruits}
+                                    label="Select All Fruits"
+                                />
+                                <CheckboxItemList<Item>
+                                    data={allFruits}
+                                    selectedKeys={field.value || []} // Gunakan field.value dari Controller
+                                    toggleItem={handleToggleFruitItem}
+                                    keySelector={(item) => item.id}
+                                    labelSelector={(item) => item.name}
+                                    className="mt-2 grid grid-cols-2 gap-2"
+                                />
+                            </>
+                        )}
+                    />
+                </section>
+
+                {/* Bagian Sayuran */}
+                <section>
+                    <h3 className="text-xl font-semibold mb-3 text-orange-700">Vegetables</h3>
+                    {/* 
+                        Kita tidak perlu Controller lagi di sini jika field RHF-nya sama ('selectedProduce').
+                        Logika di atas sudah cukup. Yang penting adalah `CheckboxItemList`
+                        mendapatkan `selectedKeys` yang benar (yaitu `currentSelectedProduce` atau `field.value` dari Controller jika kita membungkusnya lagi).
+                        Dan `toggleItem`/`toggleAll` memanggil `setValue` dari RHF.
+                    */}
+                    <CheckboxAllToggle
+                        allSelected={vegetablesSelection.allSelected}
+                        toggleAll={handleToggleAllVegetables}
+                        label="Select All Vegetables"
+                    />
+                    <CheckboxItemList<Item>
+                        data={allVegetables}
+                        selectedKeys={currentSelectedProduce} // Bisa juga ambil dari watch
+                        toggleItem={handleToggleVegetableItem}
+                        keySelector={(item) => item.id}
+                        labelSelector={(item) => item.name}
+                        className="mt-2 grid grid-cols-2 gap-2"
+                    />
+                </section>
+
+                {errors.selectedProduce && (
+                    <p className="text-red-500 text-sm mt-1">{errors.selectedProduce.message}</p>
+                )}
+
+                <Button type="submit" className="w-full">Submit Selection</Button>
+            </form>
+
+            <div className="mt-6 p-4 bg-gray-100 rounded">
+                <h4 className="font-semibold text-gray-700">Current RHF `selectedProduce` value:</h4>
+                <pre className="text-sm text-gray-600 whitespace-pre-wrap">
+                    {JSON.stringify(currentSelectedProduce, null, 2)}
+                </pre>
+            </div>
+        </div>
+    );
+
+    const code = `
+import React from 'react';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { CheckboxAllToggle } from '@/shared/components/form/CheckboxAllToggle'; // Sesuaikan path
+import { CheckboxItemList } from '@/shared/components/form/CheckboxItemList'; // Sesuaikan path
+import { useCheckboxSelectCrossRow } from '@/shared/hooks/useCheckboxSelectCrossRow'; // Sesuaikan path
+import { Button } from '@/components/ui/button'; // Sesuaikan path ke Button Anda
+
+type Item = {
+    id: string;
+    name: string;
+};
+
+const allFruits: Item[] = [
+    { id: 'apple', name: 'Apple' },
+    { id: 'banana', name: 'Banana' },
+    { id: 'cherry', name: 'Cherry' },
+];
+
+const allVegetables: Item[] = [
+    { id: 'carrot', name: 'Carrot' },
+    { id: 'lettuce', name: "Lettuce" },
+    { id: 'spinach', name: 'Spinach' },
+];
+
+type MyFormValues = {
+    selectedProduce: string[];
+};
+
+export function MyRHFCheckboxForm() { // Nama komponen diubah agar bisa berdiri sendiri
+    const {
+        control,
+        handleSubmit,
+        watch,
+        setValue,
+        formState: { errors },
+    } = useForm<MyFormValues>({
+        defaultValues: {
+            selectedProduce: ['apple', 'carrot'], // Contoh nilai default
+        },
+    });
+
+    const currentSelectedProduce = watch('selectedProduce') || [];
+
+    // Logika untuk Grup Buah
+    const fruitKeys = allFruits.map(f => f.id);
+    const fruitsSelection = useCheckboxSelectCrossRow(currentSelectedProduce, fruitKeys);
+
+    const handleToggleAllFruits = () => {
+        const newSelected = fruitsSelection.toggleAll();
+        setValue('selectedProduce', newSelected, { shouldValidate: true, shouldDirty: true });
+    };
+
+    const handleToggleFruitItem = (key: string) => {
+        const newSelected = fruitsSelection.toggleItem(key);
+        setValue('selectedProduce', newSelected, { shouldValidate: true, shouldDirty: true });
+    };
+
+    // Logika untuk Grup Sayuran
+    const vegetableKeys = allVegetables.map(v => v.id);
+    const vegetablesSelection = useCheckboxSelectCrossRow(currentSelectedProduce, vegetableKeys);
+
+    const handleToggleAllVegetables = () => {
+        const newSelected = vegetablesSelection.toggleAll();
+        setValue('selectedProduce', newSelected, { shouldValidate: true, shouldDirty: true });
+    };
+
+    const handleToggleVegetableItem = (key: string) => {
+        const newSelected = vegetablesSelection.toggleItem(key);
+        setValue('selectedProduce', newSelected, { shouldValidate: true, shouldDirty: true });
+    };
+    
+    const onSubmit: SubmitHandler<MyFormValues> = data => {
+        console.log('Form Submitted:', data);
+        alert(\`Selected Produce: \${data.selectedProduce.join(', ')}\`);
+    };
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 p-4 border rounded-md">
+            {/* Bagian Buah */}
+            <section>
+                <h3 className="text-lg font-medium mb-2">Fruits</h3>
+                <Controller
+                    name="selectedProduce"
+                    control={control}
+                    rules={{ 
+                        validate: (value) => (value && value.length > 0) || "Please select at least one produce item." 
+                    }}
+                    render={({ field }) => (
+                        <>
+                            <CheckboxAllToggle
+                                allSelected={fruitsSelection.allSelected}
+                                toggleAll={handleToggleAllFruits}
+                                label="Select All Fruits"
+                            />
+                            <div className="mt-2 space-y-1"> {/* Wrapper untuk styling item list */}
+                                <CheckboxItemList<Item>
+                                    data={allFruits}
+                                    selectedKeys={field.value || []}
+                                    toggleItem={handleToggleFruitItem}
+                                    keySelector={(item) => item.id}
+                                    labelSelector={(item) => item.name}
+                                />
+                            </div>
+                        </>
+                    )}
+                />
+            </section>
+
+            {/* Bagian Sayuran */}
+            <section>
+                <h3 className="text-lg font-medium mb-2">Vegetables</h3>
+                {/* Untuk konsistensi dan jika ada validasi terpisah, bisa juga pakai Controller di sini */}
+                {/* Namun, jika field RHF sama, logika tanpa Controller juga bisa */}
+                <CheckboxAllToggle
+                    allSelected={vegetablesSelection.allSelected}
+                    toggleAll={handleToggleAllVegetables}
+                    label="Select All Vegetables"
+                />
+                <div className="mt-2 space-y-1"> {/* Wrapper untuk styling item list */}
+                    <CheckboxItemList<Item>
+                        data={allVegetables}
+                        selectedKeys={currentSelectedProduce}
+                        toggleItem={handleToggleVegetableItem}
+                        keySelector={(item) => item.id}
+                        labelSelector={(item) => item.name}
+                    />
+                </div>
+            </section>
+            
+            {errors.selectedProduce && (
+                <p className="text-red-600 text-xs mt-1">{errors.selectedProduce.message}</p>
+            )}
+
+            <Button type="submit" className="w-full mt-4">Submit Selection</Button>
+
+            {/* Untuk Debugging di contoh (opsional jika tidak ingin ini di-copy) */}
+            <div className="mt-4 p-3 bg-gray-50 rounded text-xs">
+                <h4 className="font-semibold">RHF Value (selectedProduce):</h4>
+                <pre>{JSON.stringify(currentSelectedProduce, null, 2)}</pre>
+            </div>
+        </form>
+    );
+}
+    `;
+
+    return { preview, code };
+}
+
 export function CheckboxDoc() {
     const { code: codeCheckboxWithAllToggle, preview: previewCheckboxWithAllToggle } = ExampleCheckboxWithAllToggle();
     const { code: codeCheckboxItemListExample, preview: previewCheckboxItemListExample } = CheckboxItemListExample();
     const { code: codeCheckboxItemListExampleWithRender, preview: previewCheckboxItemListExampleWithRender } = CheckboxItemListExampleWithRender();
     const { code: codeCheckboxAllToggleWithItemListAndHookSingleRow, preview: previewCheckboxAllToggleWithItemListAndHookSingleRow } = CheckboxAllToggleWithItemListAndHookSingleRow();
     const { code: codeCheckboxCrossRowMultiExample, preview: previewCheckboxCrossRowMultiExample } = CheckboxCrossRowMultiExample();
+    const { code: codeCheckboxRHFExample, preview: previewCheckboxRHFExample } = CheckboxRHFExample();
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-2xl font-bold">Dokumentasi Checkbox</h1>
-            <p>CheckboxAllToggle dan CheckboxItemList bisa digunakan bareng hook seleksi untuk mempermudah multi-select di list.</p>
+        <div className="space-y-8 p-4 md:p-6 bg-gray-50 min-h-screen">
+            <header className="mb-8">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Panduan Komponen Checkbox</h1>
+                <p className="text-lg text-gray-600">
+                    Komponen <code>CheckboxAllToggle</code> dan <code>CheckboxItemList</code> dirancang untuk bekerja sama secara harmonis
+                    dengan hook seleksi kami, mempermudah implementasi fungsionalitas <em>multi-seleksi</em> yang kompleks dalam daftar Anda.
+                </p>
+            </header>
 
-            <CheckboxPreviewBlock
-                title="Checkbox dengan Seleksi Sederhana"
-                description="Contoh penggunaan checkbox dengan seleksi sederhana"
+            <PreviewBlock
+                title="1. Dasar: Daftar Checkbox Seleksi Individual"
+                description={
+                    <>
+                        <p>Menampilkan penggunaan dasar komponen <code>CheckboxItemList</code> untuk membuat daftar item yang dapat dipilih satu per satu.</p>
+                        <p className="mt-2">Cocok untuk skenario di mana pengguna perlu memilih beberapa item dari sebuah koleksi. Contoh ini mengelola state seleksi (<code>selectedKeys</code> dan <code>toggleItem</code>) secara manual menggunakan hook <code>useState</code> di dalam komponen pengguna.</p>
+                        <p className="mt-2"><strong>Komponen yang digunakan:</strong> <code>CheckboxItemList</code></p>
+                    </>
+                }
                 preview={previewCheckboxItemListExample}
                 code={codeCheckboxItemListExample}
             />
 
-            <CheckboxPreviewBlock
-                title="Checkbox dengan Render Kustom"
+            <PreviewBlock
+                title="2. 'Pilih Semua' dengan Logika Manual (Non-Hook)"
                 description={
                     <>
-                        Contoh penggunaan checkbox dengan <strong>render kustom</strong> pada tiap item daftar.
-                        <br />
-                        Render kustom berarti kita tidak hanya menggunakan komponen checkbox standar, tetapi juga
-                        mendefinisikan sendiri bagaimana setiap item checkbox ditampilkan secara detail.
-                        <br />
-                        Dalam contoh ini, kita menyediakan fungsi <code>renderItem</code> yang menerima data item
-                        beserta properti kontrol checkbox (seperti <code>checked</code> dan fungsi <code>toggle</code>)
-                        dan mengembalikan JSX yang dapat disesuaikan sepenuhnya, termasuk label, styling, dan event handling.
-                        <br />
-                        Dengan cara ini, kamu dapat mengubah tampilan dan perilaku checkbox dan labelnya secara fleksibel sesuai kebutuhan desain atau UX aplikasi kamu.
+                        <p>Menunjukkan cara implementasi fungsionalitas "Pilih Semua" secara manual dengan menggabungkan <code>CheckboxAllToggle</code> dan <code>CheckboxItemList</code>.</p>
+                        <p className="mt-2">State (<code>selectedKeys</code>) dan logika (<code>toggleAll</code>, <code>toggleItem</code>, kalkulasi <code>allSelected</code>) dikelola langsung di komponen pengguna menggunakan <code>useState</code>.</p>
+                        <p className="mt-2">Contoh ini berguna untuk memahami mekanisme dasar di balik fitur "Pilih Semua". Untuk solusi yang lebih ringkas dan terkelola, lihat contoh penggunaan hook.</p>
+                        <p className="mt-2"><strong>Komponen yang digunakan:</strong> <code>CheckboxAllToggle</code>, <code>CheckboxItemList</code></p>
+                    </>
+                }
+                preview={previewCheckboxWithAllToggle}
+                code={codeCheckboxWithAllToggle}
+            />
+
+            <PreviewBlock
+                title="3. Efisien: 'Pilih Semua' dengan Hook `useCheckboxSelectSingleRow`"
+                description={
+                    <>
+                        <p>Cara <strong>paling direkomendasikan</strong> untuk fungsionalitas "Pilih Semua" yang mengelola satu grup item secara keseluruhan.</p>
+                        <p className="mt-2">Hook <code>useCheckboxSelectSingleRow</code> menyederhanakan logika dengan menyediakan semua state dan fungsi yang dibutuhkan (<code>selectedKeys</code>, <code>allSelected</code>, <code>toggleAll</code>, <code>toggleItem</code>) secara otomatis.</p>
+                        <p className="mt-2">Anda hanya perlu menyambungkan output hook ke props komponen <code>CheckboxAllToggle</code> dan <code>CheckboxItemList</code>. Hasilnya, kode lebih bersih dan mudah dipelihara.</p>
+                        <p className="mt-2">
+                            <strong>Komponen & Hook:</strong> <code>CheckboxAllToggle</code>, <code>CheckboxItemList</code>, <code>useCheckboxSelectSingleRow</code>
+                        </p>
+                    </>
+                }
+                preview={previewCheckboxAllToggleWithItemListAndHookSingleRow}
+                code={codeCheckboxAllToggleWithItemListAndHookSingleRow}
+            />
+
+            <PreviewBlock
+                title="4. Kustomisasi Tampilan: `renderItem` pada `CheckboxItemList`"
+                description={
+                    <>
+                        <p>Manfaatkan prop <code>renderItem</code> pada <code>CheckboxItemList</code> untuk <strong>kontrol penuh</strong> atas tampilan setiap item dalam daftar.</p>
+                        <p className="mt-2">Daripada menggunakan rendering default, Anda bisa menyediakan fungsi kustom yang menerima detail item (<code>item</code>) dan utilitas seleksi (<code>key</code>, <code>checked</code>, <code>toggle</code>), lalu mengembalikan JSX sesuai desain Anda.</p>
+                        <p className="mt-2">Ini memungkinkan Anda untuk:</p>
+                        <ul className="list-disc list-inside ml-4 mt-1">
+                            <li>Mengubah struktur HTML per item.</li>
+                            <li>Menerapkan styling unik atau conditional.</li>
+                            <li>Menambahkan elemen interaktif atau informasi tambahan.</li>
+                        </ul>
+                        <p className="mt-2"><strong>Komponen yang digunakan:</strong> <code>CheckboxItemList</code> (dengan prop <code>renderItem</code>)</p>
                     </>
                 }
                 preview={previewCheckboxItemListExampleWithRender}
                 code={codeCheckboxItemListExampleWithRender}
             />
 
-            <CheckboxPreviewBlock
-                title="Checkbox dengan Toggle Semua"
-                description={`
-                    Contoh penggunaan checkbox dengan tombol "Pilih Semua" yang mengontrol seleksi semua item sekaligus. 
-                    Hook useCheckboxSelectSingleRow mengelola status pilihan dan fungsi toggle, sementara daftar checkbox dan labelnya di-render dengan CheckboxItemList. 
-                    Memudahkan implementasi seleksi massal dengan sedikit kode.
-                `}
-                preview={previewCheckboxAllToggleWithItemListAndHookSingleRow}
-                code={codeCheckboxAllToggleWithItemListAndHookSingleRow}
-            />
-
-            <CheckboxPreviewBlock
-                title="Checkbox dengan Seleksi Baris Silang"
-                description="Contoh penggunaan checkbox dengan seleksi baris silang untuk kategori berbeda"
+            <PreviewBlock
+                title="5. Lanjutan: 'Pilih Semua' untuk Beberapa Grup dengan `useCheckboxSelectCrossRow`"
+                description={
+                    <>
+                        <p>Untuk skenario di mana Anda memiliki <strong>beberapa grup item independen</strong> (misalnya, Buah dan Sayuran) pada satu halaman, namun ingin mengelola "Pilih Semua" untuk tiap grup secara terpisah.</p>
+                        <p className="mt-2">Hook <code>useCheckboxSelectCrossRow</code> adalah solusinya. Hook ini menerima state seleksi global (<code>selectedKeys</code>) dan daftar <em>target keys</em> untuk grup spesifik tersebut.</p>
+                        <p className="mt-2">Setiap grup akan memiliki instance <code>CheckboxAllToggle</code> sendiri yang dikontrol oleh instance <code>useCheckboxSelectCrossRow</code> yang sesuai. Semua item yang terpilih dari berbagai grup akan tetap terkumpul dalam satu state <code>selectedKeys</code> global.</p>
+                        <p className="mt-2">
+                            <strong>Komponen & Hook:</strong> <code>CheckboxAllToggle</code>, <code>CheckboxItemList</code>, <code>useCheckboxSelectCrossRow</code>
+                        </p>
+                    </>
+                }
                 preview={previewCheckboxCrossRowMultiExample}
                 code={codeCheckboxCrossRowMultiExample}
             />
 
-            <CheckboxPreviewBlock
-                title="Checkbox dengan Toggle Semua (Non-Hook)"
-                description="Contoh penggunaan checkbox dengan toggle semua untuk daftar item tanpa menggunakan hook"
-                preview={previewCheckboxWithAllToggle}
-                code={codeCheckboxWithAllToggle}
+            <PreviewBlock
+                title="6. Integrasi Lanjutan: Dengan React Hook Form"
+                description={
+                    <>
+                        <p>Contoh ini mendemonstrasikan cara mengintegrasikan sistem checkbox Anda dengan <strong>React Hook Form (RHF)</strong> untuk manajemen state form yang terpusat.</p>
+                        <p className="mt-2">
+                            State utama untuk item yang terpilih (<code>selectedProduce</code>) dikelola oleh RHF.
+                            Komponen <code>CheckboxAllToggle</code> dan <code>CheckboxItemList</code> digunakan bersama hook <code>useCheckboxSelectCrossRow</code>
+                            untuk menyediakan fungsionalitas "Pilih Semua" per grup (Buah dan Sayuran).
+                        </p>
+                        <ul className="list-disc list-inside ml-4 mt-1">
+                            <li>RHF <code>watch</code> digunakan untuk mendapatkan nilai seleksi saat ini.</li>
+                            <li>Handler <code>toggleAll</code> dan <code>toggleItem</code> memanggil fungsi dari <code>useCheckboxSelectCrossRow</code> dan kemudian memperbarui state RHF menggunakan <code>setValue</code>.</li>
+                            <li>Komponen <code>Controller</code> dari RHF dapat digunakan untuk membungkus bagian form dan menghubungkannya dengan validasi RHF.</li>
+                        </ul>
+                        <p className="mt-2">Ini adalah pola yang kuat untuk form kompleks dengan beberapa grup checkbox yang nilainya perlu di-submit bersama.</p>
+                        <p className="mt-2">
+                            <strong>Komponen & Hook:</strong> <code>CheckboxAllToggle</code>, <code>CheckboxItemList</code>, <code>useCheckboxSelectCrossRow</code>, <code>react-hook-form (useForm, Controller)</code>
+                        </p>
+                    </>
+                }
+                preview={previewCheckboxRHFExample}
+                code={codeCheckboxRHFExample}
             />
         </div>
     );

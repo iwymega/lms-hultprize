@@ -2,14 +2,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClipboardCopy } from "lucide-react";
 import { useState } from "react";
 
-type CheckboxPreviewBlockProps = {
+type PreviewBlockProps = {
     title: string;
     description?: React.ReactNode;
     preview: React.ReactNode;
     code: string;
 };
 
-export function CheckboxPreviewBlock({ title, description, preview, code }: CheckboxPreviewBlockProps) {
+export function PreviewBlock({ title, description, preview, code }: PreviewBlockProps) {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
