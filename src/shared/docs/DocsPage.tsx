@@ -1,8 +1,5 @@
 // docs/DocsPage.tsx
 import { DocsLayout } from "./layouts/DocsLayout";
-import { InstallDoc } from "./components/InstallDoc";
-import { ButtonDoc } from "./components/ButtonDoc";
-import { LayoutDoc } from "./components/LayoutDoc";
 import { OverviewDoc } from "./components/OverviewDoc";
 import { CheckboxDoc } from "./components/CheckboxDoc";
 import { CurrencyInputDoc } from "./components/CurrencyInputDoc";
@@ -12,6 +9,7 @@ import { ImageUploadWithDropzoneDoc } from "./components/ImageUploadWithDropzone
 import { SearchableSelectDoc } from "./components/SearchableSelectDoc";
 import { ImageUploadWithPreviewDoc } from "./components/ImageUploadWithPreviewDoc";
 import { RadioItemListDoc } from "./components/RadioItemListDoc";
+import { BaseTableDoc } from "./components/BaseTableDoc";
 
 export default function DocsPage() {
     return (
@@ -36,12 +34,8 @@ export default function DocsPage() {
                         return <SearchableSelectDoc />; // Placeholder for SearchableSelectDoc
                     case "digital-signature":
                         return <DigitalSignatureInputDoc />;
-                    case "install":
-                        return <InstallDoc />;
-                    case "button":
-                        return <ButtonDoc />;
-                    case "layout":
-                        return <LayoutDoc />;
+                    case "table":
+                        return <BaseTableDoc />; // Placeholder for BaseTableDoc
                     default:
                         return <div>Page not found</div>;
                 }
