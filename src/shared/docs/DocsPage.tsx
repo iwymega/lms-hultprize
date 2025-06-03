@@ -11,6 +11,7 @@ import { ImageUploadWithPreviewDoc } from "./components/ImageUploadWithPreviewDo
 import { RadioItemListDoc } from "./components/RadioItemListDoc";
 import { BaseTableDoc } from "./components/BaseTableDoc";
 import { PaginationWithShowDoc } from "./components/PaginationWithShowDoc";
+import { LoadersDoc } from "./components/LoaderDoc";
 
 export default function DocsPage() {
     return (
@@ -39,6 +40,8 @@ export default function DocsPage() {
                         return <BaseTableDoc />; // Placeholder for BaseTableDoc
                     case "pagination":
                         return <PaginationWithShowDoc />; // Placeholder for PaginationWithShowDoc
+                    case "loading":
+                        return <LoadersDoc />; // Placeholder for LoadersDoc
                     default:
                         return <div>Page not found</div>;
                 }
