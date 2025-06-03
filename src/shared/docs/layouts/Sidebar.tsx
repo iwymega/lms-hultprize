@@ -19,12 +19,8 @@ const items = [
             { id: "image-upload-preview", title: "Image Upload with Preview" },
             { id: "radio-item-list", title: "Radio Item List" },
             { id: "searchable-select", title: "Searchable Select" },
-            { id: "example-usage-form", title: "Example Usage Form" },
+            { id: "digital-signature", title: "Digital Signature"}
         ]
-    },
-    {
-        id: "digital-signature",
-        title: "Digital Signature"
     },
     { id: "install", title: "Install" },
     {

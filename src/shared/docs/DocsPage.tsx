@@ -11,6 +11,7 @@ import { TextInputDoc } from "./components/TextInputDoc";
 import { ImageUploadWithDropzoneDoc } from "./components/ImageUploadWithDropzoneDoc";
 import { SearchableSelectDoc } from "./components/SearchableSelectDoc";
 import { ImageUploadWithPreviewDoc } from "./components/ImageUploadWithPreviewDoc";
+import { RadioItemListDoc } from "./components/RadioItemListDoc";
 
 export default function DocsPage() {
     return (
@@ -30,7 +31,7 @@ export default function DocsPage() {
                     case "image-upload-preview":
                         return <ImageUploadWithPreviewDoc />;
                     case "radio-item-list":
-                        return <div>Radio Item List Doc</div>; // Placeholder for RadioItemListDoc
+                        return <RadioItemListDoc />; // Placeholder for RadioItemListDoc
                     case "searchable-select":
                         return <SearchableSelectDoc />; // Placeholder for SearchableSelectDoc
                     case "digital-signature":
