@@ -6,6 +6,7 @@ import { LayoutDoc } from "./components/LayoutDoc";
 import { OverviewDoc } from "./components/OverviewDoc";
 import { CheckboxDoc } from "./components/CheckboxDoc";
 import { CurrencyInputDoc } from "./components/CurrencyInputDoc";
+import { DigitalSignatureInputDoc } from "./components/DigitalSignatureInputDoc";
 
 export default function DocsPage() {
     return (
@@ -18,6 +19,8 @@ export default function DocsPage() {
                         return <CheckboxDoc />;
                     case "currency-input":
                         return <CurrencyInputDoc />;
+                    case "digital-signature":
+                        return <DigitalSignatureInputDoc />;
                     case "install":
                         return <InstallDoc />;
                     case "button":

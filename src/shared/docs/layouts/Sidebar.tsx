@@ -17,6 +17,10 @@ const items = [
             { id: "currency-input", title: "Currency Input" },
         ]
     },
+    {
+        id: "digital-signature",
+        title: "Digital Signature"
+    },
     { id: "install", title: "Install" },
     {
         id: "button",
