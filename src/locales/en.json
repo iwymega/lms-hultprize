@@ -132,7 +132,7 @@
             "no-role": "No Role"
         }
     },
-    "base": {
-        "title": "base-project"
+    "test": {
+        "title": "test"
     }
 }
