@@ -124,5 +124,8 @@
             },
             "no-role": "Tidak Ada Peran"
         }
+    },
+    "base": {
+        "title": "base-project"
     }
 }
