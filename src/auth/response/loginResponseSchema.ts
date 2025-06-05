@@ -40,3 +40,7 @@ const loginResponseSchema = z.object({
 });
 
 export default loginResponseSchema;
+export type LoginResponse = z.infer<typeof loginResponseSchema>;
+export type LoginData = z.infer<typeof loginDataSchema>;
+export type Role = z.infer<typeof roleSchema>;
+export type Permission = z.infer<typeof permissionSchema>;

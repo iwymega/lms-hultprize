@@ -1,10 +1,10 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { User } from "../types/User";
+import { LoginData } from "../response/loginResponseSchema";
 
 type AuthContextType = {
-    user: User | null;
-    login: (userData: User, token: string) => void;
-    relogin: (userData?: User, token?: string) => void;
+    user: LoginData | null;
+    login: (userData: LoginData, token: string) => void;
+    relogin: (userData?: LoginData, token?: string) => void;
     logout: () => void;
     hasRole: (role: string) => boolean;
     hasPermission: (permission: string) => boolean;
@@ -13,18 +13,18 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(() => {
+    const [user, setUser] = useState<LoginData | null>(() => {
         const storedUser = localStorage.getItem('user');
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-    const login = (userData: User, token: string) => {
+    const login = (userData: LoginData, token: string) => {
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('authToken', token);
     };
 
-    const relogin = (userData?: User, token?: string) => {
+    const relogin = (userData?: LoginData, token?: string) => {
         if (userData) {
             setUser(userData);
             localStorage.setItem('user', JSON.stringify(userData));
