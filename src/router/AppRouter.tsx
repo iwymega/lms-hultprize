@@ -13,7 +13,7 @@ import RoleUsersAssignedPage from "@/features/role/pages/RoleUsersAssignedPage";
 import RolePermissionsAssignedPage from "@/features/role/pages/RolePermissionsAssignedPage";
 import DocsPage from "@/shared/docs/DocsPage";
 import LivechatPage from "@/features/livechat/pages/LivechatPage";
-import NotificationPage from "@/features/notification/pages/NotificationPage";
+import AllNotificationPage from "@/features/notification/pages/AllNotificationPage";
 
 type ProtectedRoute = {
     path: string;
@@ -103,7 +103,7 @@ export const ROUTES: Record<string, AppRoute> = {
     },
     NOTIFICATIONS: {
         path: "/notifications",
-        element: <NotificationPage />, // Assuming this is the correct page for notifications
+        element: <AllNotificationPage />, // Assuming this is the correct page for notifications
         protected: true,
         roles: ["superadmin"],
         permissions: [],

@@ -8,6 +8,7 @@ import AppRouter from './router/AppRouter';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import './i18n';
+import { NotificationProvider } from './shared/components/notification/context/NotificationContext';
 
 const queryClient = new QueryClient();
 
@@ -25,7 +26,9 @@ createRoot(document.getElementById('root')!).render(
               info: 'text-info',
             },
           }} />
-        <AppRouter />
+        <NotificationProvider>
+          <AppRouter />
+        </NotificationProvider>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
