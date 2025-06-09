@@ -5,6 +5,8 @@ import { useLocation } from 'react-router'
 import LanguageDropdown from './LanguageDropdown'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { NotificationBell } from '../notification/components/NotificationBell'
+import { NotificationProvider } from '../notification/context/NotificationContext'
 
 const TopBar: React.FC = () => {
     const location = useLocation()
@@ -30,6 +32,9 @@ const TopBar: React.FC = () => {
         <header className="hidden md:flex items-center justify-between p-4 border-b bg-white">
             <h1 className="text-xl font-semibold">{dynamicPageTitle}</h1>
             <div className="flex items-center gap-2">
+                <NotificationProvider>
+                    <NotificationBell />
+                </NotificationProvider>
                 {/* Button Refresh Data */}
                 <Button variant="outline" size="sm" className="gap-2" onClick={handleRefreshData}>
                     <RefreshCw className="h-4 w-4" />
