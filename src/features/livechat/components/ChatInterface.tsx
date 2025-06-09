@@ -1,14 +1,16 @@
 // src/components/ChatInterface.tsx
 
-// Import useMemo
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { useChat } from '../context/ChatContext';
 import { useSocket } from '../hooks/useSocket';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
 import { Message, UnreadCounts } from '../types';
 
-const SOCKET_SERVER_URL = "https://livechat.gotrasoft.com/";
+// Pastikan .env Anda memiliki variabel ini
+const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL || "https://livechat.gotrasoft.com/";
+// Path aset statis, Vite akan menanganinya berdasarkan konfigurasi 'base' di vite.config.ts
+const AUDIO_NOTIFICATION_PATH = `${import.meta.env.VITE_BASE_APP_URL}/livechat/mixkit-positive-notification-951.mp3` || "/assets/audio/notification.mp3";
 
 const ChatInterface: React.FC = () => {
     const { user, logout } = useChat();
@@ -20,11 +22,20 @@ const ChatInterface: React.FC = () => {
     const [currentChatTarget, setCurrentChatTarget] = useState<string>('public');
     const [replyingTo, setReplyingTo] = useState<Message | null>(null);
 
+    // --- SOLUSI: Gunakan Ref untuk menstabilkan dependensi ---
+    // Ref ini akan menyimpan nilai `currentChatTarget` yang selalu terupdate
+    // tanpa menyebabkan re-render pada `useMemo` di bawah.
+    const chatTargetRef = useRef(currentChatTarget);
+    useEffect(() => {
+        chatTargetRef.current = currentChatTarget;
+    }, [currentChatTarget]);
+    // --- AKHIR SOLUSI ---
+
     const playNotificationSound = useCallback(() => {
-        notificationSoundRef.current?.play().catch(e => console.warn(e));
+        notificationSoundRef.current?.play().catch(e => console.warn("Gagal memutar audio:", e));
     }, []);
 
-    // REVISI: Menggunakan useMemo untuk me-memoize objek eventHandlers
+    // Objek eventHandlers sekarang stabil dan tidak dibuat ulang setiap kali target chat berubah.
     const eventHandlers = useMemo(() => ({
         'online users': (users: string[]) => {
             setOnlineUsers(users.sort((a, b) => a.localeCompare(b)));
@@ -36,15 +47,18 @@ const ChatInterface: React.FC = () => {
 
             setMessages(prev => ({ ...prev, [target]: [...(prev[target] || []), data] }));
 
-            if (!isOwnMessage && target !== currentChatTarget) {
+            // Gunakan nilai dari ref untuk perbandingan.
+            if (!isOwnMessage && target !== chatTargetRef.current) {
                 setUnreadCounts(prev => ({ ...prev, [target]: (prev[target] || 0) + 1 }));
                 playNotificationSound();
             }
         },
         'public chat history': (history: Message[]) => {
+            console.log(`[CLIENT] Menerima riwayat publik. Jumlah: ${history.length}`);
             setMessages(prev => ({ ...prev, 'public': history.slice().reverse() }));
         },
         'private chat history': (data: { recipient: string; messages: Message[] }) => {
+            console.log(`[CLIENT] Menerima riwayat pribadi untuk ${data.recipient}. Jumlah: ${data.messages.length}`);
             setMessages(prev => ({ ...prev, [data.recipient]: data.messages.slice().reverse() }));
         },
         'message read confirmation': (data: { messageId: string }) => {
@@ -60,7 +74,7 @@ const ChatInterface: React.FC = () => {
                 return newMessages;
             });
         },
-    }), [user, currentChatTarget, playNotificationSound]); // Array dependensi tetap sama
+    }), [user, playNotificationSound]); // Hapus 'currentChatTarget' dari dependensi ini
 
     const { emitEvent } = useSocket({
         url: SOCKET_SERVER_URL,
@@ -73,15 +87,16 @@ const ChatInterface: React.FC = () => {
         setUnreadCounts(prev => ({ ...prev, [target]: 0 }));
         setReplyingTo(null);
 
-        if (!messages[target]) {
-            if (target === 'public') {
-                emitEvent('request public chat history', user?.companyId);
-            } else {
-                emitEvent('request private chat history', {
-                    currentUser: user?.name,
-                    recipientUser: target
-                });
-            }
+        // Minta riwayat. Kita bisa optimasi ini lagi nanti jika perlu.
+        // Untuk sekarang, kita minta setiap kali target diganti untuk memastikan data fresh.
+        console.log(`[CLIENT] Meminta riwayat untuk target: ${target}`);
+        if (target === 'public') {
+            emitEvent('request public chat history', user?.companyId);
+        } else {
+            emitEvent('request private chat history', {
+                currentUser: user?.name,
+                recipientUser: target
+            });
         }
     };
 
@@ -111,7 +126,7 @@ const ChatInterface: React.FC = () => {
 
     return (
         <>
-            <audio ref={notificationSoundRef} src="/mixkit-positive-notification-951.mp3" preload="auto"></audio>
+            <audio ref={notificationSoundRef} src={AUDIO_NOTIFICATION_PATH} preload="auto"></audio>
             <div className="flex flex-col md:flex-row w-full md:w-[95%] max-w-[1100px] h-screen md:h-[90vh] md:min-h-[550px] bg-white rounded-none md:rounded-xl shadow-2xl overflow-hidden md:mx-auto">
                 <Sidebar
                     currentUser={user}

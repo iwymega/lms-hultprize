@@ -21,8 +21,24 @@ const Sidebar: React.FC<SidebarProps> = ({ currentUser, onlineUsers, currentChat
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // const handleTargetClick = (target: string) => {
+    //     onSetTarget(target);
+    //     if (window.innerWidth < 768) setIsMenuOpen(false);
+    // };
+
+    console.log(`[SIDEBAR] Menerima prop 'onSetTarget'. Tipenya adalah: ${typeof onSetTarget}`);
+
+    // PASANG LOG DI SINI
     const handleTargetClick = (target: string) => {
-        onSetTarget(target);
+        console.log(`[SIDEBAR] handleTargetClick dipanggil dengan target: '${target}'`);
+
+        // PERIKSA LAGI TEPAT SEBELUM MEMANGGIL
+        if (typeof onSetTarget === 'function') {
+            onSetTarget(target);
+        } else {
+            console.error("[SIDEBAR] GAGAL! onSetTarget bukan sebuah fungsi!");
+        }
+
         if (window.innerWidth < 768) setIsMenuOpen(false);
     };
 
