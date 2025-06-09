@@ -35,7 +35,6 @@ const TopBar: React.FC = () => {
                 {/* Button Refresh Data */}
                 <Button variant="outline" size="sm" className="gap-2" onClick={handleRefreshData}>
                     <RefreshCw className="h-4 w-4" />
-                    Refresh Data
                 </Button>
 
                 {/* Dropdown Select Language */}

@@ -1,34 +1,50 @@
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+// src/components/LanguageDropdown.tsx
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
+import { Languages, Check } from 'lucide-react'; // Ganti import ikon
 import i18n from '@/i18n';
 
 const LanguageDropdown: React.FC = () => {
+    // Logika ini sudah bagus dan tidak perlu diubah
     const handleLanguageChange = (lang: string) => {
-        i18n.changeLanguage(lang); // Update bahasa menggunakan i18n
-        localStorage.setItem('language', lang); // Simpan pilihan bahasa ke localStorage
+        i18n.changeLanguage(lang);
+        localStorage.setItem('language', lang);
     };
 
     return (
-        <div className="relative">
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center gap-2">
-                        <span>{i18n.language === 'en' ? 'English' : 'Bahasa Indonesia'}</span>
-                        <ChevronDown className="h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                {/* PERUBAHAN 1: Tombol sekarang hanya ikon */}
+                <Button variant="outline" size="icon" className="gap-2">
+                    <Languages className="h-5 w-5" />
+                    <span className="sr-only">Change language</span>
+                </Button>
+            </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
-                        English
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleLanguageChange('id')}>
-                        Bahasa Indonesia
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </div>
+            <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Pilih Bahasa / Select Language</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+
+                {/* PERUBAHAN 2: Tambahkan indikator centang untuk bahasa aktif */}
+                <DropdownMenuItem onClick={() => handleLanguageChange('en')} className="cursor-pointer">
+                    English
+                    {i18n.language === 'en' && <Check className="ml-auto h-4 w-4" />}
+                </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={() => handleLanguageChange('id')} className="cursor-pointer">
+                    Bahasa Indonesia
+                    {i18n.language === 'id' && <Check className="ml-auto h-4 w-4" />}
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };
 
