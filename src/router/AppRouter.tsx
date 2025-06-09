@@ -12,6 +12,7 @@ import RolePage from "@/features/role/pages/RolePage";
 import RoleUsersAssignedPage from "@/features/role/pages/RoleUsersAssignedPage";
 import RolePermissionsAssignedPage from "@/features/role/pages/RolePermissionsAssignedPage";
 import DocsPage from "@/shared/docs/DocsPage";
+import LivechatPage from "@/features/livechat/pages/LivechatPage";
 
 type ProtectedRoute = {
     path: string;
@@ -88,6 +89,13 @@ export const ROUTES: Record<string, AppRoute> = {
     CHANGE_PASSWORD: {
         path: "/profile/change-password",
         element: <ProfilePage />,
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    LIVECHAT : {
+        path: "/livechat",
+        element: <LivechatPage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],
