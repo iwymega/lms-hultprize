@@ -82,11 +82,6 @@ const ConnectionPanel: React.FC<ConnectionPanelProps> = ({ status, currentRoom, 
                 <p>Status Koneksi: <span className={`font-semibold ${statusInfo.color}`}>{statusInfo.text}</span></p>
                 <p>Room Aktif: <span className="font-semibold text-blue-600">{currentRoom || '-'}</span></p>
             </div>
-            <div className="text-center">
-                <a href="send.php" target="_blank" rel="noopener noreferrer" className="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 text-sm">
-                    Simulator Pengirim
-                </a>
-            </div>
         </div>
     );
 };
