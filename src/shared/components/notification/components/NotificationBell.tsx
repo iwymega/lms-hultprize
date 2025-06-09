@@ -15,14 +15,22 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 export function NotificationBell() {
-    const { notifications, unreadCount, clearUnread } = useNotifications();
-    const recentNotifications = notifications.slice(0, 5); // Tampilkan 5 notifikasi terakhir di dropdown
+    // Ambil fungsi & state baru dari context
+    const { notifications, unreadCount, clearUnreadBadge, markNotificationAsRead } = useNotifications();
+    const recentNotifications = notifications.slice(0, 5);
+
+    const handleNotificationClick = (notificationId: string) => {
+        // Panggil fungsi untuk menandai sebagai terbaca
+        markNotificationAsRead(notificationId);
+        // Di sini Anda bisa menambahkan logika navigasi jika diperlukan
+        // Contoh: navigate(`/orders/${notification.payload.orderId}`);
+    };
 
     return (
         <DropdownMenu onOpenChange={(isOpen) => {
-            // Saat dropdown dibuka, reset unread count
-            if (isOpen) {
-                clearUnread();
+            // Saat dropdown dibuka, reset HANYA badge angka
+            if (isOpen && unreadCount > 0) {
+                clearUnreadBadge();
             }
         }}>
             <DropdownMenuTrigger asChild>
@@ -45,7 +53,12 @@ export function NotificationBell() {
                 <ScrollArea className="h-80">
                     {recentNotifications.length > 0 ? (
                         recentNotifications.map((notif) => (
-                            <DropdownMenuItem key={notif.id} className="flex items-start gap-3 p-2">
+                            <DropdownMenuItem
+                                key={notif.id}
+                                // Tambahkan event handler onClick di sini
+                                onClick={() => handleNotificationClick(notif.id)}
+                                className="flex items-start gap-3 p-2 cursor-pointer"
+                            >
                                 <Avatar className="h-8 w-8 mt-1">
                                     <AvatarFallback>
                                         <MessageSquareText size={18} />
@@ -60,6 +73,10 @@ export function NotificationBell() {
                                         {new Date(notif.timestamp).toLocaleString('id-ID')}
                                     </p>
                                 </div>
+                                {/* --- PERUBAHAN UI: Indikator Belum Dibaca --- */}
+                                {!notif.isRead && (
+                                    <div className="h-2.5 w-2.5 bg-blue-500 rounded-full self-center ml-2 shrink-0" />
+                                )}
                             </DropdownMenuItem>
                         ))
                     ) : (

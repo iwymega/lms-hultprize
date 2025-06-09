@@ -1,19 +1,23 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
+import axios from 'axios'; // <-- Import axios
 
-// Kita bisa gunakan tipe LogItem dari tugas sebelumnya atau buat yang baru
-interface NotificationItem {
+// Perbarui tipe data notifikasi untuk menyertakan status 'isRead'
+export interface NotificationItem {
     id: string;
     timestamp: string;
     type: string;
     room_id: string;
     payload: any;
+    isRead?: boolean; // <-- Tambahkan properti ini
 }
 
+// Perbarui tipe context
 interface NotificationContextType {
     notifications: NotificationItem[];
     unreadCount: number;
-    clearUnread: () => void;
+    clearUnreadBadge: () => void; // Ganti nama agar lebih jelas
+    markNotificationAsRead: (notificationId: string) => void; // <-- Tambahkan fungsi baru
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -26,9 +30,8 @@ export const useNotifications = (): NotificationContextType => {
     return context;
 };
 
-const SOCKET_SERVER_URL = "https://realtime-data.gotrasoft.com/";
-// Bergabung ke room yang relevan untuk notifikasi
-const NOTIFICATION_ROOM_ID = "my_test_room"; // Ganti dengan room ID Anda
+const SOCKET_SERVER_URL = "https://realtime-data.gotrasoft.com"; // URL tanpa trailing slash
+const NOTIFICATION_ROOM_ID = "my_test_room";
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -42,18 +45,17 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
             socket.emit('join_room', { room_id: NOTIFICATION_ROOM_ID });
         });
 
-        // Dapatkan riwayat awal saat bergabung
         socket.on('data_history', (response: { history: NotificationItem[] }) => {
             console.log('[NOTIF_SOCKET] Menerima riwayat notifikasi:', response.history);
-            setNotifications(response.history.slice().reverse()); // Tampilkan yang terbaru di atas
+            // Asumsikan semua riwayat sudah dibaca
+            const historyItems = response.history.map(item => ({ ...item, isRead: true }));
+            setNotifications(historyItems.slice().reverse());
         });
 
-        // Dapatkan data/notifikasi baru
         socket.on('new_data', (data: NotificationItem) => {
             console.log('[NOTIF_SOCKET] Notifikasi baru diterima:', data);
-            // Tambahkan notifikasi baru ke paling atas daftar
-            setNotifications(prev => [data, ...prev]);
-            // Tambah jumlah yang belum dibaca
+            // Tandai notifikasi baru sebagai belum dibaca
+            setNotifications(prev => [{ ...data, isRead: false }, ...prev]);
             setUnreadCount(prev => prev + 1);
         });
 
@@ -63,11 +65,43 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
         };
     }, []);
 
-    const clearUnread = useCallback(() => {
+    // Fungsi untuk mereset HANYA badge angka, dipanggil saat dropdown dibuka
+    const clearUnreadBadge = useCallback(() => {
         setUnreadCount(0);
     }, []);
 
-    const value = { notifications, unreadCount, clearUnread };
+    // Fungsi untuk menandai satu notifikasi sebagai telah dibaca
+    const markNotificationAsRead = useCallback(async (notificationId: string) => {
+        // 1. Update UI secara optimis untuk responsivitas instan
+        setNotifications(prev =>
+            prev.map(notif =>
+                notif.id === notificationId ? { ...notif, isRead: true } : notif
+            )
+        );
+
+        // 2. Panggil API di latar belakang
+        try {
+            console.log(`[API] Mengirim 'acknowledge' untuk event_id: ${notificationId}`);
+            await axios.post(`${SOCKET_SERVER_URL}/api/acknowledge`, {
+                event_id: notificationId
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(`[API] Berhasil 'acknowledge' untuk event_id: ${notificationId}`);
+        } catch (error) {
+            console.error("Gagal menandai notifikasi sebagai terbaca di server:", error);
+            // Opsional: Kembalikan state jika API gagal (rollback)
+            setNotifications(prev =>
+                prev.map(notif =>
+                    notif.id === notificationId ? { ...notif, isRead: false } : notif
+                )
+            );
+        }
+    }, []);
+
+    const value = { notifications, unreadCount, clearUnreadBadge, markNotificationAsRead };
 
     return (
         <NotificationContext.Provider value={value}>
