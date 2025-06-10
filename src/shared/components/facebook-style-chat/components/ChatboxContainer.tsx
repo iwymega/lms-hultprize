@@ -14,7 +14,7 @@ interface ChatboxContainerProps {
 
 const ChatboxContainer: React.FC<ChatboxContainerProps> = ({ currentUser, openChats, messages, onSendMessage, onCloseChat, onFocusChat }) => {
     return (
-        <div className="fixed bottom-0 right-4 sm:right-6 flex items-end gap-4 pointer-events-auto">
+        <div className="fixed bottom-0 right-4 sm:right-[5%] flex items-end gap-4 pointer-events-auto">
             {openChats.map(targetUser => (
                 <Chatbox
                     key={targetUser}
