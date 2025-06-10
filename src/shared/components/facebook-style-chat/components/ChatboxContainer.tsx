@@ -27,7 +27,7 @@ const ChatboxContainer: React.FC<ChatboxContainerProps> = ({
 }) => {
     return (
         // Container ini mengatur posisi semua chatbox di pojok kanan bawah
-        <div className="fixed bottom-0 right-4 sm:right-[5%] flex items-end gap-4 pointer-events-auto">
+        <div className="fixed bottom-0 right-4 sm:right-[100px] flex items-end gap-4 pointer-events-auto">
             {openChats.map(targetUserId => (
                 <Chatbox
                     key={targetUserId} // Gunakan ID sebagai key, ini sangat penting dan stabil
