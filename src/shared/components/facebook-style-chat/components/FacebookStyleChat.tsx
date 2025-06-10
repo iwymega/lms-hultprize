@@ -13,7 +13,7 @@ import useIndexUser from '@/services/user/hooks/useIndexUser';
 import { SingleUserResponse } from '@/services/user/response/IndexUserResponse';
 
 // URL konstanta
-const NOTIFICATION_SOUND_URL = `${import.meta.env.BASE_URL}/livechat/mixkit-positive-notification-951` || "https://livechat.gotrasoft.com/assets/sounds/notification.mp3";
+const NOTIFICATION_SOUND_URL = `${import.meta.env.VITE_BASE_APP_URL}/livechat/mixkit-positive-notification-951.mp3` || "https://livechat.gotrasoft.com/assets/sounds/notification.mp3";
 const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL || "https://livechat.gotrasoft.com/";
 
 const FacebookStyleChat: React.FC = () => {
