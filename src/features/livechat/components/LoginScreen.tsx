@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useChat } from '../context/ChatContext';
+import { useChat } from '@/shared/components/facebook-style-chat/context/ChatContext';
 
 const LoginScreen: React.FC = () => {
     const [name, setName] = useState<string>('');

@@ -1,7 +1,8 @@
 // src/components/FacebookStyleChat/FacebookStyleChat.tsx
-import React, { useState, useMemo, useCallback } from 'react';
+
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'; // 1. Tambahkan useRef
 import { useChat } from '../context/ChatContext';
-import { useSocket } from '../hooks/useSocket';
+import { useSocket } from '../hooks/useSocket'
 import { Message } from '../types';
 import ChatTrigger from './ChatTrigger';
 import UserListDrawer from './UserListDrawer';
@@ -16,16 +17,19 @@ const FacebookStyleChat: React.FC = () => {
     const [messages, setMessages] = useState<{ [target: string]: Message[] }>({});
     const [openChats, setOpenChats] = useState<string[]>([]);
 
+    // --- SOLUSI DIMULAI DI SINI ---
+    // 2. Buat sebuah ref untuk menyimpan state openChats
+    const openChatsRef = useRef(openChats);
+
+    // 3. Update ref setiap kali state openChats berubah
+    useEffect(() => {
+        openChatsRef.current = openChats;
+    }, [openChats]);
+    // --- AKHIR DARI BAGIAN SOLUSI ---
+
     const eventHandlers = useMemo(() => ({
         'online users': (users: string[]) => {
             setOnlineUsers(users.sort((a, b) => a.localeCompare(b)));
-        },
-        'chat message': (data: Message) => {
-            // Ini untuk pesan publik, yang tidak kita gunakan di UI ini
-            // Tapi tetap kita handle agar state konsisten
-            if (data.type === 'public') {
-                setMessages(prev => ({ ...prev, 'public': [...(prev['public'] || []), data] }));
-            }
         },
         'private chat message': (data: Message) => {
             if (!user) return;
@@ -34,33 +38,40 @@ const FacebookStyleChat: React.FC = () => {
 
             setMessages(prev => ({ ...prev, [target]: [...(prev[target] || []), data] }));
 
-            // Otomatis buka chat jika belum terbuka saat menerima pesan
-            if (!isOwnMessage && !openChats.includes(target)) {
-                setOpenChats(prev => [...prev, target].slice(-3)); // Batasi 3 chatbox
+            // 4. Gunakan nilai dari ref, bukan dari state langsung
+            if (!isOwnMessage && !openChatsRef.current.includes(target)) {
+                // Jangan gunakan setOpenChats(prev => ...) di sini karena akan memicu loop
+                // Cukup update ref saja, karena state akan diupdate di tempat lain jika perlu
+                setOpenChats(prevChats => [...prevChats, target].slice(-3));
             }
         },
         'private chat history': (data: { recipient: string; messages: Message[] }) => {
+            console.log(`[DEBUG-2] Menerima 'private chat history' untuk: ${data.recipient}. Jumlah: ${data.messages.length}`);
             setMessages(prev => ({ ...prev, [data.recipient]: data.messages.slice().reverse() }));
         },
-    }), [user, openChats]);
+        // 'public' events bisa ditambahkan kembali jika perlu
+    }), [user]); // 5. HAPUS `openChats` dari array dependensi ini
 
     const { emitEvent } = useSocket({
         url: SOCKET_SERVER_URL,
         user,
-        eventHandlers,
+        eventHandlers, // Sekarang eventHandlers sudah stabil dan tidak berubah-ubah
     });
 
     const handleOpenChat = useCallback((targetUser: string) => {
+        console.log(`[DEBUG-1] handleOpenChat dipanggil untuk: ${targetUser}`);
         if (!openChats.includes(targetUser)) {
             // Batasi maksimal 3 chatbox agar tidak menumpuk
-            setOpenChats(prev => [...prev, targetUser].slice(-3));
+            setOpenChats(prev => [...prev.filter(c => c !== targetUser), targetUser].slice(-3));
+
+            console.log(`[DEBUG-1.1] Mengirim event 'request private chat history' ke server...`);
             emitEvent('request private chat history', {
                 currentUser: user?.name,
                 recipientUser: targetUser
             });
         }
         setIsDrawerOpen(false);
-    }, [openChats, user, emitEvent]);
+    }, [openChats, user, emitEvent]); // openChats boleh ada di sini karena ini adalah useCallback biasa, bukan yang mempengaruhi socket.
 
     const handleCloseChat = useCallback((targetUser: string) => {
         setOpenChats(prev => prev.filter(u => u !== targetUser));
@@ -74,12 +85,12 @@ const FacebookStyleChat: React.FC = () => {
         });
     }, [user, emitEvent]);
 
+
     if (!user) {
-        return null; // Jangan render apapun jika user belum login
+        return null;
     }
 
     return (
-        // Pointer events none agar tidak menghalangi interaksi page di belakangnya
         <div className="fixed inset-0 pointer-events-none z-40">
             <ChatTrigger onClick={() => setIsDrawerOpen(prev => !prev)} />
 
