@@ -35,9 +35,12 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         // Jika user dari useAuth ada, kita buat objek user untuk chat
         if (authUser) {
             return {
+                ...authUser, // Ambil semua properti dari authUser
                 // SESUAIKAN PROPERTI INI dengan objek user dari useAuth() Anda
+                id: authUser.id,          // Misal: Anda menggunakan authUser.id
+                displayName: authUser.name, // Misal: Anda menggunakan authUser.name
                 name: authUser.id,      // Misal: Anda menggunakan authUser.username
-                companyId: 'base' // Misal: Anda menggunakan authUser.companyId
+                companyId: 'base', // Misal: Anda menggunakan authUser.companyId
             };
         }
         // Jika tidak ada user yang login, kembalikan null

@@ -1,6 +1,8 @@
 // src/types.ts
 export interface User {
-    name: string;
+    id: string;          // ID unik asli dari useAuth
+    name: string;        // Properti yang dikirim ke socket (akan kita isi dengan ID)
+    displayName: string; // Nama asli untuk ditampilkan di UI
     companyId: string;
 }
 
