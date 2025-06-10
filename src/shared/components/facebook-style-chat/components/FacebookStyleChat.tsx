@@ -1,13 +1,14 @@
 // src/components/FacebookStyleChat/FacebookStyleChat.tsx
 
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'; // 1. Tambahkan useRef
-import { useChat } from '../context/ChatContext';
-import { useSocket } from '../hooks/useSocket'
-import { Message } from '../types';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useChat } from '@/shared/components/facebook-style-chat/context/ChatContext';
+import { useSocket } from '@/shared/components/facebook-style-chat/hooks/useSocket';
+import { Message } from '@/shared/components/facebook-style-chat/types';
 import ChatTrigger from './ChatTrigger';
 import UserListDrawer from './UserListDrawer';
 import ChatboxContainer from './ChatboxContainer';
 
+const NOTIFICATION_SOUND_URL = `${import.meta.env.VITE_BASE_APP_URL}/livechat/mixkit-positive-notification-951.mp3` || "/assets/audio/notification.mp3";
 const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL || "https://livechat.gotrasoft.com/";
 
 const FacebookStyleChat: React.FC = () => {
@@ -16,69 +17,113 @@ const FacebookStyleChat: React.FC = () => {
     const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
     const [messages, setMessages] = useState<{ [target: string]: Message[] }>({});
     const [openChats, setOpenChats] = useState<string[]>([]);
+    const [activeChat, setActiveChat] = useState<string | null>(null);
 
-    // --- SOLUSI DIMULAI DI SINI ---
-    // 2. Buat sebuah ref untuk menyimpan state openChats
+    const notificationSoundRef = useRef<HTMLAudioElement | null>(null);
     const openChatsRef = useRef(openChats);
+    const activeChatRef = useRef(activeChat);
 
-    // 3. Update ref setiap kali state openChats berubah
     useEffect(() => {
         openChatsRef.current = openChats;
     }, [openChats]);
-    // --- AKHIR DARI BAGIAN SOLUSI ---
+
+    useEffect(() => {
+        activeChatRef.current = activeChat;
+    }, [activeChat]);
+
+    const playNotificationSound = useCallback(() => {
+        notificationSoundRef.current?.play().catch(e => console.warn("Gagal memutar audio notifikasi:", e));
+    }, []);
 
     const eventHandlers = useMemo(() => ({
         'online users': (users: string[]) => {
             setOnlineUsers(users.sort((a, b) => a.localeCompare(b)));
         },
-        'private chat message': (data: Message) => {
-            if (!user) return;
+        // <<< INI KUNCINYA: Handler baru ditambahkan untuk meniru kode lama yang berfungsi >>>
+        'chat message': (data: Message) => {
+            if (!user || data.type === 'public') return; // Abaikan pesan publik di UI ini
+
             const isOwnMessage = data.user === user.name;
             const target = isOwnMessage ? data.recipient_username! : data.user;
 
             setMessages(prev => ({ ...prev, [target]: [...(prev[target] || []), data] }));
 
-            // 4. Gunakan nilai dari ref, bukan dari state langsung
-            if (!isOwnMessage && !openChatsRef.current.includes(target)) {
-                // Jangan gunakan setOpenChats(prev => ...) di sini karena akan memicu loop
-                // Cukup update ref saja, karena state akan diupdate di tempat lain jika perlu
-                setOpenChats(prevChats => [...prevChats, target].slice(-3));
+            if (!isOwnMessage) {
+                if (!openChatsRef.current.includes(target)) {
+                    setOpenChats(prevChats => [...prevChats, target].slice(-3));
+                }
+                if (target !== activeChatRef.current) {
+                    playNotificationSound();
+                }
             }
         },
         'private chat history': (data: { recipient: string; messages: Message[] }) => {
-            console.log(`[DEBUG-2] Menerima 'private chat history' untuk: ${data.recipient}. Jumlah: ${data.messages.length}`);
             setMessages(prev => ({ ...prev, [data.recipient]: data.messages.slice().reverse() }));
         },
-        // 'public' events bisa ditambahkan kembali jika perlu
-    }), [user]); // 5. HAPUS `openChats` dari array dependensi ini
+        'message read confirmation': (data: { reader: string, target: string }) => {
+            const chatPartner = data.reader;
+            setMessages(prev => {
+                const partnerMessages = prev[chatPartner];
+                if (!partnerMessages) return prev;
+                const newPartnerMessages = partnerMessages.map(msg =>
+                    msg.user === user?.name && !msg.is_read ? { ...msg, is_read: true } : msg
+                );
+                return { ...prev, [chatPartner]: newPartnerMessages };
+            });
+        },
+    }), [user, playNotificationSound]);
 
     const { emitEvent } = useSocket({
         url: SOCKET_SERVER_URL,
         user,
-        eventHandlers, // Sekarang eventHandlers sudah stabil dan tidak berubah-ubah
+        eventHandlers,
     });
 
-    const handleOpenChat = useCallback((targetUser: string) => {
-        console.log(`[DEBUG-1] handleOpenChat dipanggil untuk: ${targetUser}`);
-        if (!openChats.includes(targetUser)) {
-            // Batasi maksimal 3 chatbox agar tidak menumpuk
-            setOpenChats(prev => [...prev.filter(c => c !== targetUser), targetUser].slice(-3));
+    const markMessagesAsRead = useCallback((targetUser: string) => {
+        const targetMessages = messages[targetUser] || [];
+        const unreadMessageIds = targetMessages
+            .filter(msg => msg.user === targetUser && !msg.is_read)
+            .map(msg => msg.id);
 
-            console.log(`[DEBUG-1.1] Mengirim event 'request private chat history' ke server...`);
+        if (unreadMessageIds.length > 0) {
+            emitEvent('mark messages as read', { reader: user?.name, target: targetUser });
+            setMessages(prev => {
+                const newTargetMessages = (prev[targetUser] || []).map(msg =>
+                    unreadMessageIds.includes(msg.id) ? { ...msg, is_read: true } : msg
+                );
+                return { ...prev, [targetUser]: newTargetMessages };
+            });
+        }
+    }, [messages, user, emitEvent]);
+
+    const handleOpenChat = useCallback((targetUser: string) => {
+        if (!openChats.includes(targetUser)) {
+            setOpenChats(prev => [...prev.filter(c => c !== targetUser), targetUser].slice(-3));
             emitEvent('request private chat history', {
                 currentUser: user?.name,
                 recipientUser: targetUser
             });
         }
         setIsDrawerOpen(false);
-    }, [openChats, user, emitEvent]); // openChats boleh ada di sini karena ini adalah useCallback biasa, bukan yang mempengaruhi socket.
+        setActiveChat(targetUser);
+        markMessagesAsRead(targetUser);
+    }, [openChats, user, emitEvent, markMessagesAsRead]);
+
+    const handleChatboxFocus = useCallback((targetUser: string) => {
+        setActiveChat(targetUser);
+        markMessagesAsRead(targetUser);
+    }, [markMessagesAsRead]);
 
     const handleCloseChat = useCallback((targetUser: string) => {
         setOpenChats(prev => prev.filter(u => u !== targetUser));
-    }, []);
+        if (activeChat === targetUser) {
+            setActiveChat(null);
+        }
+    }, [activeChat]);
 
     const handleSendMessage = useCallback((recipientUser: string, messageText: string) => {
         if (!user || !messageText.trim()) return;
+        // Event yang dikirim tetap 'private chat message', sesuai dengan kode lama.
         emitEvent('private chat message', {
             recipientUser,
             message: messageText,
@@ -91,25 +136,27 @@ const FacebookStyleChat: React.FC = () => {
     }
 
     return (
-        <div className="fixed inset-0 pointer-events-none z-40">
-            <ChatTrigger onClick={() => setIsDrawerOpen(prev => !prev)} />
-
-            <UserListDrawer
-                isOpen={isDrawerOpen}
-                onClose={() => setIsDrawerOpen(false)}
-                currentUser={user}
-                onlineUsers={onlineUsers}
-                onUserSelect={handleOpenChat}
-            />
-
-            <ChatboxContainer
-                currentUser={user}
-                openChats={openChats}
-                messages={messages}
-                onSendMessage={handleSendMessage}
-                onCloseChat={handleCloseChat}
-            />
-        </div>
+        <>
+            <audio ref={notificationSoundRef} src={NOTIFICATION_SOUND_URL} preload="auto"></audio>
+            <div className="fixed inset-0 pointer-events-none z-40">
+                <ChatTrigger onClick={() => setIsDrawerOpen(prev => !prev)} />
+                <UserListDrawer
+                    isOpen={isDrawerOpen}
+                    onClose={() => setIsDrawerOpen(false)}
+                    currentUser={user}
+                    onlineUsers={onlineUsers}
+                    onUserSelect={handleOpenChat}
+                />
+                <ChatboxContainer
+                    currentUser={user}
+                    openChats={openChats}
+                    messages={messages}
+                    onSendMessage={handleSendMessage}
+                    onCloseChat={handleCloseChat}
+                    onFocusChat={handleChatboxFocus}
+                />
+            </div>
+        </>
     );
 };
 
