@@ -1,7 +1,8 @@
 // src/components/FacebookStyleChat/Chatbox.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { User, Message } from '@/shared/components/facebook-style-chat/types'; // <-- Import tipe data
-import { X, Minus, Send, Check, CheckCheck } from 'lucide-react'; // <-- Import Ikon
+// Path import Anda sudah benar, saya sesuaikan dengan yang Anda berikan
+import { User, Message } from '@/shared/components/facebook-style-chat/types';
+import { X, Minus, Send, Check, CheckCheck } from 'lucide-react';
 
 interface ChatboxProps {
     currentUser: User;
@@ -9,7 +10,7 @@ interface ChatboxProps {
     messages: Message[];
     onSendMessage: (recipientUser: string, messageText: string) => void;
     onClose: () => void;
-    onFocus: () => void; // <-- Prop baru
+    onFocus: () => void;
 }
 
 const Chatbox: React.FC<ChatboxProps> = ({ currentUser, targetUser, messages, onSendMessage, onClose, onFocus }) => {
@@ -25,10 +26,9 @@ const Chatbox: React.FC<ChatboxProps> = ({ currentUser, targetUser, messages, on
     }, [messages]);
 
     useEffect(() => {
-        // Otomatis fokus ke input saat chatbox tidak diminimize
         if (!isMinimized) {
             inputRef.current?.focus();
-            onFocus(); // Panggil onFocus saat komponen menjadi aktif
+            onFocus();
         }
     }, [isMinimized, onFocus]);
 
@@ -42,16 +42,16 @@ const Chatbox: React.FC<ChatboxProps> = ({ currentUser, targetUser, messages, on
 
     const handleHeaderClick = () => {
         setIsMinimized(!isMinimized);
-        // Jika membuka dari kondisi minimize, panggil onFocus
         if (isMinimized) {
             onFocus();
         }
     };
 
     return (
-        // Tambahkan onFocus ke div utama untuk menangkap klik di area chatbox
         <div
-            className="w-80 h-[450px] bg-white rounded-t-lg shadow-2xl flex flex-col transition-all duration-300"
+            // --- INI PERUBAHANNYA ---
+            // Tinggi div utama sekarang dinamis berdasarkan state `isMinimized`
+            className={`w-80 bg-white rounded-t-lg shadow-2xl flex flex-col transition-all duration-300 ${isMinimized ? 'h-auto' : 'h-[450px]'}`}
             onClick={onFocus}
         >
             <div
@@ -65,17 +65,15 @@ const Chatbox: React.FC<ChatboxProps> = ({ currentUser, targetUser, messages, on
                 </div>
             </div>
 
-            <div className={`flex-grow flex flex-col min-h-0 transition-all duration-300 ${isMinimized ? 'h-0 hidden' : 'h-full'}`}>
-                {/* Message Feed */}
+            {/* Konten chatbox tetap sama, disembunyikan dengan `hidden` saat terminimize */}
+            <div className={`flex-grow flex flex-col min-h-0 transition-all duration-300 ${isMinimized ? 'hidden' : 'flex'}`}>
                 <div ref={feedRef} className="flex-grow p-3 overflow-y-auto">
                     <ul className="flex flex-col gap-1">
                         {messages.map((msg) => {
                             const isOutgoing = msg.user === currentUser.name;
                             return (
                                 <li key={msg.id} className={`flex flex-col ${isOutgoing ? 'items-end' : 'items-start'}`}>
-                                    <div
-                                        className={`max-w-[80%] p-2 rounded-lg text-sm ${isOutgoing ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
-                                    >
+                                    <div className={`max-w-[80%] p-2 rounded-lg text-sm ${isOutgoing ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
                                         {msg.message}
                                     </div>
                                     {isOutgoing && (
@@ -92,15 +90,13 @@ const Chatbox: React.FC<ChatboxProps> = ({ currentUser, targetUser, messages, on
                         })}
                     </ul>
                 </div>
-
-                {/* Message Input */}
                 <form onSubmit={handleSubmit} className="p-2 border-t flex items-center gap-2">
                     <input
                         ref={inputRef}
                         type="text"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        onFocus={onFocus} // Tandai aktif saat input difokuskan juga
+                        onFocus={onFocus}
                         placeholder="Ketik pesan..."
                         className="w-full p-2 border border-gray-300 rounded-full text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
