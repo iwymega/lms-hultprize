@@ -1,10 +1,15 @@
+// src/auth/schema/loginDataSchema.ts
 import { z } from "zod";
 
-// Define the LoginData schema
-const loginDataSchema = z.object({
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+// Skema ini sekarang mendefinisikan payload yang diterima oleh API.
+// Keduanya (email dan username) bersifat opsional, karena hanya salah satu yang akan dikirim.
+const apiLoginPayloadSchema = z.object({
+  email: z.string().email().optional(),
+  username: z.string().optional(),
+  password: z.string(), // Password selalu dibutuhkan
 });
 
-export default loginDataSchema;
-export type LoginData = z.infer<typeof loginDataSchema>;
+export default apiLoginPayloadSchema;
+
+// Ini adalah tipe yang akan kita gunakan di hook useLogin
+export type ApiLoginPayload = z.infer<typeof apiLoginPayloadSchema>;

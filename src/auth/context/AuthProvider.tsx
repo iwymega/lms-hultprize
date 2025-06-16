@@ -1,8 +1,12 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+// src/auth/context/AuthProvider.tsx
+
+import { createContext, ReactNode, useContext, useState, useCallback, useMemo } from "react";
 import { LoginData } from "../response/loginResponseSchema";
+import { authService } from "../services/authService"; // Import service
 
 type AuthContextType = {
     user: LoginData | null;
+    isAuthenticated: boolean;
     login: (userData: LoginData, token: string) => void;
     relogin: (userData?: LoginData, token?: string) => void;
     logout: () => void;
@@ -13,45 +17,49 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<LoginData | null>(() => {
-        const storedUser = localStorage.getItem('user');
-        return storedUser ? JSON.parse(storedUser) : null;
-    });
+    // State hanya mengambil nilai awal dari service
+    const [user, setUser] = useState<LoginData | null>(() => authService.getUser());
 
-    const login = (userData: LoginData, token: string) => {
+    const login = useCallback((userData: LoginData, token: string) => {
+        authService.startSession(userData, token);
         setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('authToken', token);
-    };
+    }, []);
 
-    const relogin = (userData?: LoginData, token?: string) => {
+    const relogin = useCallback((userData?: LoginData, token?: string) => {
+        // Panggil service untuk update storage
+        authService.updateSession(userData, token);
+        // Jika data user baru diberikan, update state
         if (userData) {
             setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
         }
-    
-        if (token) {
-            localStorage.setItem('authToken', token);
-        }
-    };
-    
+    }, []);
 
-    const logout = () => {
+    const logout = useCallback(() => {
+        authService.clearSession();
         setUser(null);
-        localStorage.removeItem('user');
-        localStorage.removeItem('authToken');
-    };
+    }, []);
 
-    const hasRole = (role: string): boolean => {
+    const hasRole = useCallback((role: string): boolean => {
         return user?.roles.some(r => r.name === role) ?? false;
-    };
+    }, [user]);
 
-    const hasPermission = (permission: string): boolean => {
+    const hasPermission = useCallback((permission: string): boolean => {
         return user?.permissions.some(p => p.name === permission) ?? false;
-    };
+    }, [user]);
+
+    // Gunakan useMemo untuk mengoptimalkan value context
+    const value = useMemo(() => ({
+        user,
+        isAuthenticated: !!user, // Tambahkan helper flag
+        login,
+        relogin,
+        logout,
+        hasRole,
+        hasPermission,
+    }), [user, login, relogin, logout, hasRole, hasPermission]);
 
     return (
-        <AuthContext.Provider value={{ user, login, relogin, logout, hasRole, hasPermission }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
@@ -62,7 +70,7 @@ export default AuthProvider;
 export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);
     if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider')
+        throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
 }

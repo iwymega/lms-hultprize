@@ -1,4 +1,8 @@
+// src/api/api.ts
+
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+// Import authService yang sudah kita buat
+import { authService } from '@/auth/services/authService';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
@@ -23,7 +27,8 @@ const privateApi: AxiosInstance = axios.create({
 // Intercept requests for Private API
 privateApi.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('authToken'); // Get token from localStorage
+        // Ambil token dari authService, bukan localStorage langsung
+        const token = authService.getToken();
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -40,8 +45,10 @@ privateApi.interceptors.response.use(
     (error) => {
         // Handle token expiration or unauthorized access
         if (error.response?.status === 401) {
-            localStorage.removeItem('authToken'); // Clear token on 401
-            window.location.href = '/login'; // Redirect to login page
+            // Gunakan authService untuk membersihkan seluruh sesi (token dan data user)
+            authService.clearSession();
+            // Redirect ke halaman login. Ini adalah pendekatan yang simpel dan efektif.
+            window.location.href = '/login';
         }
         return Promise.reject(error);
     }

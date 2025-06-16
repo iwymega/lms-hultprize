@@ -1,34 +1,63 @@
-import { useMutation } from '@tanstack/react-query';
+// src/auth/hooks/useLogin.ts
+
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { publicApi } from '../../api/api';
 import { useAuth } from '../context/AuthProvider';
-import loginDataSchema from '../schema/loginDataSchema';
-import loginResponseSchema from '../response/loginResponseSchema';
-import { z } from 'zod';
+import { ApiLoginPayload } from '../schema/loginDataSchema'; // PERBAIKAN: Hanya impor tipe yang digunakan
 import { useNavigate } from 'react-router';
-import { AxiosError } from 'axios';
-import { getRedirectPathFromPermissions } from '../utils/utils';
+import { AxiosError } from 'axios'; // PERBAIKAN: Hanya impor tipe yang digunakan
+import { LoginData as UserData } from '../response/loginResponseSchema';
+import { getRedirectPath } from '../utils/utils';
 
-type LoginData = z.infer<typeof loginDataSchema>;
-type LoginResponse = z.infer<typeof loginResponseSchema>;
+type LoginVariables = ApiLoginPayload;
 
-export const useLogin = () => {
+// Definisikan default mutationFn
+const defaultMutationFn = (data: LoginVariables) => {
+    return publicApi.post<any>('/v1/login', data).then(res => res.data);
+};
+
+// Tipe untuk hasil transformasi, yang dibutuhkan oleh fungsi login
+interface TransformedAuthData {
+    user: UserData;
+    token: string;
+}
+
+// Tipe untuk opsi kustomisasi
+interface UseLoginOptions<TResponse = unknown> {
+    transformResponse?: (response: TResponse) => TransformedAuthData;
+    mutationFn?: (variables: LoginVariables) => Promise<TResponse>;
+    mutationOptions?: Omit<UseMutationOptions<TransformedAuthData, AxiosError, LoginVariables>, 'mutationFn'>;
+}
+
+// Default transformer jika API sudah sesuai dengan schema
+const defaultTransformResponse = (response: any): TransformedAuthData => {
+    return {
+        user: response.data,
+        token: response.token,
+    };
+};
+
+export const useLogin = <TResponse = any>(options?: UseLoginOptions<TResponse>) => {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    return useMutation<LoginResponse, AxiosError, LoginData>({
+    const {
+        transformResponse = defaultTransformResponse,
+        mutationOptions,
+        mutationFn = defaultMutationFn,
+    } = options ?? {};
+
+    return useMutation<TransformedAuthData, AxiosError, LoginVariables>({
         mutationFn: async (data) => {
-            const response = await publicApi.post<LoginResponse>('/v1/login', data);
-            return response.data;
+            const response = await mutationFn(data);
+            return transformResponse(response);
         },
         onSuccess: (data) => {
-            login(data.data, data.token);
-
-            const roles = data?.data?.roles || [];
-            const permissions = data?.data?.permissions || [];
-            const redirectPath = getRedirectPathFromPermissions(permissions, roles);
-
-            // navigate('/');
+            login(data.user, data.token);
+            const { roles = [], permissions = [] } = data.user;
+            const redirectPath = getRedirectPath(roles, permissions);
             navigate(redirectPath);
         },
+        ...mutationOptions,
     });
 };
