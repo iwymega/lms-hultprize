@@ -16,15 +16,18 @@ interface BaseTableProps<T> {
     skeletonRows?: number;
     tableName?: string;
     renderHeader?: () => React.ReactNode;
+    className?: string;
 }
 
-export function BaseTable<T>({ columns, data, isLoading, skeletonRows = 5, tableName, renderHeader }: BaseTableProps<T>) {
+export function BaseTable<T>({ columns, data, isLoading, skeletonRows = 5, tableName, renderHeader, className }: BaseTableProps<T>) {
     return (
         <>
-            <div className="bg-white rounded-lg border">
-                <div className="flex items-center justify-between p-6 border-b">
-                    {renderHeader ? renderHeader() : <h2 className="text-lg font-medium">{tableName}</h2>}
-                </div>
+            <div className={cn("bg-white rounded-lg border", className)}>
+                {(renderHeader || tableName) && (
+                    <div className="flex items-center justify-between p-6 border-b">
+                        {renderHeader ? renderHeader() : <h2 className="text-lg font-medium">{tableName}</h2>}
+                    </div>
+                )}
                 <div className="overflow-x-auto">
                     <Table className="w-full">
                         <TableHeader>
