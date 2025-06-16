@@ -17,9 +17,10 @@ interface BaseTableProps<T> {
     tableName?: string;
     renderHeader?: () => React.ReactNode;
     className?: string;
+    renderBody?: (data: T[]) => React.ReactNode;
 }
 
-export function BaseTable<T>({ columns, data, isLoading, skeletonRows = 5, tableName, renderHeader, className }: BaseTableProps<T>) {
+export function BaseTable<T extends { id?: string | number }>({ columns, data, isLoading, skeletonRows = 5, tableName, renderHeader, className, renderBody, }: BaseTableProps<T>) {
     return (
         <>
             <div className={cn("bg-white rounded-lg border", className)}>
@@ -40,33 +41,41 @@ export function BaseTable<T>({ columns, data, isLoading, skeletonRows = 5, table
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {isLoading
-                                ? Array.from({ length: skeletonRows }).map((_, i) => (
-                                    <TableRow key={i} className="border-b">
-                                        {columns.map((col) => (
-                                            <TableCell key={col.key as string} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {isLoading ? (
+                                // Skeleton logic tetap sama
+                                Array.from({ length: skeletonRows }).map((_, i) => (
+                                    <TableRow key={`skeleton-${i}`}>
+                                        {columns.map((_col, j) => (
+                                            <TableCell key={`skeleton-cell-${j}`} className="px-6 py-4 whitespace-nowrap">
                                                 <Skeleton className="h-4 w-full" />
                                             </TableCell>
                                         ))}
                                     </TableRow>
                                 ))
-                                : data.length === 0
-                                    ? (
-                                        <TableRow className="border-b">
-                                            <TableCell colSpan={columns.length} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                                                Data Not Found
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                    : data.map((item, index) => (
-                                        <TableRow key={index} className="border-b">
-                                            {columns.map((col) => (
-                                                <TableCell key={col.key as string} className={cn("px-6 py-4 whitespace-nowrap text-sm text-gray-900", col.className)}>
+                            ) : data.length === 0 ? (
+                                // "Data Not Found" logic tetap sama
+                                <TableRow>
+                                    <TableCell colSpan={columns.length} className="px-6 py-4 text-center text-sm text-gray-500">
+                                        Data Not Found
+                                    </TableCell>
+                                </TableRow>
+                            ) : // --- START: Perubahan Logika Rendering ---
+                                // Jika renderBody ada, gunakan itu.
+                                // Jika tidak, gunakan logika lama untuk kompatibilitas ke belakang.
+                                renderBody ? (
+                                    renderBody(data)
+                                ) : (
+                                    data.map((item, index) => (
+                                        <TableRow key={item.id || index}>
+                                            {columns.map((col, colIndex) => (
+                                                <TableCell key={(col.key as string) || colIndex} className={cn("px-6 py-4 whitespace-nowrap text-sm text-gray-900", col.className)}>
                                                     {col.render ? col.render(item, index) : (item[col.key as keyof T] as React.ReactNode)}
                                                 </TableCell>
                                             ))}
                                         </TableRow>
-                                    ))}
+                                    ))
+                                    // --- END: Perubahan Logika Rendering ---
+                                )}
                         </TableBody>
                     </Table>
                 </div>
