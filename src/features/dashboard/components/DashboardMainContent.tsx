@@ -4,77 +4,70 @@ import {
     ShoppingCart,
     UserPlus,
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { DashboardCard } from "./DashboardCard"
 import SalesChart from "./SalesChart"
 import TopCustomers from "./TopCustomers"
 import LatestTransactions from "./LatestTransactions"
 import Notifications from "./Notifications"
-import { useTranslation } from "react-i18next"
+import CashflowChart from "./CashflowChart"
+import IncomeBreakdown from "./IncomeBreakdown"
+import { dashboardCardStats } from "@/features/dashboard/data/dashboard"
+
+const iconMap = {
+    ShoppingCart: (props: any) => <ShoppingCart {...props} />,
+    CreditCard: (props: any) => <CreditCard {...props} />,
+    AlertTriangle: (props: any) => <AlertTriangle {...props} />,
+    UserPlus: (props: any) => <UserPlus {...props} />,
+};
 
 export default function DashboardMainContent() {
     const { t } = useTranslation();
-    const dashboardCards = [
-        {
-            title: t("dashboard.total-sales-today"),
-            icon: <ShoppingCart className="h-4 w-4 text-blue-600" />,
-            iconBg: "bg-blue-100",
-            value: "$1,204.00",
-            change: "+12% vs " + t("dashboard.yesterday"),
-            changeType: "up" as "up",
-        },
-        {
-            title: t("dashboard.total-transactions"),
-            icon: <CreditCard className="h-4 w-4 text-blue-600" />,
-            iconBg: "bg-blue-100",
-            value: "342",
-            change: "+5% vs " + t("dashboard.yesterday"),
-            changeType: "up" as "up",
-        },
-        {
-            title: t("dashboard.low-stock-warning"),
-            icon: <AlertTriangle className="h-4 w-4 text-blue-600" />,
-            iconBg: "bg-blue-100",
-            value: "8 Items",
-            change: "2 " + t("dashboard.new-warning"),
-            changeType: "down" as "down",
-        },
-        {
-            title: t("dashboard.new-customers-today"),
-            icon: <UserPlus className="h-4 w-4 text-blue-600" />,
-            iconBg: "bg-blue-100",
-            value: "24",
-            change: "+9% vs " + t("dashboard.yesterday"),
-            changeType: "up" as "up",
-        },
-    ]
 
     return (
-        <main className="p-6">
+        <main className="p-6 bg-gray-50 min-h-full">
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
-                {dashboardCards.map((card, idx) => (
-                    <DashboardCard
-                        key={idx}
-                        {...card}
-                        onDetailClick={() => console.log(`Detail clicked: ${card.title}`)}
-                    />
-                ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                {dashboardCardStats.map((card) => {
+                    const IconComponent = iconMap[card.icon as keyof typeof iconMap];
+                    return (
+                        <DashboardCard
+                            key={card.id}
+                            title={t(card.titleKey)}
+                            icon={<IconComponent className={`h-5 w-5 ${card.iconColor}`} />}
+                            iconBg={card.iconBg}
+                            value={card.value}
+                            change={`${card.change} vs ${t(card.changeSuffixKey)}`}
+                            changeType={card.changeType}
+                            onDetailClick={() => console.log(`Detail clicked: ${card.titleKey}`)}
+                        />
+                    );
+                })}
             </div>
 
-            {/* Charts */}
-            <div className="mb-6">
-                <SalesChart />
+            {/* Main Charts Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+                <div className="lg:col-span-3">
+                    <SalesChart />
+                </div>
+                <div className="lg:col-span-2">
+                    <IncomeBreakdown />
+                </div>
             </div>
 
-            {/* Top Customer, Latest Transactions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                {/* Top Customer */}
-                <TopCustomers />
-                {/* Transaction History */}
+            {/* Secondary Charts/Data Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+                <div className="lg:col-span-2">
+                    <TopCustomers />
+                </div>
+                <div className="lg:col-span-3">
+                    <CashflowChart />
+                </div>
+            </div>
+
+            {/* Tables Row */}
+            <div className="grid grid-cols-1 gap-6 mb-6">
                 <LatestTransactions />
-            </div>
-
-            <div className="mb-6">
                 <Notifications />
             </div>
         </main>

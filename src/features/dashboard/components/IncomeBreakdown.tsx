@@ -2,13 +2,36 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { ArrowRight, ChevronDown, MoreHorizontal } from 'lucide-react'
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { incomeBreakdownData } from '@/features/dashboard/data/dashboard'
+import { cn } from '@/lib/utils'
+
+// Helper untuk membuat pie chart dari border
+const PieSlice: React.FC<{ percentage: number; color: string; size: number; rotation: number }> = ({ percentage, color, size, rotation }) => {
+    const circumference = 2 * Math.PI * (size / 2 - 2); // -2 untuk ketebalan border
+    const dasharray = `${(percentage / 100) * circumference} ${circumference}`;
+    return (
+        <svg className="absolute w-full h-full" style={{ transform: `rotate(${rotation}deg)` }}>
+            <circle cx={size / 2} cy={size / 2} r={size / 2 - 2} fill="transparent" strokeWidth="4"
+                className={cn('transition-all duration-500', color)}
+                strokeDasharray={dasharray}
+                strokeDashoffset="0"
+                transform={`rotate(-90 ${size / 2} ${size / 2})`}
+            />
+        </svg>
+    )
+}
 
 const IncomeBreakdown: React.FC = () => {
+    const { t } = useTranslation()
     const [month, setMonth] = useState("December")
+
+    let cumulativeRotation = 0;
+
     return (
-        <div className="bg-white p-6 rounded-lg border">
+        <div className="bg-white p-6 rounded-lg border h-full flex flex-col">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium">Incomes Breakdown</h2>
+                <h2 className="text-lg font-medium">{t('dashboard.income_breakdown.title')}</h2>
                 <div className="flex items-center gap-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -29,65 +52,29 @@ const IncomeBreakdown: React.FC = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-6">
-                <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-full border-4 border-indigo-500 border-r-transparent"></div>
-                    <span className="mt-2 text-sm">UI UX</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-full border-4 border-blue-400 border-r-transparent border-t-transparent"></div>
-                    <span className="mt-2 text-sm">Branding</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-full border-4 border-teal-500 border-r-transparent border-t-transparent border-l-transparent"></div>
-                    <span className="mt-2 text-sm">Illustration</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-full border-4 border-orange-400 border-r-transparent border-t-transparent border-l-transparent border-b-transparent"></div>
-                    <span className="mt-2 text-sm">Web Dev</span>
+            <div className="flex justify-center items-center my-4 h-32">
+                <div className="relative w-32 h-32">
+                    <div className="w-full h-full rounded-full bg-gray-100"></div>
+                    {incomeBreakdownData.map(item => {
+                        const rotation = cumulativeRotation;
+                        cumulativeRotation += (item.percentage / 100) * 360;
+                        return <PieSlice key={item.category} percentage={item.percentage} color={item.borderColor} size={128} rotation={rotation} />
+                    })}
                 </div>
             </div>
 
-            <div className="space-y-4">
-                <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-indigo-500 mr-2"></div>
-                    <span className="text-sm font-medium">52% UI UX</span>
-                    <span className="ml-auto text-sm font-medium">$39.419,76</span>
-                    <Button variant="ghost" size="sm" className="ml-2 h-6 px-2">
-                        <span className="text-sm text-gray-500">See Detail</span>
-                        <ArrowRight className="h-3 w-3 ml-1" />
-                    </Button>
-                </div>
-
-                <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-blue-400 mr-2"></div>
-                    <span className="text-sm font-medium">20% Branding</span>
-                    <span className="ml-auto text-sm font-medium">$7.883,95</span>
-                    <Button variant="ghost" size="sm" className="ml-2 h-6 px-2">
-                        <span className="text-sm text-gray-500">See Detail</span>
-                        <ArrowRight className="h-3 w-3 ml-1" />
-                    </Button>
-                </div>
-
-                <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-teal-500 mr-2"></div>
-                    <span className="text-sm font-medium">15% Illustration</span>
-                    <span className="ml-auto text-sm font-medium">$5.912,96</span>
-                    <Button variant="ghost" size="sm" className="ml-2 h-6 px-2">
-                        <span className="text-sm text-gray-500">See Detail</span>
-                        <ArrowRight className="h-3 w-3 ml-1" />
-                    </Button>
-                </div>
-
-                <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-orange-400 mr-2"></div>
-                    <span className="text-sm font-medium">13% Web Dev</span>
-                    <span className="ml-auto text-sm font-medium">$5.129,76</span>
-                    <Button variant="ghost" size="sm" className="ml-2 h-6 px-2">
-                        <span className="text-sm text-gray-500">See Detail</span>
-                        <ArrowRight className="h-3 w-3 ml-1" />
-                    </Button>
-                </div>
+            <div className="space-y-4 flex-grow">
+                {incomeBreakdownData.map(item => (
+                    <div key={item.category} className="flex items-center">
+                        <div className={cn("w-3 h-3 rounded-full mr-3", item.color)}></div>
+                        <span className="text-sm font-medium">{item.percentage}% {item.category}</span>
+                        <span className="ml-auto text-sm font-medium">${item.amount.toLocaleString('en-US')}</span>
+                        <Button variant="ghost" size="sm" className="ml-2 h-6 px-2 text-gray-500 hover:text-gray-800">
+                            <span>{t('common.see-detail')}</span>
+                            <ArrowRight className="h-3 w-3 ml-1" />
+                        </Button>
+                    </div>
+                ))}
             </div>
         </div>
     )
