@@ -12,8 +12,9 @@ import { getRedirectPath } from '../utils/utils';
 type LoginVariables = ApiLoginPayload;
 
 // Definisikan default mutationFn
-const defaultMutationFn = (data: LoginVariables) => {
-    return publicApi.post<any>('/v1/login', data).then(res => res.data);
+const defaultMutationFn = async (data: LoginVariables) => {
+    const res = await publicApi.post<any>('/v1/login', data);
+    return res.data;
 };
 
 // Tipe untuk hasil transformasi, yang dibutuhkan oleh fungsi login
