@@ -1,11 +1,13 @@
+// src/shared/hooks/useFormSubmit.tsx
+
 import { FieldValues, UseFormSetError, Path } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useCallback } from "react";
 import { AxiosError } from "axios";
-import { ErrorToast } from '@/shared/components/toasts/ErrorToast'
+import { ErrorToast } from '@/shared/components/toasts/ErrorToast'; // Pastikan path ini benar
 
-// Helper untuk mendapatkan detail error, tetap sama
+// Helper dan tipe props tidak perlu diubah
 const getDetailedErrorMessage = (error: any): string => {
     if (error instanceof AxiosError && error.response) {
         return `Status: ${error.response.status}\nURL: ${error.config?.url}\nResponse: ${JSON.stringify(error.response.data, null, 2)}`;
@@ -16,7 +18,6 @@ const getDetailedErrorMessage = (error: any): string => {
     return JSON.stringify(error, null, 2);
 };
 
-// Tipe props yang sudah ditingkatkan, tetap sama
 interface UseFormSubmitProps<TForm extends FieldValues, TMutate = TForm> {
     mutate: (data: TMutate) => Promise<any>;
     isPending: boolean;
@@ -42,8 +43,9 @@ export function useFormSubmit<TForm extends FieldValues, TMutate = TForm>({
 
     const onSubmit = useCallback(
         async (formData: TForm) => {
-            const toastId = "submit-toast";
-            toast.loading("Submitting...", { id: toastId });
+            // PERBAIKAN: JANGAN BUAT TOAST LOADING DI SINI
+            // const toastId = "submit-toast";
+            // toast.loading("Submitting...", { id: toastId });
 
             try {
                 const apiPayload = transformPayload
@@ -65,7 +67,8 @@ export function useFormSubmit<TForm extends FieldValues, TMutate = TForm>({
                     });
                 }
 
-                toast.success(successMessage, { id: toastId });
+                // Tampilkan toast sukses HANYA SETELAH semua berhasil
+                toast.success(successMessage);
 
             } catch (mutationError: any) {
                 console.error("Mutation error:", mutationError);
@@ -82,7 +85,7 @@ export function useFormSubmit<TForm extends FieldValues, TMutate = TForm>({
                     }
                 }
 
-                // PERBAIKAN: Panggil toast.custom dengan komponen yang diimpor
+                // Tampilkan toast error kustom HANYA SETELAH error terjadi
                 toast.custom(
                     (t) => (
                         <ErrorToast
@@ -91,7 +94,7 @@ export function useFormSubmit<TForm extends FieldValues, TMutate = TForm>({
                             details={getDetailedErrorMessage(mutationError)}
                         />
                     ),
-                    { id: toastId, duration: Infinity }
+                    { duration: Infinity } // Biarkan permanen sampai di-dismiss manual
                 );
             }
         },
