@@ -28,6 +28,9 @@ interface SearchableSelectProps {
     isMulti?: boolean;
     className?: string;
     disabled?: boolean;
+    searchValue?: string;
+    onSearchChange?: (search: string) => void;
+    serverSideSearch?: boolean;
 }
 
 export const SearchableSelect: React.FC<SearchableSelectProps> = ({
@@ -38,6 +41,9 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
     isMulti = false,
     className,
     disabled = false,
+    searchValue,
+    onSearchChange,
+    serverSideSearch = false,
 }) => {
     const [open, setOpen] = React.useState(false);
 
@@ -51,8 +57,9 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
     const handleSelect = (val: string) => {
         if (isMulti) {
             const current = Array.isArray(value) ? value : [];
-            const exists = current.includes(val);
-            const newValues = exists
+            const isAlreadySelected = current.includes(val); // Menggunakan variabel yang lebih deskriptif
+
+            const newValues = isAlreadySelected
                 ? current.filter((v) => v !== val)
                 : [...current, val];
             onChange(newValues);
@@ -63,15 +70,19 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
     };
 
     const displayValue = () => {
-        if (isMulti && Array.isArray(value)) {
+        if (isMulti && Array.isArray(value) && value.length > 0) {
+            if (value.length > 2) {
+                return `${value.length} items selected`;
+            }
             return options
                 .filter((opt) => value.includes(opt.value))
                 .map((opt) => opt.label)
                 .join(", ");
-        } else {
+        } else if (!isMulti) {
             const selected = options.find((opt) => opt.value === value);
             return selected?.label || "";
         }
+        return "";
     };
 
     return (
@@ -84,18 +95,24 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
                         disabled={disabled}
                         aria-expanded={open}
                         className={cn(
-                            "w-full h-10 justify-between rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            "w-full h-10 justify-between font-normal", // Menghapus style hardcode dan menggunakan font-normal
+                            !displayValue() && "text-muted-foreground" // Gaya placeholder jika tidak ada nilai
                         )}
                     >
-                        {displayValue() || (
-                            <span className="text-muted-foreground">{placeholder}</span>
-                        )}
+                        {displayValue() || placeholder}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
-                    <Command>
-                        <CommandInput placeholder="Search..." className="h-9" />
+                    <Command
+                        filter={serverSideSearch ? () => 1 : undefined}
+                    >
+                        <CommandInput
+                            placeholder="Search..."
+                            className="h-9"
+                            value={searchValue}
+                            onValueChange={onSearchChange}
+                        />
                         <CommandEmpty>No options found.</CommandEmpty>
                         <CommandGroup>
                             {options.map((option) => (
@@ -122,4 +139,5 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
         </div>
     );
 };
+
 export default SearchableSelect;
