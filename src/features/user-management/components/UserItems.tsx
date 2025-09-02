@@ -4,6 +4,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next';
 import EditUserModal from './EditUserModal';
 import RemoveUser from './RemoveUser';
+import AssignRoleModal from './AssignRoleModal';
 
 type Props = {
     user: SingleUserResponse;
@@ -29,6 +30,7 @@ const UserItems: React.FC<Props> = ({ user }) => {
             </td>
 
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex space-x-2">
+                <AssignRoleModal user={user} /> 
                 <EditUserModal user={user} />
                 <RemoveUser user={user} />
             </td>
