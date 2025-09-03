@@ -41,7 +41,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({ collapse
                         <Button variant="ghost" className="w-full px-2 py-1.5 flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                                 <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-                                    <img src="/profile.jpg" alt="User" className="w-full h-full object-cover" />
+                                    <img src={user?.photo_url || "/profile.jpg"} alt={user?.name} className="w-full h-full object-cover" />
                                 </div>
                                 <div className="text-left">
                                     <p className="text-sm font-medium leading-none">{truncateText(user?.name ?? '', 30, '...')}</p>

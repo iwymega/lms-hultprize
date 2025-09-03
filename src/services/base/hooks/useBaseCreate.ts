@@ -28,7 +28,14 @@ export const useBaseCreate = <T, R>({
                 const formDataObject = new FormData();
                 Object.entries(formData as Record<string, any>).forEach(([key, value]) => {
                     if (value !== undefined && value !== null) {
-                        formDataObject.append(key, value);
+                        // *** INI PERUBAHANNYA ***
+                        // Jika value adalah FileList, ambil file pertama (value[0])
+                        if (value instanceof FileList && value.length > 0) {
+                            formDataObject.append(key, value[0]);
+                        } else {
+                            // Jika bukan, append seperti biasa
+                            formDataObject.append(key, value);
+                        }
                     }
                 });
                 dataToSend = formDataObject;
@@ -39,13 +46,12 @@ export const useBaseCreate = <T, R>({
 
             const response = await privateApi.post(`/${endpoint}`, dataToSend, {
                 headers,
-                ...request, // ← Inject custom Axios config if provided
+                ...request,
             });
 
             return response.data;
         },
 
-        // Core success logic with schema validation
         onSuccess: async (data, variables, context) => {
             try {
                 const validationResult = schema.safeParse(data);
@@ -54,7 +60,6 @@ export const useBaseCreate = <T, R>({
                     throw new Error(`Invalid ${endpoint} data format`);
                 }
 
-                // Call external onSuccess if provided via query layer
                 if (query?.onSuccess) {
                     query.onSuccess(validationResult.data, variables, context);
                 }
@@ -65,7 +70,6 @@ export const useBaseCreate = <T, R>({
             }
         },
 
-        // Custom error handler
         onError: (error, variables, context) => {
             console.error(`Failed to create ${endpoint}`, error);
             if (query?.onError) {

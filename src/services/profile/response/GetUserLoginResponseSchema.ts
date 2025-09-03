@@ -26,6 +26,7 @@ const UserSchema = z.object({
     updated_at: z.string(),
     roles: z.array(RoleSchema).optional(),
     permissions: z.array(PermissionSchema).optional(),
+    photo_url: z.string().nullable().optional(),
 });
 
 // Apply the base schema for a single user response
