@@ -3,6 +3,8 @@ import { useState } from "react";
 export default function ImageMapPage() {
     const [isOpen, setIsOpen] = useState(false);
     const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+    const [tooltipContent, setTooltipContent] = useState('');
+    const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
     const handleAreaClick = () => {
         setIsOpen(true);
@@ -17,17 +19,32 @@ export default function ImageMapPage() {
                 className="max-w-none"
             />
             {isTooltipOpen && (
-                <div className="absolute top-52 left-80 bg-gray-800 text-white p-2 rounded shadow-lg z-10">
-                    Tooltip for the area
+                <div className="absolute bg-gray-800 text-white p-2 rounded shadow-lg z-10" style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
+                    {tooltipContent}
                 </div>
             )}
             <map name="WhatsAppImage2025-11-24at14.34.49.jpeg" id="WhatsAppImage2025-11-24at14.34.49.jpeg">
                 <area
                     shape="poly"
-                    coords="360,214,388,321,471,310,404,196,360,214"
+                    coords="543,140,620,140,620,194,543,194,543,140"
                     onClick={handleAreaClick}
-                    onFocus={handleAreaClick}
-                    onMouseEnter={() => setIsTooltipOpen(true)}
+                    onMouseEnter={() => { setIsTooltipOpen(true); setTooltipContent('Tooltip for area 1'); setTooltipPosition({ top: 167, left: 581 }); }}
+                    onMouseLeave={() => setIsTooltipOpen(false)}
+                    alt=""
+                />
+                <area
+                    shape="poly"
+                    coords="428,201,498,201,498,258,428,258,428,201"
+                    onClick={handleAreaClick}
+                    onMouseEnter={() => { setIsTooltipOpen(true); setTooltipContent('Tooltip for area 2'); setTooltipPosition({ top: 230, left: 463 }); }}
+                    onMouseLeave={() => setIsTooltipOpen(false)}
+                    alt=""
+                />
+                <area
+                    shape="poly"
+                    coords="349,218,426,218,426,306,349,306,349,218"
+                    onClick={handleAreaClick}
+                    onMouseEnter={() => { setIsTooltipOpen(true); setTooltipContent('Tooltip for area 3'); setTooltipPosition({ top: 262, left: 388 }); }}
                     onMouseLeave={() => setIsTooltipOpen(false)}
                     alt=""
                 />
