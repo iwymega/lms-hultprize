@@ -14,6 +14,7 @@ import RolePermissionsAssignedPage from "@/features/role/pages/RolePermissionsAs
 import DocsPage from "@/shared/docs/DocsPage";
 import AllNotificationPage from "@/features/notification/pages/AllNotificationPage";
 import ImageMapPage from "@/features/image-map/pages/ImageMapPage";
+import CardScannerPage from "@/features/card-scanner/pages/CardScannerPage";
 
 type ProtectedRoute = {
     path: string;
@@ -104,6 +105,13 @@ export const ROUTES: Record<string, AppRoute> = {
     IMAGE_MAP: {
         path: "/image-map",
         element: <ImageMapPage />,
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    CARD_SCANNER: {
+        path: "/card-scanner",
+        element: <CardScannerPage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],
