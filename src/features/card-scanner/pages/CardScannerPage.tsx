@@ -47,6 +47,11 @@ export default function CardScannerPage() {
     setIsScanning(false);
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+    startScan();
+  }
+
   return (
     <div>
       <Card>
@@ -95,7 +100,7 @@ export default function CardScannerPage() {
               )}
             </div>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
               className="mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
             >
               Close
