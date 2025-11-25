@@ -13,6 +13,7 @@ import RoleUsersAssignedPage from "@/features/role/pages/RoleUsersAssignedPage";
 import RolePermissionsAssignedPage from "@/features/role/pages/RolePermissionsAssignedPage";
 import DocsPage from "@/shared/docs/DocsPage";
 import AllNotificationPage from "@/features/notification/pages/AllNotificationPage";
+import ImageMapPage from "@/features/image-map/pages/ImageMapPage";
 
 type ProtectedRoute = {
     path: string;
@@ -96,6 +97,13 @@ export const ROUTES: Record<string, AppRoute> = {
     NOTIFICATIONS: {
         path: "/notifications",
         element: <AllNotificationPage />, // Assuming this is the correct page for notifications
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    IMAGE_MAP: {
+        path: "/image-map",
+        element: <ImageMapPage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],
