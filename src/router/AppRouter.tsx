@@ -15,6 +15,7 @@ import DocsPage from "@/shared/docs/DocsPage";
 import AllNotificationPage from "@/features/notification/pages/AllNotificationPage";
 import ImageMapPage from "@/features/image-map/pages/ImageMapPage";
 import CardScannerPage from "@/features/card-scanner/pages/CardScannerPage";
+import NotFound from "@/shared/components/error-page/NotFound";
 
 type ProtectedRoute = {
     path: string;
@@ -124,6 +125,10 @@ export const ROUTES: Record<string, AppRoute> = {
     FORBIDDEN: {
         path: "/forbidden",
         element: <ForbiddenPage />,
+    },
+    NOT_FOUND: {
+        path: "*",
+        element: <NotFound />,
     },
     DOCS: {
         path: "/docs",
