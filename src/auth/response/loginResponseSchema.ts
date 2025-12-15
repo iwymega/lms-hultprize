@@ -28,7 +28,7 @@ const loginDataSchema = z.object({
     active_property: z.string().optional(),
     active_property_id: z.string().optional(),
     properties: z.record(z.any()).optional(),
-    photo_url: z.string().optional(),
+    photo_url: z.string().nullable().optional(),
 });
 
 const loginResponseSchema = z.object({

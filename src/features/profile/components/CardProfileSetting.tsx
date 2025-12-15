@@ -1,4 +1,5 @@
 import { useAuth } from '@/auth/context/AuthProvider';
+import { LoginData } from '@/auth/response/loginResponseSchema';
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import useGetUserLogin from '@/services/profile/hooks/useGetUserLogin';
@@ -45,7 +46,8 @@ const CardProfileSetting: React.FC = () => {
                             ...res.data.data,
                             roles: res.data.data.roles ?? [],
                             permissions: res.data.data.permissions ?? [],
-                        });
+                            photo_url: res.data.data.photo_url ?? undefined,
+                        } as LoginData);
                     }
                 });
             }
