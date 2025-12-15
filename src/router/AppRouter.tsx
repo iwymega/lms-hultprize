@@ -11,7 +11,6 @@ import PermissionsPage from "@/features/permission/pages/PermissionsPage";
 import RolePage from "@/features/role/pages/RolePage";
 import RoleUsersAssignedPage from "@/features/role/pages/RoleUsersAssignedPage";
 import RolePermissionsAssignedPage from "@/features/role/pages/RolePermissionsAssignedPage";
-import DocsPage from "@/shared/docs/DocsPage";
 import AllNotificationPage from "@/features/notification/pages/AllNotificationPage";
 import ImageMapPage from "@/features/image-map/pages/ImageMapPage";
 import CardScannerPage from "@/features/card-scanner/pages/CardScannerPage";
@@ -129,10 +128,6 @@ export const ROUTES: Record<string, AppRoute> = {
     NOT_FOUND: {
         path: "*",
         element: <NotFound />,
-    },
-    DOCS: {
-        path: "/docs",
-        element: <DocsPage />,
     },
 };
 
