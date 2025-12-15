@@ -25,10 +25,10 @@ const GroupedPermissions = () => {
         }
     });
 
-    const groupedPermissions = permissions?.data.reduce((acc: Record<string, { group: string; permissions: { key: string; display_name: string }[] }>, permission) => {
+    const groupedPermissions = permissions?.data.reduce((acc: Record<string, { id: string; group: string; permissions: { key: string; display_name: string }[] }>, permission) => {
         const group = permission.group || "Ungrouped";
         if (!acc[group]) {
-            acc[group] = { group, permissions: [] };
+            acc[group] = { id: group, group, permissions: [] };
         }
         acc[group].permissions.push({
             key: permission.name,
@@ -128,7 +128,7 @@ const RolePermissionManagementTable: React.FC<Props> = ({ roleName, roleDisplayN
     return (
         <div className="p-6 space-y-4">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <BaseTable
+                <BaseTable<{ id: string; group: string; permissions: { key: string; display_name: string }[] }>
                     data={groupedPermissions ? Object.values(groupedPermissions) : []}
                     columns={[
                         { title: "No", key: "index", render: (_, index) => index + 1, className: "w-12" },
@@ -139,7 +139,7 @@ const RolePermissionManagementTable: React.FC<Props> = ({ roleName, roleDisplayN
                                     control={control}
                                     name="permissions"
                                     render={({ field }) => {
-                                        const allKeys = item.permissions.map((d) => d.key);
+                                        const allKeys = item.permissions.map((d: { key: string; display_name: string }) => d.key);
                                         const { allSelected, toggleAll } = useCheckboxSelectCrossRow(field.value || [], allKeys);
 
                                         return (
@@ -173,8 +173,8 @@ const RolePermissionManagementTable: React.FC<Props> = ({ roleName, roleDisplayN
                                                     data={item.permissions}
                                                     selectedKeys={field.value ?? []}
                                                     toggleItem={toggleItem}
-                                                    keySelector={(item) => item.key}
-                                                    labelSelector={(item) => item.display_name}
+                                                    keySelector={(item: { key: string; display_name: string }) => item.key}
+                                                    labelSelector={(item: { key: string; display_name: string }) => item.display_name}
                                                     className="flex flex-row gap-2"
                                                 />
                                             )
