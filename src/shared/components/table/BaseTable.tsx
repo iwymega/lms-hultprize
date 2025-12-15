@@ -1,12 +1,19 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Columns, Eye, EyeOff } from "lucide-react";
 
 interface Column<T> {
     title: string;
     key: keyof T | string;
     render?: (item: T, index: number) => React.ReactNode;
     className?: string;
+    visible?: boolean;
 }
 
 interface BaseTableProps<T> {
@@ -18,22 +25,122 @@ interface BaseTableProps<T> {
     renderHeader?: () => React.ReactNode;
     className?: string;
     renderBody?: (data: T[]) => React.ReactNode;
+    enableColumnToggle?: boolean;
 }
 
-export function BaseTable<T extends { id?: string | number }>({ columns, data, isLoading, skeletonRows = 5, tableName, renderHeader, className, renderBody, }: BaseTableProps<T>) {
+export function BaseTable<T extends { id?: string | number }>({ columns, data, isLoading, skeletonRows = 5, tableName, renderHeader, className, renderBody, enableColumnToggle = false }: BaseTableProps<T>) {
+    const [visibleColumns, setVisibleColumns] = useState<Set<string | keyof T>>(() => 
+        new Set(columns.filter(col => col.visible !== false).map(col => col.key))
+    );
+
+    const filteredColumns = useMemo(() => 
+        columns.filter(col => visibleColumns.has(col.key)), 
+        [columns, visibleColumns]
+    );
+
+    const toggleColumn = (key: string | keyof T) => {
+        setVisibleColumns(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(key)) {
+                newSet.delete(key);
+            } else {
+                newSet.add(key);
+            }
+            return newSet;
+        });
+    };
+
+    const renderColumnToggle = () => {
+        const allVisible = columns.every(col => visibleColumns.has(col.key));
+        const noneVisible = columns.every(col => !visibleColumns.has(col.key));
+
+        return (
+            <TooltipProvider>
+                <Popover>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <PopoverTrigger asChild>
+                                <Button variant="outline" size="sm" className="gap-2">
+                                    <Columns className="h-4 w-4" />
+                                    <span className="hidden sm:inline">Columns</span>
+                                </Button>
+                            </PopoverTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Show/Hide Columns</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <PopoverContent className="w-64 p-0" align="end">
+                        <div className="p-4 border-b">
+                            <h4 className="font-medium text-sm">Column Visibility</h4>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Choose which columns to display
+                            </p>
+                        </div>
+                        <div className="p-2">
+                            <div className="flex items-center justify-between mb-3 px-2">
+                                <span className="text-sm font-medium">Toggle All</span>
+                                <div className="flex gap-1">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setVisibleColumns(new Set(columns.map(col => col.key)))}
+                                        disabled={allVisible}
+                                        className="h-7 px-2 text-xs"
+                                    >
+                                        <Eye className="h-3 w-3 mr-1" />
+                                        Show All
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setVisibleColumns(new Set())}
+                                        disabled={noneVisible}
+                                        className="h-7 px-2 text-xs"
+                                    >
+                                        <EyeOff className="h-3 w-3 mr-1" />
+                                        Hide All
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className="space-y-1 max-h-48 overflow-y-auto">
+                                {columns.map(col => (
+                                    <div key={col.key as string} className="flex items-center space-x-2 px-2 py-1 hover:bg-muted/50 rounded">
+                                        <Checkbox
+                                            id={`col-${col.key as string}`}
+                                            checked={visibleColumns.has(col.key)}
+                                            onCheckedChange={() => toggleColumn(col.key)}
+                                        />
+                                        <label
+                                            htmlFor={`col-${col.key as string}`}
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
+                                        >
+                                            {col.title}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </PopoverContent>
+                </Popover>
+            </TooltipProvider>
+        );
+    };
+
     return (
         <>
             <div className={cn("bg-white rounded-lg border", className)}>
                 {(renderHeader || tableName) && (
                     <div className="flex items-center justify-between p-6 border-b">
                         {renderHeader ? renderHeader() : <h2 className="text-lg font-medium">{tableName}</h2>}
+                        {enableColumnToggle && renderColumnToggle()}
                     </div>
                 )}
                 <div className="overflow-x-auto">
                     <Table className="w-full">
                         <TableHeader>
                             <TableRow className="border-b">
-                                {columns.map((col) => (
+                                {filteredColumns.map((col) => (
                                     <TableHead key={col.key as string} className={cn("px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider", col.className)}>
                                         {col.title}
                                     </TableHead>
@@ -45,7 +152,7 @@ export function BaseTable<T extends { id?: string | number }>({ columns, data, i
                                 // Skeleton logic tetap sama
                                 Array.from({ length: skeletonRows }).map((_, i) => (
                                     <TableRow key={`skeleton-${i}`}>
-                                        {columns.map((_col, j) => (
+                                        {filteredColumns.map((_col, j) => (
                                             <TableCell key={`skeleton-cell-${j}`} className="px-6 py-4 whitespace-nowrap">
                                                 <Skeleton className="h-4 w-full" />
                                             </TableCell>
@@ -55,7 +162,7 @@ export function BaseTable<T extends { id?: string | number }>({ columns, data, i
                             ) : data.length === 0 ? (
                                 // "Data Not Found" logic tetap sama
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className="px-6 py-4 text-center text-sm text-gray-500">
+                                    <TableCell colSpan={filteredColumns.length} className="px-6 py-4 text-center text-sm text-gray-500">
                                         Data Not Found
                                     </TableCell>
                                 </TableRow>
@@ -67,7 +174,7 @@ export function BaseTable<T extends { id?: string | number }>({ columns, data, i
                                 ) : (
                                     data.map((item, index) => (
                                         <TableRow key={item.id || index}>
-                                            {columns.map((col, colIndex) => (
+                                            {filteredColumns.map((col, colIndex) => (
                                                 <TableCell key={(col.key as string) || colIndex} className={cn("px-6 py-4 whitespace-nowrap text-sm text-gray-900", col.className)}>
                                                     {col.render ? col.render(item, index) : (item[col.key as keyof T] as React.ReactNode)}
                                                 </TableCell>

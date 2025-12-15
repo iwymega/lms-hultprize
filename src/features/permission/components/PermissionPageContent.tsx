@@ -85,6 +85,7 @@ const PermissionPageContent: React.FC = () => {
             </div>
 
             <BaseTable
+                enableColumnToggle={true}
                 columns={[
                     { title: "Name", key: "name" },
                     { title: "Display Name", key: "display_name" },
