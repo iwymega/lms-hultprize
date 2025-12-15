@@ -1,10 +1,3 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import { useState, useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Columns, Eye, EyeOff } from "lucide-react";
 
@@ -137,19 +130,93 @@ export function useColumnToggle<T>(columns: Column<T>[], initialVisibleColumns?:
     };
 }
 
-export function BaseTable<T extends { id?: string | number }>({
-    columns,
-    data,
-    isLoading,
-    skeletonRows = 5,
-    tableName,
-    renderHeader,
-    className,
-    renderBody,
-    enableColumnToggle = false,
-    columnToggleComponent
-}: BaseTableProps<T>) {
-    const { filteredColumns, renderColumnToggle } = useColumnToggle(columns);
+export function BaseTable<T extends { id?: string | number }>({ columns, data, isLoading, skeletonRows = 5, tableName, renderHeader, className, renderBody, enableColumnToggle = false, columnToggleComponent }: BaseTableProps<T>) {
+    const { visibleColumns, filteredColumns, renderColumnToggle } = useColumnToggle(columns);
+
+    return (
+            <TooltipProvider>
+                <Popover>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <PopoverTrigger asChild>
+                                <Button variant="outline" size="sm" className="gap-2">
+                                    <Columns className="h-4 w-4" />
+                                    <span className="hidden sm:inline">Columns</span>
+                                </Button>
+                            </PopoverTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Show/Hide Columns</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <PopoverContent className="w-64 p-0" align="end">
+                        <div className="p-4 border-b">
+                            <h4 className="font-medium text-sm">Column Visibility</h4>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Choose which columns to display
+                            </p>
+                        </div>
+                        <div className="p-2">
+                            <div className="flex items-center justify-between mb-3 px-2">
+                                <span className="text-sm font-medium">Toggle All</span>
+                                <div className="flex gap-1">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setVisibleColumns(new Set(columns.map(col => col.key)))}
+                                        disabled={allVisible}
+                                        className="h-7 px-2 text-xs"
+                                    >
+                                        <Eye className="h-3 w-3 mr-1" />
+                                        Show All
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setVisibleColumns(new Set())}
+                                        disabled={noneVisible}
+                                        className="h-7 px-2 text-xs"
+                                    >
+                                        <EyeOff className="h-3 w-3 mr-1" />
+                                        Hide All
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className="space-y-1 max-h-48 overflow-y-auto">
+                                {columns.map(col => (
+                                    <div key={col.key as string} className="flex items-center space-x-2 px-2 py-1 hover:bg-muted/50 rounded">
+                                        <Checkbox
+                                            id={`col-${col.key as string}`}
+                                            checked={visibleColumns.has(col.key)}
+                                            onCheckedChange={() => toggleColumn(col.key)}
+                                        />
+                                        <label
+                                            htmlFor={`col-${col.key as string}`}
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
+                                        >
+                                            {col.title}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </PopoverContent>
+                </Popover>
+            </TooltipProvider>
+        );
+    };
+
+    return {
+        visibleColumns,
+        filteredColumns,
+        toggleColumn,
+        renderColumnToggle,
+        setVisibleColumns
+    };
+}
+
+export function BaseTable<T extends { id?: string | number }>({ columns, data, isLoading, skeletonRows = 5, tableName, renderHeader, className, renderBody, enableColumnToggle = false, columnToggleComponent }: BaseTableProps<T>) {
+    const { visibleColumns, filteredColumns, renderColumnToggle } = useColumnToggle(columns);
 
     return (
         <>

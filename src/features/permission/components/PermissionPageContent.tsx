@@ -6,7 +6,7 @@ import { Download, Search } from 'lucide-react';
 import FilterDropdown from '@/shared/components/utility/FilterDropdown';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { BaseTable } from '@/shared/components/table/BaseTable';
+import { BaseTable, useColumnToggle } from '@/shared/components/table/BaseTable';
 import PaginationWithShow from '@/shared/components/pagination/PaginationWithShow';
 import SortByDropdown from '@/shared/components/utility/SortByDropdown';
 import EditPermissionModal from './EditPermissionModal';
@@ -41,6 +41,27 @@ const PermissionPageContent: React.FC = () => {
     };
 
     const [isAscending, setIsAscending] = useState(true); // State untuk urutan (ascending/descending)
+
+    // Column definitions
+    const columns = [
+        { title: "Name", key: "name" },
+        { title: "Display Name", key: "display_name" },
+        { title: "group", key: "group" },
+        {
+            title: "Actions",
+            key: "actions",
+            render: (item: any) => (
+                <>
+                    <EditPermissionModal permission={item} />
+                    <RemovePermission permission={item} />
+                </>
+            ),
+            className: "text-right",
+        },
+    ];
+
+    // Hook untuk column toggle
+    const { filteredColumns, renderColumnToggle } = useColumnToggle(columns);
 
     return (
         <main className="p-6">
@@ -85,23 +106,7 @@ const PermissionPageContent: React.FC = () => {
             </div>
 
             <BaseTable
-                enableColumnToggle={true}
-                columns={[
-                    { title: "Name", key: "name" },
-                    { title: "Display Name", key: "display_name" },
-                    { title: "group", key: "group" },
-                    {
-                        title: "Actions",
-                        key: "actions", // bebas, karena tidak diakses langsung dari item
-                        render: (item) => (
-                            <>
-                                <EditPermissionModal permission={item} />
-                                <RemovePermission permission={item} />
-                            </>
-                        ),
-                        className: "text-right",
-                    },
-                ]}
+                columns={filteredColumns}
                 data={permissions?.data || []}
                 isLoading={isFetching}
                 renderHeader={() => (
@@ -111,6 +116,8 @@ const PermissionPageContent: React.FC = () => {
                             <div className="hidden md:flex items-center gap-2">
                                 <SortByDropdown onSortChange={setIsAscending} isAscending={isAscending} />
                             </div>
+                            {/* Tombol show/hide column diintegrasikan ke header */}
+                            {renderColumnToggle()}
                         </div>
                     </>
                 )}
