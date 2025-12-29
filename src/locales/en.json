@@ -19,6 +19,8 @@
         "penjualan": "Sales",
         "pelanggan": "Customers",
         "laporan-analitik": "Reports & Analytics",
+        "post": "Post",
+        "file-manager": "File Manager",
         "user-management": "User Management",
         "permissions": "Permissions",
         "roles": "Roles",

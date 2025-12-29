@@ -22,7 +22,7 @@ export const SinglePostSchema = z.object({
     category_id: z.string().nullable(),
     files_count: z.number().optional(),
     files_exists: z.boolean().optional(),
-    image_url: z.string(),
+    image_url: z.string().nullable().optional(),
     files: z.array(FileItemSchema).optional(),
 });
 

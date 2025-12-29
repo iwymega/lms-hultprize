@@ -3,7 +3,7 @@ import { ROUTES } from '@/router/AppRouter'
 import SideBar from '@/shared/components/sidebar/SideBar'
 import SidebarDrawer from '@/shared/components/sidebar/SidebarDrawer'
 import TopBar from '@/shared/components/topbar/TopBar'
-import { BarChart3, ChartBar, Clock, Computer, CreditCard, Lock, Settings, ShieldUser, Users } from 'lucide-react'
+import { BarChart3, ChartBar, Clock, Computer, CreditCard, Lock, Settings, ShieldUser, Users, FileText, FolderOpen } from 'lucide-react'
 import React, { ElementType } from 'react'
 import { useTranslation } from 'react-i18next'
 // import { Link } from 'react-router'
@@ -30,6 +30,8 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
             label: t('sidebar.master'),
             items: [
                 { icon: Users as ElementType, text: t('menu.pelanggan'), url: '/pelanggan' },
+                { icon: FileText as ElementType, text: t('menu.post'), url: '/posts' },
+                { icon: FolderOpen as ElementType, text: t('menu.file-manager'), url: '/file-manager' },
                 { icon: Users as ElementType, text: t('menu.user-management'), url: ROUTES.USER_MANAGEMENT.path },
                 { icon: Lock as ElementType, text: t('menu.permissions'), url: ROUTES.PERMISSIONS.path },
                 { icon: ShieldUser as ElementType, text: t('menu.roles'), url: ROUTES.ROLES.path },
