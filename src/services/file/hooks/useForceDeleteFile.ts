@@ -5,7 +5,7 @@ import { DeleteFileResponse, DeleteFileResponseSchema } from "@/services/file/re
 const API_VERSION = "v1";
 
 interface ForceDeleteFileParams {
-    id: string;
+    ids: string[];
 }
 
 export const useForceDeleteFile = () => {
@@ -14,7 +14,8 @@ export const useForceDeleteFile = () => {
     return useMutation<DeleteFileResponse, Error, ForceDeleteFileParams>({
         mutationFn: async (params: ForceDeleteFileParams): Promise<DeleteFileResponse> => {
             const response = await privateApi.post(`/${API_VERSION}/file/force-delete`, {
-                id: params.id
+                ids: params.ids.join(', '),
+                _method: 'DELETE'
             });
 
             return DeleteFileResponseSchema.parse(response.data);

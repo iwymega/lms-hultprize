@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Eye, Trash2, RotateCcw } from 'lucide-react'
+import { Eye, Trash2, RotateCcw, Trash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
     AlertDialog,
@@ -14,6 +14,7 @@ import {
 import { toast } from 'sonner'
 import { useDeleteFile } from '@/services/file/hooks/useDeleteFile'
 import { useRestoreFile } from '@/services/file/hooks/useRestoreFile'
+import { useForceDeleteFile } from '@/services/file/hooks/useForceDeleteFile'
 
 interface FileCardProps {
     file: {
@@ -32,8 +33,10 @@ interface FileCardProps {
 const FileCard: React.FC<FileCardProps> = ({ file, isTrashed = false }) => {
     const [isHovered, setIsHovered] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+    const [showForceDeleteDialog, setShowForceDeleteDialog] = useState(false)
     const deleteMutation = useDeleteFile()
     const restoreMutation = useRestoreFile()
+    const forceDeleteMutation = useForceDeleteFile()
 
     // Format file size
     const formatFileSize = (bytes: number) => {
@@ -67,13 +70,27 @@ const FileCard: React.FC<FileCardProps> = ({ file, isTrashed = false }) => {
     }
 
     const handleRestore = () => {
-        restoreMutation.mutate({ id: file.id }, {
+        restoreMutation.mutate({ ids: [file.id] }, {
             onSuccess: () => {
                 toast.success(`File "${file.name}" restored successfully`)
             },
             onError: (error) => {
                 toast.error('Failed to restore file')
                 console.error(error)
+            }
+        })
+    }
+
+    const handleForceDelete = () => {
+        forceDeleteMutation.mutate({ ids: [file.id] }, {
+            onSuccess: () => {
+                toast.success(`File "${file.name}" permanently deleted`)
+                setShowForceDeleteDialog(false)
+            },
+            onError: (error) => {
+                toast.error('Failed to delete file permanently')
+                console.error(error)
+                setShowForceDeleteDialog(false)
             }
         })
     }
@@ -110,15 +127,25 @@ const FileCard: React.FC<FileCardProps> = ({ file, isTrashed = false }) => {
                             <Eye className="h-5 w-5" />
                         </Button>
                         {isTrashed ? (
-                            <Button
-                                size="icon"
-                                variant="secondary"
-                                className="rounded-full w-10 h-10"
-                                onClick={handleRestore}
-                                disabled={restoreMutation.isPending}
-                            >
-                                <RotateCcw className="h-5 w-5 text-green-600" />
-                            </Button>
+                            <>
+                                <Button
+                                    size="icon"
+                                    variant="secondary"
+                                    className="rounded-full w-10 h-10"
+                                    onClick={handleRestore}
+                                    disabled={restoreMutation.isPending}
+                                >
+                                    <RotateCcw className="h-5 w-5 text-green-600" />
+                                </Button>
+                                <Button
+                                    size="icon"
+                                    variant="secondary"
+                                    className="rounded-full w-10 h-10"
+                                    onClick={() => setShowForceDeleteDialog(true)}
+                                >
+                                    <Trash className="h-5 w-5 text-red-600" />
+                                </Button>
+                            </>
                         ) : (
                             <Button
                                 size="icon"
@@ -147,7 +174,7 @@ const FileCard: React.FC<FileCardProps> = ({ file, isTrashed = false }) => {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete the file "{file.name}".
+                            This will move the file "{file.name}" to trash. You can restore it later.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -158,6 +185,28 @@ const FileCard: React.FC<FileCardProps> = ({ file, isTrashed = false }) => {
                             disabled={deleteMutation.isPending}
                         >
                             {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            {/* Force Delete Confirmation Dialog */}
+            <AlertDialog open={showForceDeleteDialog} onOpenChange={setShowForceDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Permanently Delete?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the file "{file.name}" from the server.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={forceDeleteMutation.isPending}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={handleForceDelete}
+                            className="bg-red-600 hover:bg-red-700"
+                            disabled={forceDeleteMutation.isPending}
+                        >
+                            {forceDeleteMutation.isPending ? 'Deleting...' : 'Delete Permanently'}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

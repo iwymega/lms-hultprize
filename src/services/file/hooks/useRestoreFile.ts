@@ -5,7 +5,7 @@ import { DeleteFileResponse, DeleteFileResponseSchema } from "@/services/file/re
 const API_VERSION = "v1";
 
 interface RestoreFileParams {
-    id: string;
+    ids: string[];
 }
 
 export const useRestoreFile = () => {
@@ -14,7 +14,7 @@ export const useRestoreFile = () => {
     return useMutation<DeleteFileResponse, Error, RestoreFileParams>({
         mutationFn: async (params: RestoreFileParams): Promise<DeleteFileResponse> => {
             const response = await privateApi.post(`/${API_VERSION}/file/restore`, {
-                id: params.id,
+                ids: params.ids.join(', '),
                 _method: 'PATCH'
             });
 
