@@ -8,7 +8,7 @@ export default function useCreatePost() {
     return useBaseCreate<CreatePost, CreatePostResponse>({
         endpoint: `${API_VERSION}/post`,
         schema: CreatePostResponseSchema,
-        contentType: "application/json",
+        contentType: "multipart/form-data",
         query: {
             onSuccess: (data) => data,
             onError: (error) => {

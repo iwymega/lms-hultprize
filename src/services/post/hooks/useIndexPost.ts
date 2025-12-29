@@ -4,7 +4,10 @@ import { IndexPostResponseSchema } from "@/services/post/response/IndexPostRespo
 const API_VERSION = "v1";
 
 interface IndexPostProps {
-    params?: { [key: string]: any };
+    params?: { 
+        include?: string;
+        [key: string]: any 
+    };
 }
 
 const useIndexPost = (query: IndexPostProps) =>

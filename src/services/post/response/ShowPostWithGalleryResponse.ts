@@ -12,21 +12,18 @@ export const FileItemSchema = z.object({
     updated_at: z.string(),
 });
 
-export const SinglePostSchema = z.object({
+export const PostWithGallerySchema = z.object({
     id: z.string(),
     title: z.string(),
     content: z.string(),
     image: z.string(),
     created_at: z.string(),
     updated_at: z.string(),
-    category_id: z.string().nullable(),
-    files_count: z.number().optional(),
-    files_exists: z.boolean().optional(),
-    image_url: z.string(),
     files: z.array(FileItemSchema).optional(),
+    filesCount: z.number().optional(),
+    filesExists: z.boolean().optional(),
 });
 
-export const PostSchema = z.array(SinglePostSchema);
-export const IndexPostResponseSchema = BaseResponseSchema(PostSchema);
-export type IndexPostResponse = z.infer<typeof IndexPostResponseSchema>;
-export type SinglePostResponse = z.infer<typeof SinglePostSchema>;
+export const ShowPostWithGalleryResponseSchema = BaseResponseSchema(PostWithGallerySchema);
+export type ShowPostWithGalleryResponse = z.infer<typeof ShowPostWithGalleryResponseSchema>;
+export type PostWithGallery = z.infer<typeof PostWithGallerySchema>;

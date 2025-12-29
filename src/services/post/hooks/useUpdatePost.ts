@@ -8,7 +8,7 @@ export const useUpdatePost = () => {
     return useBaseUpdate<{ post_id: string; data: UpdatePost }, UpdatePostResponse>({
         endpoint: ({ post_id }: { post_id: string }) => `${API_VERSION}/post/${post_id}`,
         schema: UpdatePostResponseSchema,
-        contentType: "application/json",
+        contentType: "multipart/form-data",
         query: {
             onSuccess: (data: UpdatePostResponse) => data,
             onError: (error: Error) => {
