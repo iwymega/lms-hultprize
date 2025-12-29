@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Eye, Trash2 } from 'lucide-react'
+import { Eye, Trash2, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
     AlertDialog,
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { toast } from 'sonner'
 import { useDeleteFile } from '@/services/file/hooks/useDeleteFile'
+import { useRestoreFile } from '@/services/file/hooks/useRestoreFile'
 
 interface FileCardProps {
     file: {
@@ -25,12 +26,14 @@ interface FileCardProps {
         created_at: string
         size_for_human?: string
     }
+    isTrashed?: boolean
 }
 
-const FileCard: React.FC<FileCardProps> = ({ file }) => {
+const FileCard: React.FC<FileCardProps> = ({ file, isTrashed = false }) => {
     const [isHovered, setIsHovered] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const deleteMutation = useDeleteFile()
+    const restoreMutation = useRestoreFile()
 
     // Format file size
     const formatFileSize = (bytes: number) => {
@@ -59,6 +62,18 @@ const FileCard: React.FC<FileCardProps> = ({ file }) => {
                 toast.error('Failed to delete file')
                 console.error(error)
                 setShowDeleteDialog(false)
+            }
+        })
+    }
+
+    const handleRestore = () => {
+        restoreMutation.mutate({ id: file.id }, {
+            onSuccess: () => {
+                toast.success(`File "${file.name}" restored successfully`)
+            },
+            onError: (error) => {
+                toast.error('Failed to restore file')
+                console.error(error)
             }
         })
     }
@@ -94,14 +109,26 @@ const FileCard: React.FC<FileCardProps> = ({ file }) => {
                         >
                             <Eye className="h-5 w-5" />
                         </Button>
-                        <Button
-                            size="icon"
-                            variant="secondary"
-                            className="rounded-full w-10 h-10"
-                            onClick={() => setShowDeleteDialog(true)}
-                        >
-                            <Trash2 className="h-5 w-5 text-red-600" />
-                        </Button>
+                        {isTrashed ? (
+                            <Button
+                                size="icon"
+                                variant="secondary"
+                                className="rounded-full w-10 h-10"
+                                onClick={handleRestore}
+                                disabled={restoreMutation.isPending}
+                            >
+                                <RotateCcw className="h-5 w-5 text-green-600" />
+                            </Button>
+                        ) : (
+                            <Button
+                                size="icon"
+                                variant="secondary"
+                                className="rounded-full w-10 h-10"
+                                onClick={() => setShowDeleteDialog(true)}
+                            >
+                                <Trash2 className="h-5 w-5 text-red-600" />
+                            </Button>
+                        )}
                     </div>
                 )}
 

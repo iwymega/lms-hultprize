@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Upload } from 'lucide-react'
+import { Upload, Trash2, Archive } from 'lucide-react'
 import {
     Select,
     SelectContent,
@@ -19,12 +19,14 @@ const FileManagerContent: React.FC = () => {
     const [search, setSearch] = useState("")
     const [fileType, setFileType] = useState("all")
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+    const [isTrashedMode, setIsTrashedMode] = useState(false)
 
-    // Fetch files from API
+    // Fetch files from API with trashed filter
     const { data: filesData, isFetching } = useIndexFile({
         params: {
             search: search,
-            include: "folder,fileItems"
+            include: "folder,fileItems",
+            "filter[is_trashed]": isTrashedMode ? "true" : "false"
         }
     })
 
@@ -71,16 +73,30 @@ const FileManagerContent: React.FC = () => {
                     Filter
                 </Button>
 
-                {/* Upload Button */}
+                {/* Trash Mode Toggle */}
                 <Button 
-                    className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
-                    onClick={() => setIsUploadModalOpen(true)}
+                    variant={isTrashedMode ? "destructive" : "outline"}
+                    className="flex items-center gap-2"
+                    onClick={() => setIsTrashedMode(!isTrashedMode)}
                 >
-                    <Upload className="h-4 w-4" />
-                    Upload Files
+                    {isTrashedMode ? <Archive className="h-4 w-4" /> : <Trash2 className="h-4 w-4" />}
+                    {isTrashedMode ? "Normal Mode" : "Trash Mode"}
                 </Button>
 
-                <span className="text-gray-500 text-sm">or drag & drop anywhere</span>
+                {/* Upload Button - Hide in trash mode */}
+                {!isTrashedMode && (
+                    <>
+                        <Button 
+                            className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
+                            onClick={() => setIsUploadModalOpen(true)}
+                        >
+                            <Upload className="h-4 w-4" />
+                            Upload Files
+                        </Button>
+
+                        <span className="text-gray-500 text-sm">or drag & drop anywhere</span>
+                    </>
+                )}
             </div>
 
             {/* Storage Usage */}
@@ -121,7 +137,7 @@ const FileManagerContent: React.FC = () => {
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {files.map((file) => (
-                            <FileCard key={file.id} file={file} />
+                            <FileCard key={file.id} file={file} isTrashed={isTrashedMode} />
                         ))}
                     </div>
 
