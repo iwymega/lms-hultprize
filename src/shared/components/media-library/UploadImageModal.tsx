@@ -1,12 +1,5 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
 import { Upload, X, Image as ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { useUploadFile } from '@/services/file/hooks/useUploadFile'
@@ -116,17 +109,51 @@ const UploadImageModal: React.FC<UploadImageModalProps> = ({
         }
     }
 
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Upload Images</DialogTitle>
-                    <DialogDescription>
-                        Drag and drop images here or click to browse
-                    </DialogDescription>
-                </DialogHeader>
+    useEffect(() => {
+        if (open) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = 'unset'
+        }
+        return () => {
+            document.body.style.overflow = 'unset'
+        }
+    }, [open])
 
-                <div className="space-y-4">
+    if (!open) return null
+
+    return (
+        <>
+            {/* Backdrop */}
+            <div 
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300"
+                onClick={() => onOpenChange(false)}
+            />
+            
+            {/* Modal */}
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div 
+                    className="bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col animate-in fade-in zoom-in-95 duration-300"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {/* Header */}
+                    <div className="p-6 pb-4 border-b">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900">Upload Images</h2>
+                                <p className="text-gray-500 text-sm mt-1">Drag and drop images here or click to browse</p>
+                            </div>
+                            <button
+                                onClick={() => onOpenChange(false)}
+                                className="h-8 w-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
+                            >
+                                <X className="h-5 w-5 text-gray-500" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 space-y-4">
                     {/* Drag and Drop Area */}
                     <div
                         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
@@ -188,9 +215,10 @@ const UploadImageModal: React.FC<UploadImageModalProps> = ({
                             ))}
                         </div>
                     )}
+                    </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex justify-end gap-2">
+                    {/* Footer */}
+                    <div className="border-t p-4 px-6 flex justify-end gap-2 bg-gradient-to-r from-gray-50 to-gray-100">
                         <Button
                             type="button"
                             variant="outline"
@@ -212,8 +240,8 @@ const UploadImageModal: React.FC<UploadImageModalProps> = ({
                         </Button>
                     </div>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </div>
+        </>
     )
 }
 

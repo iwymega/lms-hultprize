@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Search, Upload, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
 import ImageSelectionCard from './ImageSelectionCard'
 import UploadImageModal from './UploadImageModal'
 import useIndexFile from '@/services/file/hooks/useIndexFile'
@@ -89,25 +88,46 @@ const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
         setSearch("")
     }
 
+    useEffect(() => {
+        if (open) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = 'unset'
+        }
+        return () => {
+            document.body.style.overflow = 'unset'
+        }
+    }, [open])
+
+    if (!open) return null
+
     return (
         <>
-            <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="max-w-5xl p-0 gap-0">
+            {/* Backdrop */}
+            <div 
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300"
+                onClick={handleClose}
+            />
+            
+            {/* Modal */}
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div 
+                    className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-300"
+                    onClick={(e) => e.stopPropagation()}
+                >
                     {/* Header */}
-                    <div className="p-6 pb-4">
-                        <div className="flex items-start justify-between mb-2">
+                    <div className="p-6 pb-4 border-b">
+                        <div className="flex items-start justify-between mb-4">
                             <div>
-                                <h2 className="text-2xl font-bold">{title}</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
                                 <p className="text-gray-500 text-sm mt-1">{subtitle}</p>
                             </div>
-                            <Button
-                                variant="ghost"
-                                size="icon"
+                            <button
                                 onClick={handleClose}
-                                className="h-8 w-8"
+                                className="h-8 w-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
                             >
-                                <X className="h-4 w-4" />
-                            </Button>
+                                <X className="h-5 w-5 text-gray-500" />
+                            </button>
                         </div>
 
                         {/* Search and Upload Bar */}
@@ -138,7 +158,7 @@ const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
                     </div>
 
                     {/* Images Grid */}
-                    <div className="px-6 pb-4 max-h-[500px] overflow-y-auto">
+                    <div className="flex-1 overflow-y-auto px-6 py-4">
                         {isLoading ? (
                             <div className="flex justify-center items-center py-12">
                                 <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
@@ -163,7 +183,7 @@ const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
                     </div>
 
                     {/* Footer */}
-                    <div className="border-t p-4 px-6 flex items-center justify-between bg-gray-50">
+                    <div className="border-t p-4 px-6 flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100">
                         <p className="text-sm text-gray-600">
                             Click on an image to select it
                         </p>
@@ -181,8 +201,8 @@ const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
                             </Button>
                         </div>
                     </div>
-                </DialogContent>
-            </Dialog>
+                </div>
+            </div>
 
             {/* Upload Modal */}
             <UploadImageModal

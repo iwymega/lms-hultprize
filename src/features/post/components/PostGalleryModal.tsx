@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { useGetPostGallery } from '@/services/post/hooks/useGetPostGallery'
 import { useAddPostGallery } from '@/services/post/hooks/useAddPostGallery'
 import { useRemovePostGallery } from '@/services/post/hooks/useRemovePostGallery'
 import { toast } from 'sonner'
-import { Loader2, Plus, Trash2 } from 'lucide-react'
+import { Loader2, Plus, Trash2, X } from 'lucide-react'
 import MediaLibraryModal from '@/shared/components/media-library/MediaLibraryModal'
 
 interface PostGalleryModalProps {
@@ -56,18 +55,52 @@ const PostGalleryModal: React.FC<PostGalleryModalProps> = ({ postId, open, onOpe
         )
     }
 
+    useEffect(() => {
+        if (open) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = 'unset'
+        }
+        return () => {
+            document.body.style.overflow = 'unset'
+        }
+    }, [open])
+
+    if (!open) return null
+
     return (
         <>
-            <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>Manage Post Gallery</DialogTitle>
-                        <DialogDescription>
-                            Add or remove images from this post's gallery
-                        </DialogDescription>
-                    </DialogHeader>
+            {/* Backdrop */}
+            <div 
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300"
+                onClick={() => onOpenChange(false)}
+            />
+            
+            {/* Modal */}
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div 
+                    className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[85vh] flex flex-col animate-in fade-in zoom-in-95 duration-300"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {/* Header */}
+                    <div className="p-6 pb-4 border-b">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900">Manage Post Gallery</h2>
+                                <p className="text-gray-500 text-sm mt-1">Add or remove images from this post's gallery</p>
+                            </div>
+                            <button
+                                onClick={() => onOpenChange(false)}
+                                className="h-8 w-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
+                            >
+                                <X className="h-5 w-5 text-gray-500" />
+                            </button>
+                        </div>
+                    </div>
 
-                    <div className="space-y-4">
+                    {/* Content */}
+                    <div className="flex-1 overflow-y-auto p-6">
+                        <div className="space-y-4">
                         <div className="flex justify-between items-center">
                             <h3 className="text-lg font-medium">Gallery Images ({gallery.length})</h3>
                             <Button
@@ -123,15 +156,17 @@ const PostGalleryModal: React.FC<PostGalleryModalProps> = ({ postId, open, onOpe
                                 ))}
                             </div>
                         )}
+                        </div>
                     </div>
 
-                    <div className="flex justify-end mt-4">
+                    {/* Footer */}
+                    <div className="border-t p-4 px-6 flex justify-end bg-gradient-to-r from-gray-50 to-gray-100">
                         <Button variant="outline" onClick={() => onOpenChange(false)}>
                             Close
                         </Button>
                     </div>
-                </DialogContent>
-            </Dialog>
+                </div>
+            </div>
 
             <MediaLibraryModal
                 open={showMediaLibrary}
