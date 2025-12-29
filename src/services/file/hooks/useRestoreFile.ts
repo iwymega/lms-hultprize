@@ -14,7 +14,8 @@ export const useRestoreFile = () => {
     return useMutation<DeleteFileResponse, Error, RestoreFileParams>({
         mutationFn: async (params: RestoreFileParams): Promise<DeleteFileResponse> => {
             const response = await privateApi.post(`/${API_VERSION}/file/restore`, {
-                id: params.id
+                id: params.id,
+                _method: 'PATCH'
             });
 
             return DeleteFileResponseSchema.parse(response.data);
