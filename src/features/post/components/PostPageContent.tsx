@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
-import AddPostModal from './AddPostModal'
 import DebouncedSearchInput from '@/shared/components/search/DebouncedSearchInput'
 import useIndexPost from '@/services/post/hooks/useIndexPost';
-import { Download, Search } from 'lucide-react';
+import { Download, Search, Plus, Edit } from 'lucide-react';
 import FilterDropdown from '@/shared/components/utility/FilterDropdown';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { BaseTable, useColumnToggle } from '@/shared/components/table/BaseTable';
 import PaginationWithShow from '@/shared/components/pagination/PaginationWithShow';
 import SortByDropdown from '@/shared/components/utility/SortByDropdown';
-import EditPostModal from './EditPostModal';
 import RemovePost from './RemovePost';
+import { useNavigate } from 'react-router';
 
 const PostPageContent: React.FC = () => {
+    const navigate = useNavigate()
     const [search, setSearch] = useState("");
     const [entriesPerPage, setEntriesPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
@@ -53,7 +53,15 @@ const PostPageContent: React.FC = () => {
             key: "actions",
             render: (item: any) => (
                 <>
-                    <EditPostModal post={item} />
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2"
+                        onClick={() => navigate(`/posts/edit/${item.id}`)}
+                        aria-label="Edit"
+                    >
+                        <Edit className="h-4 w-4" />
+                    </Button>
                     <RemovePost post={item} />
                 </>
             ),
@@ -69,7 +77,10 @@ const PostPageContent: React.FC = () => {
             {/* Action Bar */}
             <div className="flex justify-between items-center mb-6 flex-wrap gap-y-4">
                 {/* Left - Add Button */}
-                <AddPostModal />
+                <Button className="bg-indigo-600 hover:bg-indigo-700 flex items-center gap-2" onClick={() => navigate('/posts/create')}>
+                    <Plus className="h-4 w-4" />
+                    Add Post
+                </Button>
 
                 {/* Right - Search, Filter, Download */}
                 <div className="flex items-center gap-2">

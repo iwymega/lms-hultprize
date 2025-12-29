@@ -15,6 +15,9 @@ import AllNotificationPage from "@/features/notification/pages/AllNotificationPa
 import ImageMapPage from "@/features/image-map/pages/ImageMapPage";
 import CardScannerPage from "@/features/card-scanner/pages/CardScannerPage";
 import NotFound from "@/shared/components/error-page/NotFound";
+import PostPage from "@/features/post/pages/PostPage";
+import CreatePostPage from "@/features/post/pages/CreatePostPage";
+import EditPostPage from "@/features/post/pages/EditPostPage";
 
 type ProtectedRoute = {
     path: string;
@@ -112,6 +115,27 @@ export const ROUTES: Record<string, AppRoute> = {
     CARD_SCANNER: {
         path: "/card-scanner",
         element: <CardScannerPage />,
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    POST: {
+        path: "/posts",
+        element: <PostPage />, // Replace with actual PostPage component
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    CREATE_POST: {
+        path: "/posts/create",
+        element: <CreatePostPage />, // Replace with actual CreatePostPage component
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    EDIT_POST: {
+        path: "/posts/edit/:postId",
+        element: <EditPostPage />, // Replace with actual EditPostPage component
         protected: true,
         roles: ["superadmin"],
         permissions: [],
