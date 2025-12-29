@@ -6,8 +6,11 @@ const API_VERSION = "v1";
 
 interface UploadFileParams {
     file: File;
-    name?: string;
-    type?: string;
+    folder_id?: number;
+    user_id?: number;
+    is_compressed?: boolean | null;
+    title?: string;
+    description?: string | null;
 }
 
 export const useUploadFile = () => {
@@ -18,14 +21,23 @@ export const useUploadFile = () => {
             const formData = new FormData();
             formData.append('file', params.file);
             
-            if (params.name) {
-                formData.append('name', params.name);
+            if (params.folder_id !== undefined) {
+                formData.append('folder_id', params.folder_id.toString());
             }
-            if (params.type) {
-                formData.append('type', params.type);
+            if (params.user_id !== undefined) {
+                formData.append('user_id', params.user_id.toString());
+            }
+            if (params.is_compressed !== undefined && params.is_compressed !== null) {
+                formData.append('is_compressed', params.is_compressed.toString());
+            }
+            if (params.title) {
+                formData.append('title', params.title);
+            }
+            if (params.description) {
+                formData.append('description', params.description);
             }
 
-            const response = await privateApi.post(`/${API_VERSION}/files`, formData, {
+            const response = await privateApi.post(`/${API_VERSION}/file`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

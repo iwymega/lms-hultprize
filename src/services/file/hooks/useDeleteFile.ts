@@ -5,7 +5,7 @@ const API_VERSION = "v1";
 
 export const useDeleteFile = () => {
     return useBaseDelete<{ id: string }, DeleteFileResponse>({
-        endpoint: ({ id }) => `${API_VERSION}/files/${id}`,
+        endpoint: ({ id }) => `${API_VERSION}/file/${id}`,
         schema: DeleteFileResponseSchema,
         query: {
             onSuccess: (data) => data,

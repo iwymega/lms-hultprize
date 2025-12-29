@@ -4,13 +4,19 @@ import { IndexFileResponseSchema } from "@/services/file/response/IndexFileRespo
 const API_VERSION = "v1";
 
 interface IndexFileProps {
-    params?: { [key: string]: any };
+    params?: { 
+        search?: string;
+        paginate?: number;
+        page?: number;
+        include?: string; // e.g., "folder,fileItems,posts"
+        [key: string]: any;
+    };
 }
 
 const useIndexFile = (query: IndexFileProps) =>
     useBaseIndex({
         request: {
-            endpoint: `${API_VERSION}/files`,
+            endpoint: `${API_VERSION}/file`,
             params: query.params,
         },
         query: {
