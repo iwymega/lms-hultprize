@@ -18,6 +18,7 @@ import NotFound from "@/shared/components/error-page/NotFound";
 import PostPage from "@/features/post/pages/PostPage";
 import CreatePostPage from "@/features/post/pages/CreatePostPage";
 import EditPostPage from "@/features/post/pages/EditPostPage";
+import FileManagerPage from "@/features/file-manager/pages/FileManagerPage";
 
 type ProtectedRoute = {
     path: string;
@@ -136,6 +137,13 @@ export const ROUTES: Record<string, AppRoute> = {
     EDIT_POST: {
         path: "/posts/edit/:postId",
         element: <EditPostPage />, // Replace with actual EditPostPage component
+        protected: true,
+        roles: ["superadmin"],
+        permissions: [],
+    },
+    FILE_MANAGER: {
+        path: "/file-manager",
+        element: <FileManagerPage />,
         protected: true,
         roles: ["superadmin"],
         permissions: [],
