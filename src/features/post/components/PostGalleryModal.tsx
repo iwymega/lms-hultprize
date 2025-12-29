@@ -23,7 +23,7 @@ const PostGalleryModal: React.FC<PostGalleryModalProps> = ({ postId, open, onOpe
 
     const handleAddImages = (selectedFiles: any) => {
         const files = Array.isArray(selectedFiles) ? selectedFiles : [selectedFiles]
-        const fileIds = files.map(file => file.id).join(', ')
+        const fileIds = files.map(file => file.id).join(',')
         
         addGalleryMutation.mutate(
             { post_id: postId, data: { file_ids: fileIds } },

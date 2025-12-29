@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,15 +9,37 @@ import { UpdatePostSchema, UpdatePost } from '@/services/post/schema/UpdatePostS
 import { useUpdatePost } from '@/services/post/hooks/useUpdatePost'
 import { toast } from 'sonner'
 import { useNavigate, useParams } from 'react-router'
-import { Upload, X } from 'lucide-react'
+import { Upload, X, Loader2 } from 'lucide-react'
+import useIndexPost from '@/services/post/hooks/useIndexPost'
 
 const EditPostContent: React.FC = () => {
     const navigate = useNavigate()
     const { postId } = useParams<{ postId: string }>()
     const [imagePreview, setImagePreview] = useState<string | null>(null)
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<UpdatePost>({
+    const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<UpdatePost>({
         resolver: zodResolver(UpdatePostSchema),
     })
+
+    // Fetch post data using useIndexPost with filter[id]
+    const { data: postData, isLoading: isLoadingPost } = useIndexPost({ 
+        params: { 
+            'filter[id]': postId 
+        } 
+    })
+
+    // Populate form when data is loaded
+    useEffect(() => {
+        if (postData?.data && postData.data.length > 0) {
+            const post = postData.data[0]
+            reset({
+                title: post.title,
+                content: post.content,
+            })
+            if (post.image_url) {
+                setImagePreview(post.image_url)
+            }
+        }
+    }, [postData, reset])
 
     const updatePostMutation = useUpdatePost()
 
@@ -35,7 +57,7 @@ const EditPostContent: React.FC = () => {
 
     const removeImage = () => {
         setImagePreview(null)
-        setValue('image', undefined)
+        setValue('image', null as any)
     }
 
     const onSubmit = (data: UpdatePost) => {
@@ -49,6 +71,32 @@ const EditPostContent: React.FC = () => {
                 console.error(error)
             }
         })
+    }
+
+    if (isLoadingPost) {
+        return (
+            <main className="p-6">
+                <div className="max-w-2xl mx-auto flex items-center justify-center min-h-[400px]">
+                    <div className="text-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-gray-500 mx-auto mb-2" />
+                        <p className="text-gray-500">Loading post data...</p>
+                    </div>
+                </div>
+            </main>
+        )
+    }
+
+    if (!postData?.data || postData.data.length === 0) {
+        return (
+            <main className="p-6">
+                <div className="max-w-2xl mx-auto">
+                    <div className="text-center py-12">
+                        <p className="text-gray-500 mb-4">Post not found</p>
+                        <Button onClick={() => navigate('/posts')}>Back to Posts</Button>
+                    </div>
+                </div>
+            </main>
+        )
     }
 
     return (

@@ -28,7 +28,7 @@ export const useBaseUpdate = <T, R>({
             if (contentType === "multipart/form-data") {
                 const formDataObject = new FormData();
                 Object.entries(dataToSend as Record<string, any>).forEach(([key, value]) => {
-                    if (value !== undefined && value !== null) {
+                    if (value !== undefined) {
                         formDataObject.append(key, value);
                     }
                 });
