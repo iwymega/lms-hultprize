@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import DebouncedSearchInput from '@/shared/components/search/DebouncedSearchInput'
 import useIndexPost from '@/services/post/hooks/useIndexPost';
-import { Download, Search, Plus, Edit } from 'lucide-react';
+import { Download, Search, Plus, Edit, Images } from 'lucide-react';
 import FilterDropdown from '@/shared/components/utility/FilterDropdown';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { BaseTable, useColumnToggle } from '@/shared/components/table/BaseTable'
 import PaginationWithShow from '@/shared/components/pagination/PaginationWithShow';
 import SortByDropdown from '@/shared/components/utility/SortByDropdown';
 import RemovePost from './RemovePost';
+import PostGalleryModal from './PostGalleryModal';
 import { useNavigate } from 'react-router';
 
 const PostPageContent: React.FC = () => {
@@ -16,6 +17,8 @@ const PostPageContent: React.FC = () => {
     const [search, setSearch] = useState("");
     const [entriesPerPage, setEntriesPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+    const [showGalleryModal, setShowGalleryModal] = useState(false);
 
     const { data: posts, isFetching, isSuccess } = useIndexPost({
         params: {
@@ -46,13 +49,19 @@ const PostPageContent: React.FC = () => {
     const columns = [
         { title: "Title", key: "title" },
         { title: "Content", key: "content", render: (item: any) => item.content.substring(0, 50) + "..." },
-        { title: "Author", key: "author" },
-        { title: "Created At", key: "created_at" },
+        { 
+            title: "Image", 
+            key: "image_url", 
+            render: (item: any) => (
+                <img src={item.image_url} alt={item.title} className="w-16 h-16 object-cover rounded" />
+            )
+        },
+        { title: "Created At", key: "created_at", render: (item: any) => new Date(item.created_at).toLocaleDateString() },
         {
             title: "Actions",
             key: "actions",
             render: (item: any) => (
-                <>
+                <div className="flex gap-1">
                     <Button
                         variant="ghost"
                         size="sm"
@@ -62,8 +71,20 @@ const PostPageContent: React.FC = () => {
                     >
                         <Edit className="h-4 w-4" />
                     </Button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2"
+                        onClick={() => {
+                            setSelectedPostId(item.id)
+                            setShowGalleryModal(true)
+                        }}
+                        aria-label="Gallery"
+                    >
+                        <Images className="h-4 w-4" />
+                    </Button>
                     <RemovePost post={item} />
-                </>
+                </div>
             ),
             className: "text-right",
         },
@@ -148,6 +169,15 @@ const PostPageContent: React.FC = () => {
                         />
                     )}
                 </>
+            )}
+
+            {/* Gallery Modal */}
+            {selectedPostId && (
+                <PostGalleryModal
+                    postId={selectedPostId}
+                    open={showGalleryModal}
+                    onOpenChange={setShowGalleryModal}
+                />
             )}
         </main>
     )
