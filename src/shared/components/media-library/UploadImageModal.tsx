@@ -93,8 +93,7 @@ const UploadImageModal: React.FC<UploadImageModalProps> = ({
             // Upload all files
             const uploadPromises = selectedFiles.map((file) =>
                 uploadFileMutation.mutateAsync({
-                    file: file,
-                    is_compressed: false
+                    file: file
                 })
             )
 
