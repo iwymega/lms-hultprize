@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { Upload, X, File } from 'lucide-react'
 import { toast } from 'sonner'
+import { useUploadFile } from '@/services/file/hooks/useUploadFile'
 
 interface UploadFileModalProps {
     open: boolean
@@ -18,7 +19,7 @@ interface UploadFileModalProps {
 const UploadFileModal: React.FC<UploadFileModalProps> = ({ open, onOpenChange }) => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([])
     const [isDragging, setIsDragging] = useState(false)
-    const [isUploading, setIsUploading] = useState(false)
+    const uploadMutation = useUploadFile()
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files
@@ -67,11 +68,16 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({ open, onOpenChange })
             return
         }
 
-        setIsUploading(true)
-
         try {
-            // Simulate upload - replace with actual API call
-            await new Promise((resolve) => setTimeout(resolve, 2000))
+            // Upload all files in parallel
+            const uploadPromises = selectedFiles.map((file) =>
+                uploadMutation.mutateAsync({
+                    file: file,
+                    title: file.name,
+                })
+            )
+
+            await Promise.all(uploadPromises)
 
             toast.success(`Successfully uploaded ${selectedFiles.length} file(s)`)
             setSelectedFiles([])
@@ -79,8 +85,6 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({ open, onOpenChange })
         } catch (error) {
             toast.error('Failed to upload files')
             console.error(error)
-        } finally {
-            setIsUploading(false)
         }
     }
 
@@ -165,17 +169,17 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({ open, onOpenChange })
                                 setSelectedFiles([])
                                 onOpenChange(false)
                             }}
-                            disabled={isUploading}
+                            disabled={uploadMutation.isPending}
                         >
                             Cancel
                         </Button>
                         <Button
                             type="button"
                             onClick={handleUpload}
-                            disabled={selectedFiles.length === 0 || isUploading}
+                            disabled={selectedFiles.length === 0 || uploadMutation.isPending}
                             className="bg-blue-600 hover:bg-blue-700"
                         >
-                            {isUploading ? 'Uploading...' : 'Upload'}
+                            {uploadMutation.isPending ? 'Uploading...' : 'Upload'}
                         </Button>
                     </div>
                 </div>

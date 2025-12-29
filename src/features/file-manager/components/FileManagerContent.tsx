@@ -11,52 +11,31 @@ import {
 } from "@/components/ui/select"
 import FileCard from './FileCard'
 import UploadFileModal from './UploadFileModal'
+import useIndexFile from '@/services/file/hooks/useIndexFile'
+import useFileUsage from '@/services/file/hooks/useFileUsage'
+import SectionLoader from '@/shared/components/loader/SectionLoader'
 
 const FileManagerContent: React.FC = () => {
     const [search, setSearch] = useState("")
     const [fileType, setFileType] = useState("all")
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
-    // Mock data - replace with actual API call
-    const files = [
-        {
-            id: '1',
-            name: 'qr-code (1).webp',
-            size: '23.17 KB',
-            type: 'image',
-            url: '/placeholder-qr.webp',
-            createdAt: '2025-12-13'
-        },
-        {
-            id: '2',
-            name: 'frame-top-left.d701606.webp',
-            size: '47.57 KB',
-            type: 'image',
-            url: '/placeholder-frame.webp',
-            createdAt: '2025-12-13'
-        },
-        {
-            id: '3',
-            name: 'screencapture-file-Users-sunar...',
-            size: '125.65 KB',
-            type: 'image',
-            url: '/placeholder-capture.webp',
-            createdAt: '2025-12-13'
-        },
-        {
-            id: '4',
-            name: 'WhatsApp Image 2025-12-13 at...',
-            size: '108.29 KB',
-            type: 'image',
-            url: '/placeholder-whatsapp.webp',
-            createdAt: '2025-12-13'
+    // Fetch files from API
+    const { data: filesData, isFetching } = useIndexFile({
+        params: {
+            search: search,
+            include: "folder,fileItems"
         }
-    ]
+    })
 
+    // Fetch file usage statistics
+    const { data: usageData } = useFileUsage()
+
+    const files = filesData?.data || []
     const totalFiles = files.length
-    const usedStorage = "310.68 KB"
-    const totalStorage = "1 GB"
-    const storagePercentage = 0
+    const usedStorage = usageData?.data?.current_usage_formatted || "0 B"
+    const totalStorage = usageData?.data?.usage_limit_formatted || "1 GB"
+    const storagePercentage = usageData?.data?.usage_percentage || 0
 
     return (
         <main className="p-6">
@@ -136,16 +115,22 @@ const FileManagerContent: React.FC = () => {
             </div>
 
             {/* Files Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {files.map((file) => (
-                    <FileCard key={file.id} file={file} />
-                ))}
-            </div>
+            {isFetching ? (
+                <SectionLoader text="Loading files..." time={1000} className="bg-gray-50" />
+            ) : (
+                <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {files.map((file) => (
+                            <FileCard key={file.id} file={file} />
+                        ))}
+                    </div>
 
-            {files.length === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                    No files found. Upload your first file to get started.
-                </div>
+                    {files.length === 0 && (
+                        <div className="text-center py-12 text-gray-500">
+                            No files found. Upload your first file to get started.
+                        </div>
+                    )}
+                </>
             )}
 
             {/* Upload Modal */}
