@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
-import { X, Search, Upload } from 'lucide-react'
+import { X, Search, Upload, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import ImageSelectionCard from './ImageSelectionCard'
 import UploadImageModal from './UploadImageModal'
+import useIndexFile from '@/services/file/hooks/useIndexFile'
 
 export interface MediaFile {
     id: string
     name: string
-    size: string
+    size: number
+    size_for_human?: string
     url: string
-    type?: string
-    createdAt?: string
+    ext: string
+    mime_type: string
+    created_at: string
+    updated_at: string
 }
 
 interface MediaLibraryModalProps {
@@ -22,7 +26,6 @@ interface MediaLibraryModalProps {
     multiple?: boolean
     title?: string
     subtitle?: string
-    files?: MediaFile[]
 }
 
 const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
@@ -31,50 +34,22 @@ const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
     onSelect,
     multiple = false,
     title = "Media Library",
-    subtitle = "Select or upload images",
-    files = []
+    subtitle = "Select or upload images"
 }) => {
     const [search, setSearch] = useState("")
     const [selectedFiles, setSelectedFiles] = useState<string[]>([])
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
-    // Mock data - replace with actual API data passed via props
-    const defaultFiles: MediaFile[] = [
-        {
-            id: '1',
-            name: 'qr-code (1).webp',
-            size: '29.17 KB',
-            url: '/placeholder-qr.webp',
-            type: 'image'
-        },
-        {
-            id: '2',
-            name: 'frame-top-left.d701606.webp',
-            size: '47.57 KB',
-            url: '/placeholder-frame.webp',
-            type: 'image'
-        },
-        {
-            id: '3',
-            name: 'screencapture-file-Users-sunar...',
-            size: '125.65 KB',
-            url: '/placeholder-capture.webp',
-            type: 'image'
-        },
-        {
-            id: '4',
-            name: 'WhatsApp Image 2025-12-13 at...',
-            size: '108.29 KB',
-            url: '/placeholder-whatsapp.webp',
-            type: 'image'
+    // Fetch files from API
+    const { data: filesData, isLoading } = useIndexFile({
+        params: {
+            search: search,
+            paginate: 50,
+            'filter[is_trashed]': 'false'
         }
-    ]
+    })
 
-    const displayFiles = files.length > 0 ? files : defaultFiles
-
-    const filteredFiles = displayFiles.filter(file =>
-        file.name.toLowerCase().includes(search.toLowerCase())
-    )
+    const displayFiles = filesData?.data || []
 
     const handleFileClick = (fileId: string) => {
         if (multiple) {
@@ -88,27 +63,30 @@ const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
         } else {
             setSelectedFiles([fileId])
             // Immediately select for single selection
-            const selectedFile = displayFiles.find(f => f.id === fileId)
+            const selectedFile = displayFiles.find((f: MediaFile) => f.id === fileId)
             if (selectedFile) {
                 onSelect(selectedFile)
                 onOpenChange(false)
                 setSelectedFiles([])
+                setSearch("")
             }
         }
     }
 
     const handleConfirmSelection = () => {
         if (multiple) {
-            const selected = displayFiles.filter(f => selectedFiles.includes(f.id))
+            const selected = displayFiles.filter((f: MediaFile) => selectedFiles.includes(f.id))
             onSelect(selected)
         }
         onOpenChange(false)
         setSelectedFiles([])
+        setSearch("")
     }
 
     const handleClose = () => {
         onOpenChange(false)
         setSelectedFiles([])
+        setSearch("")
     }
 
     return (
@@ -146,7 +124,7 @@ const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="text-sm text-gray-600 font-medium">
-                                    {filteredFiles.length} images
+                                    {isLoading ? 'Loading...' : `${displayFiles.length} images`}
                                 </span>
                                 <Button
                                     className="bg-green-600 hover:bg-green-700 flex items-center gap-2"
@@ -161,20 +139,25 @@ const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
 
                     {/* Images Grid */}
                     <div className="px-6 pb-4 max-h-[500px] overflow-y-auto">
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {filteredFiles.map((file) => (
-                                <ImageSelectionCard
-                                    key={file.id}
-                                    file={file}
-                                    isSelected={selectedFiles.includes(file.id)}
-                                    onClick={() => handleFileClick(file.id)}
-                                />
-                            ))}
-                        </div>
-
-                        {filteredFiles.length === 0 && (
+                        {isLoading ? (
+                            <div className="flex justify-center items-center py-12">
+                                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                                <span className="ml-2 text-gray-500">Loading images...</span>
+                            </div>
+                        ) : displayFiles.length === 0 ? (
                             <div className="text-center py-12 text-gray-500">
                                 No images found
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                {displayFiles.map((file: MediaFile) => (
+                                    <ImageSelectionCard
+                                        key={file.id}
+                                        file={file}
+                                        isSelected={selectedFiles.includes(file.id)}
+                                        onClick={() => handleFileClick(file.id)}
+                                    />
+                                ))}
                             </div>
                         )}
                     </div>

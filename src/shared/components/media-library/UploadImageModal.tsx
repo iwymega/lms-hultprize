@@ -9,6 +9,8 @@ import {
 } from '@/components/ui/dialog'
 import { Upload, X, Image as ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
+import { useUploadFile } from '@/services/file/hooks/useUploadFile'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface UploadImageModalProps {
     open: boolean
@@ -23,7 +25,8 @@ const UploadImageModal: React.FC<UploadImageModalProps> = ({
 }) => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([])
     const [isDragging, setIsDragging] = useState(false)
-    const [isUploading, setIsUploading] = useState(false)
+    const uploadFileMutation = useUploadFile()
+    const queryClient = useQueryClient()
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files
@@ -86,13 +89,21 @@ const UploadImageModal: React.FC<UploadImageModalProps> = ({
             return
         }
 
-        setIsUploading(true)
-
         try {
-            // Simulate upload - replace with actual API call
-            await new Promise((resolve) => setTimeout(resolve, 2000))
+            // Upload all files
+            const uploadPromises = selectedFiles.map((file) =>
+                uploadFileMutation.mutateAsync({
+                    file: file,
+                    is_compressed: false
+                })
+            )
+
+            await Promise.all(uploadPromises)
 
             toast.success(`Successfully uploaded ${selectedFiles.length} image(s)`)
+            
+            // Invalidate file list to refresh
+            queryClient.invalidateQueries({ queryKey: ['file-list'] })
             
             if (onUploadComplete) {
                 onUploadComplete(selectedFiles)
@@ -103,8 +114,6 @@ const UploadImageModal: React.FC<UploadImageModalProps> = ({
         } catch (error) {
             toast.error('Failed to upload images')
             console.error(error)
-        } finally {
-            setIsUploading(false)
         }
     }
 
@@ -190,17 +199,17 @@ const UploadImageModal: React.FC<UploadImageModalProps> = ({
                                 setSelectedFiles([])
                                 onOpenChange(false)
                             }}
-                            disabled={isUploading}
+                            disabled={uploadFileMutation.isPending}
                         >
                             Cancel
                         </Button>
                         <Button
                             type="button"
                             onClick={handleUpload}
-                            disabled={selectedFiles.length === 0 || isUploading}
+                            disabled={selectedFiles.length === 0 || uploadFileMutation.isPending}
                             className="bg-green-600 hover:bg-green-700"
                         >
-                            {isUploading ? 'Uploading...' : 'Upload'}
+                            {uploadFileMutation.isPending ? 'Uploading...' : 'Upload'}
                         </Button>
                     </div>
                 </div>

@@ -45,7 +45,7 @@ const ImageSelectionCard: React.FC<ImageSelectionCardProps> = ({
                 <p className="text-sm font-medium truncate" title={file.name}>
                     {file.name}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">{file.size}</p>
+                <p className="text-xs text-gray-500 mt-1">{file.size_for_human || `${(file.size / 1024).toFixed(2)} KB`}</p>
             </div>
         </div>
     )
