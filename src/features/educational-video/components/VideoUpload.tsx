@@ -14,24 +14,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Upload,
   X,
-  Play,
-  Pause,
-  Scissors,
-  RotateCcw,
-  CheckCircle,
-  AlertCircle,
   Video,
-  Image as ImageIcon,
-  Tag,
-  BookOpen,
-  Target,
-  Users
+  Image as ImageIcon
 } from 'lucide-react';
 import {
   VideoUploadData,
   GradeLevel,
-  DifficultyLevel,
-  VideoCategory
+  DifficultyLevel
 } from '../types';
 
 const videoUploadSchema = z.object({

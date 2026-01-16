@@ -1,39 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Video,
   Upload,
   Search,
-  Filter,
-  TrendingUp,
-  BookOpen,
-  Users,
-  Award,
-  PlayCircle,
-  Heart,
-  MessageCircle,
-  Share,
   Bookmark,
   Star,
-  Target,
-  Zap
+  Home,
+  User,
+  Users,
+  MessageSquare,
+  Plus,
+  CheckCircle,
+  Crown,
+  Mail,
+  Phone,
+  PlayCircle,
+  Award
 } from 'lucide-react';
 import { VideoFeed } from '../components/VideoFeed';
 import { VideoUpload } from '../components/VideoUpload';
 import { StudentProfileForm } from '../../matching/components/StudentProfileForm';
-import { useMatchingStore } from '../../matching/stores/matchingStore';
 import {
   EducationalVideo,
   VideoFeedItem,
   VideoUploadData,
-  VideoFilters,
   GradeLevel,
   DifficultyLevel,
-  Badge as BadgeType,
   UserProgress
 } from '../types';
 
@@ -144,16 +140,14 @@ const mockUserProgress: UserProgress = {
 };
 
 export function EducationalVideoPage() {
-  const [activeTab, setActiveTab] = useState('feed');
+  const [activeTab, setActiveTab] = useState('home');
   const [showUpload, setShowUpload] = useState(false);
   const [showStudentProfile, setShowStudentProfile] = useState(false);
+  const [showTeacherProfile, setShowTeacherProfile] = useState<string | null>(null);
   const [videos, setVideos] = useState<VideoFeedItem[]>([]);
-  const [filters, setFilters] = useState<VideoFilters>({
-    sort_by: 'trending',
-    time_range: 'week'
-  });
+  const [bookmarkedVideos, setBookmarkedVideos] = useState<VideoFeedItem[]>([]);
 
-  const { currentStudent, setCurrentStudent } = useMatchingStore();
+  // const { currentStudent, setCurrentStudent } = useMatchingStore(); // Not used in this component
 
   // Initialize videos with mock data
   useEffect(() => {
@@ -218,7 +212,7 @@ export function EducationalVideoPage() {
     alert('Video link copied to clipboard!');
   };
 
-  const handleVideoComment = async (videoId: string, comment: string) => {
+  const handleVideoComment = async (videoId: string, _comment: string) => {
     setVideos(prev => prev.map(item => {
       if (item.video.video_id === videoId) {
         return {
@@ -356,291 +350,556 @@ export function EducationalVideoPage() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Video className="h-8 w-8 text-blue-600" />
-                <h1 className="text-2xl font-bold text-gray-900">EduTok</h1>
+  // Mock teachers data (extended for educational video context)
+  const mockTeachers = [
+    {
+      teacher_id: 'teacher_1',
+      name: 'Dr. Sarah Johnson',
+      email: 'sarah.johnson@school.edu',
+      expertise_areas: ['Mathematics', 'Physics'],
+      qualifications: ['PhD in Mathematics', '10+ years teaching experience'],
+      availability: [
+        { day_of_week: 1, start_time: '09:00', end_time: '12:00' },
+        { day_of_week: 1, start_time: '14:00', end_time: '17:00' },
+        { day_of_week: 2, start_time: '09:00', end_time: '12:00' },
+        { day_of_week: 2, start_time: '14:00', end_time: '17:00' },
+        { day_of_week: 3, start_time: '09:00', end_time: '12:00' },
+        { day_of_week: 4, start_time: '14:00', end_time: '17:00' },
+        { day_of_week: 5, start_time: '09:00', end_time: '12:00' }
+      ] as any,
+      teaching_style: 'DIRECT_INSTRUCTION' as any,
+      rating: 4.8,
+      total_sessions: 150,
+      status: 'AVAILABLE' as any,
+      created_at: new Date('2020-01-15'),
+      updated_at: new Date('2024-01-15'),
+      // Extended properties for educational video
+      profile_image: '/avatars/sarah.jpg',
+      bio: 'Passionate mathematics educator with a PhD from MIT. Specializing in making complex concepts accessible to all students.',
+      languages: ['English', 'Spanish'],
+      certifications: ['Certified Math Teacher', 'STEM Education Specialist'],
+      is_verified: true,
+      hourly_rate: 50,
+      total_reviews: 89,
+      total_students: 150
+    },
+    {
+      teacher_id: 'teacher_2',
+      name: 'Prof. Michael Chen',
+      email: 'michael.chen@university.edu',
+      expertise_areas: ['Biology', 'Chemistry', 'Environmental Science'],
+      qualifications: ['Professor of Biology', 'Published researcher in molecular biology'],
+      availability: [
+        { day_of_week: 1, start_time: '10:00', end_time: '14:00' },
+        { day_of_week: 2, start_time: '10:00', end_time: '14:00' },
+        { day_of_week: 2, start_time: '15:00', end_time: '18:00' },
+        { day_of_week: 3, start_time: '10:00', end_time: '14:00' },
+        { day_of_week: 4, start_time: '15:00', end_time: '18:00' },
+        { day_of_week: 5, start_time: '10:00', end_time: '14:00' }
+      ] as any,
+      teaching_style: 'EXPERIENTIAL' as any,
+      rating: 4.9,
+      total_sessions: 200,
+      status: 'AVAILABLE' as any,
+      created_at: new Date('2019-08-20'),
+      updated_at: new Date('2024-01-14'),
+      // Extended properties for educational video
+      profile_image: '/avatars/michael.jpg',
+      bio: 'Award-winning biology professor passionate about making science accessible and exciting for students of all ages.',
+      languages: ['English', 'Mandarin'],
+      certifications: ['AP Biology Teacher', 'Research Scientist'],
+      is_verified: true,
+      hourly_rate: 65,
+      total_reviews: 120,
+      total_students: 200
+    }
+  ];
+
+  const renderTeacherProfile = (teacherId: string) => {
+    const teacher = mockTeachers.find(t => t.teacher_id === teacherId);
+    if (!teacher) return null;
+
+    return (
+      <div className="min-h-screen bg-white">
+        {/* Header */}
+        <div className="bg-white border-b px-4 py-3 flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowTeacherProfile(null)}
+          >
+            ← Back
+          </Button>
+          <h1 className="font-semibold">Teacher Profile</h1>
+        </div>
+
+        <div className="p-4 space-y-6">
+          {/* Teacher Header */}
+          <div className="flex items-start gap-4">
+            <Avatar className="h-20 w-20">
+              <AvatarImage src={teacher.profile_image} />
+              <AvatarFallback className="text-lg">{teacher.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-xl font-bold">{teacher.name}</h2>
+                {teacher.is_verified && <CheckCircle className="h-5 w-5 text-blue-500" />}
               </div>
-              <Badge variant="secondary" className="hidden md:flex">
-                Educational Video Platform
-              </Badge>
+              <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                <div className="flex items-center gap-1">
+                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  <span>{teacher.rating}</span>
+                  <span>({teacher.total_reviews} reviews)</span>
+                </div>
+                <span>{teacher.total_students} students</span>
+              </div>
+              <div className="flex flex-wrap gap-1 mb-3">
+                {teacher.expertise_areas.map(subject => (
+                  <Badge key={subject} variant="secondary" className="text-xs">
+                    {subject}
+                  </Badge>
+                ))}
+              </div>
+              <p className="text-sm text-gray-700">{teacher.bio}</p>
             </div>
+          </div>
 
-            <div className="flex items-center gap-3">
-              {!currentStudent && (
-                <Button
-                  variant="outline"
-                  onClick={() => setShowStudentProfile(true)}
-                  className="hidden md:flex"
-                >
-                  <Users className="h-4 w-4 mr-2" />
-                  Complete Profile
+          {/* Subscription Options */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-yellow-500" />
+                Subscription Plans
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold">Free Access</h3>
+                    <Badge variant="outline">Free</Badge>
+                  </div>
+                  <ul className="text-sm text-gray-600 space-y-1 mb-4">
+                    <li>• Access to public videos</li>
+                    <li>• Basic Q&A in comments</li>
+                    <li>• Limited study materials</li>
+                  </ul>
+                  <Button className="w-full" variant="outline">
+                    Subscribe Free
+                  </Button>
+                </div>
+
+                <div className="border rounded-lg p-4 bg-gradient-to-br from-blue-50 to-purple-50">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold">Premium Access</h3>
+                    <Badge className="bg-yellow-500">${teacher.hourly_rate}/month</Badge>
+                  </div>
+                  <ul className="text-sm text-gray-600 space-y-1 mb-4">
+                    <li>• All public and private videos</li>
+                    <li>• Direct messaging with teacher</li>
+                    <li>• Exclusive study materials</li>
+                    <li>• Priority Q&A responses</li>
+                    <li>• Progress tracking</li>
+                  </ul>
+                  <Button className="w-full">
+                    Subscribe Premium
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Contact Options */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="h-5 w-5" />
+                Contact Teacher
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button variant="outline" className="h-auto p-4 flex flex-col items-center gap-2">
+                  <Mail className="h-6 w-6" />
+                  <div className="text-center">
+                    <div className="font-medium">Send Message</div>
+                    <div className="text-sm text-gray-600">Direct messaging</div>
+                  </div>
                 </Button>
-              )}
 
-              <Button onClick={() => setShowUpload(true)}>
-                <Upload className="h-4 w-4 mr-2" />
-                Upload Video
-              </Button>
-            </div>
+                <Button variant="outline" className="h-auto p-4 flex flex-col items-center gap-2">
+                  <Phone className="h-6 w-6" />
+                  <div className="text-center">
+                    <div className="font-medium">Book Session</div>
+                    <div className="text-sm text-gray-600">1-on-1 tutoring</div>
+                  </div>
+                </Button>
+
+                <Button variant="outline" className="h-auto p-4 flex flex-col items-center gap-2">
+                  <Users className="h-6 w-6" />
+                  <div className="text-center">
+                    <div className="font-medium">Group Class</div>
+                    <div className="text-sm text-gray-600">Join group sessions</div>
+                  </div>
+                </Button>
+
+                <Button variant="outline" className="h-auto p-4 flex flex-col items-center gap-2">
+                  <Video className="h-6 w-6" />
+                  <div className="text-center">
+                    <div className="font-medium">Live Session</div>
+                    <div className="text-sm text-gray-600">Real-time tutoring</div>
+                  </div>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Availability */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Availability</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((dayName, index) => {
+                  interface AvailabilitySlot {
+                    day_of_week: number;
+                    start_time: string;
+                    end_time: string;
+                  }
+
+                                    const daySchedules = teacher.availability.filter((schedule: AvailabilitySlot) => schedule.day_of_week === index);
+                  return (
+                    <div key={dayName} className="flex justify-between items-center">
+                      <span className="capitalize font-medium">{dayName}</span>
+                      <div className="flex gap-1">
+                        {daySchedules.map((schedule: { start_time: string; end_time: string; day_of_week: number }, idx: number) => (
+                          <Badge key={idx} variant="outline" className="text-xs">
+                            {schedule.start_time}-{schedule.end_time}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Qualifications */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Qualifications & Certifications</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <h4 className="font-medium mb-1">Education</h4>
+                <p className="text-sm text-gray-600">{teacher.qualifications}</p>
+              </div>
+              <div>
+                <h4 className="font-medium mb-1">Certifications</h4>
+                <div className="flex flex-wrap gap-2">
+                  {teacher.certifications.map(cert => (
+                    <Badge key={cert} variant="secondary" className="text-xs">
+                      {cert}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="font-medium mb-1">Languages</h4>
+                <div className="flex gap-2">
+                  {teacher.languages.map(lang => (
+                    <Badge key={lang} variant="outline" className="text-xs">
+                      {lang}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  };
+
+  if (showTeacherProfile) {
+    return renderTeacherProfile(showTeacherProfile);
+  }
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      {/* Top Header */}
+      <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Video className="h-6 w-6 text-blue-400" />
+            <span className="font-bold text-lg">EduTok</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20"
+              onClick={() => setShowUpload(true)}
+            >
+              <Plus className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20"
+              onClick={() => setActiveTab('search')}
+            >
+              <Search className="h-5 w-5" />
+            </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="feed" className="flex items-center gap-2">
-              <PlayCircle className="h-4 w-4" />
-              Feed
-            </TabsTrigger>
-            <TabsTrigger value="trending" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              Trending
-            </TabsTrigger>
-            <TabsTrigger value="learn" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Learn
-            </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Profile
-            </TabsTrigger>
-          </TabsList>
+      {/* Main Content */}
+      <div className="h-screen">
+        {activeTab === 'home' && (
+          <VideoFeed
+            videos={videos}
+            onVideoLike={handleVideoLike}
+            onVideoBookmark={(videoId) => {
+              handleVideoBookmark(videoId);
+              // Add to bookmarked videos
+              const video = videos.find(v => v.video.video_id === videoId);
+              if (video && !bookmarkedVideos.find(bv => bv.video.video_id === videoId)) {
+                setBookmarkedVideos(prev => [...prev, video]);
+              }
+            }}
+            onVideoShare={handleVideoShare}
+            onVideoComment={handleVideoComment}
+            onLoadMore={handleLoadMore}
+            hasMore={videos.length < 20}
+            isLoading={false}
+          />
+        )}
 
-          <TabsContent value="feed" className="space-y-6">
-            <VideoFeed
-              videos={videos}
-              onVideoLike={handleVideoLike}
-              onVideoBookmark={handleVideoBookmark}
-              onVideoShare={handleVideoShare}
-              onVideoComment={handleVideoComment}
-              onLoadMore={handleLoadMore}
-              hasMore={videos.length < 20}
-              isLoading={false}
-            />
-          </TabsContent>
-
-          <TabsContent value="trending" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos
-                .filter(item => item.video.views > 1000)
-                .sort((a, b) => b.video.views - a.video.views)
-                .slice(0, 9)
-                .map((item) => (
-                  <Card key={item.video.video_id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="aspect-video bg-gray-200 relative">
-                      <img
-                        src={item.video.thumbnail_url}
-                        alt={item.video.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                        <PlayCircle className="h-12 w-12 text-white" />
-                      </div>
-                      <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
-                        {Math.floor(item.video.duration / 60)}:{(item.video.duration % 60).toString().padStart(2, '0')}
-                      </div>
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold line-clamp-2 mb-2">{item.video.title}</h3>
-                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={item.creator.avatar} />
-                          <AvatarFallback>{item.creator.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <span>{item.creator.name}</span>
-                        {item.creator.rating && (
-                          <div className="flex items-center">
-                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                            <span>{item.creator.rating.toFixed(1)}</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between text-xs text-gray-500">
-                        <span>{item.video.views.toLocaleString()} views</span>
-                        <span>{item.video.likes} likes</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="learn" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Learning Paths */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="h-5 w-5" />
-                    Learning Paths
-                  </CardTitle>
-                  <CardDescription>
-                    Structured learning journeys for different subjects
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {['Mathematics', 'Science', 'Programming', 'Languages'].map((subject) => (
-                    <div key={subject} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <BookOpen className="h-5 w-5 text-blue-600" />
-                        <div>
-                          <p className="font-medium">{subject} Fundamentals</p>
-                          <p className="text-sm text-gray-600">12 videos • 4 hours</p>
+        {activeTab === 'teachers' && (
+          <div className="h-screen overflow-y-auto pt-16 pb-20">
+            <div className="p-4 space-y-4">
+              <h2 className="text-xl font-bold mb-4">Featured Teachers</h2>
+              {mockTeachers.map(teacher => (
+                <Card key={teacher.teacher_id} className="bg-gray-900 border-gray-800">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={teacher.profile_image} />
+                        <AvatarFallback>{teacher.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold">{teacher.name}</h3>
+                          {teacher.is_verified && <CheckCircle className="h-4 w-4 text-blue-400" />}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-gray-400">
+                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                          <span>{teacher.rating}</span>
+                          <span>•</span>
+                          <span>{teacher.total_students} students</span>
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">
-                        Start Learning
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowTeacherProfile(teacher.teacher_id)}
+                        className="border-gray-600 text-white hover:bg-gray-800"
+                      >
+                        View Profile
                       </Button>
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Challenges */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Zap className="h-5 w-5" />
-                    Weekly Challenges
-                  </CardTitle>
-                  <CardDescription>
-                    Compete with others and earn badges
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="p-4 border rounded-lg bg-gradient-to-r from-purple-50 to-blue-50">
-                    <h4 className="font-semibold mb-2">Math Problem Solving</h4>
-                    <p className="text-sm text-gray-600 mb-3">
-                      Create a video explaining how to solve quadratic equations
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <Badge variant="secondary">50 points</Badge>
-                      <Button size="sm">Join Challenge</Button>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {teacher.expertise_areas.slice(0, 3).map(subject => (
+                        <Badge key={subject} variant="secondary" className="text-xs bg-gray-800">
+                          {subject}
+                        </Badge>
+                      ))}
                     </div>
-                  </div>
-
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-semibold mb-2">Science Experiment</h4>
-                    <p className="text-sm text-gray-600 mb-3">
-                      Demonstrate a simple physics experiment
-                    </p>
+                    <p className="text-sm text-gray-400 line-clamp-2 mb-3">{teacher.bio}</p>
                     <div className="flex items-center justify-between">
-                      <Badge variant="secondary">75 points</Badge>
-                      <Button variant="outline" size="sm">View Details</Button>
+                      <div className="text-sm">
+                        <span className="text-gray-400">From </span>
+                        <span className="font-semibold text-green-400">${teacher.hourly_rate}/hr</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" className="border-gray-600">
+                          <Mail className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                          Subscribe
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent value="profile" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* User Stats */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Progress</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-1">
-                      {mockUserProgress.total_points}
-                    </div>
-                    <p className="text-sm text-gray-600">Total Points</p>
-                  </div>
+        {activeTab === 'bookmarks' && (
+          <div className="h-screen overflow-y-auto pt-16 pb-20">
+            <div className="p-4">
+              <h2 className="text-xl font-bold mb-4">Bookmarked Videos</h2>
+              {bookmarkedVideos.length === 0 ? (
+                <div className="text-center py-12">
+                  <Bookmark className="h-16 w-16 mx-auto text-gray-600 mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-400 mb-2">No bookmarked videos yet</h3>
+                  <p className="text-gray-500">Bookmark videos to save them for later</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {bookmarkedVideos.map(item => (
+                    <Card key={item.video.video_id} className="bg-gray-900 border-gray-800 overflow-hidden">
+                      <div className="flex">
+                        <div className="w-32 h-24 bg-gray-800 relative flex-shrink-0">
+                          <img
+                            src={item.video.thumbnail_url}
+                            alt={item.video.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                            <PlayCircle className="h-8 w-8 text-white" />
+                          </div>
+                        </div>
+                        <CardContent className="flex-1 p-3">
+                          <h3 className="font-semibold line-clamp-2 mb-1">{item.video.title}</h3>
+                          <p className="text-sm text-gray-400 line-clamp-1 mb-2">{item.creator.name}</p>
+                          <div className="flex items-center justify-between text-xs text-gray-500">
+                            <span>{item.video.views.toLocaleString()} views</span>
+                            <span>{item.video.likes} likes</span>
+                          </div>
+                        </CardContent>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Level {mockUserProgress.level}</span>
-                      <span>{mockUserProgress.level * 100}/{(mockUserProgress.level + 1) * 100}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-600 h-2 rounded-full"
-                        style={{ width: `${(mockUserProgress.level * 100 % 100)}%` }}
-                      />
-                    </div>
-                  </div>
+        {activeTab === 'profile' && (
+          <div className="h-screen overflow-y-auto pt-16 pb-20">
+            <div className="p-4 space-y-6">
+              {/* Profile Header */}
+              <div className="text-center">
+                <Avatar className="h-20 w-20 mx-auto mb-4">
+                  <AvatarFallback className="text-2xl">U</AvatarFallback>
+                </Avatar>
+                <h2 className="text-xl font-bold mb-1">Your Profile</h2>
+                <p className="text-gray-400">Student • Level {mockUserProgress.level}</p>
+              </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                      <div className="text-xl font-semibold">{mockUserProgress.streak_days}</div>
-                      <p className="text-xs text-gray-600">Day Streak</p>
-                    </div>
-                    <div>
-                      <div className="text-xl font-semibold">{mockUserProgress.weekly_goal_progress}%</div>
-                      <p className="text-xs text-gray-600">Weekly Goal</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-gray-900 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-400">{mockUserProgress.total_points}</div>
+                  <div className="text-sm text-gray-400">Points</div>
+                </div>
+                <div className="text-center p-4 bg-gray-900 rounded-lg">
+                  <div className="text-2xl font-bold text-green-400">{mockUserProgress.streak_days}</div>
+                  <div className="text-sm text-gray-400">Day Streak</div>
+                </div>
+                <div className="text-center p-4 bg-gray-900 rounded-lg">
+                  <div className="text-2xl font-bold text-purple-400">{mockUserProgress.badges.length}</div>
+                  <div className="text-sm text-gray-400">Badges</div>
+                </div>
+              </div>
 
               {/* Badges */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Award className="h-5 w-5" />
-                    Your Badges
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-3">
-                    {mockUserProgress.badges.map((badge) => (
-                      <div key={badge.badge_id} className="text-center p-3 border rounded-lg">
-                        <Award className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
-                        <p className="font-medium text-sm">{badge.name}</p>
-                        <p className="text-xs text-gray-600">{badge.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Activity */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    <div className="flex-1">
-                      <p className="text-sm">Completed "Math Challenge"</p>
-                      <p className="text-xs text-gray-600">2 days ago</p>
+              <div>
+                <h3 className="font-semibold mb-3">Your Badges</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {mockUserProgress.badges.map(badge => (
+                    <div key={badge.badge_id} className="bg-gray-900 p-3 rounded-lg text-center">
+                      <Award className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
+                      <div className="font-medium text-sm">{badge.name}</div>
+                      <div className="text-xs text-gray-400">{badge.description}</div>
                     </div>
-                    <Badge variant="secondary">+50 pts</Badge>
-                  </div>
+                  ))}
+                </div>
+              </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                    <div className="flex-1">
-                      <p className="text-sm">Uploaded new video</p>
-                      <p className="text-xs text-gray-600">3 days ago</p>
-                    </div>
-                    <Badge variant="secondary">+25 pts</Badge>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full" />
-                    <div className="flex-1">
-                      <p className="text-sm">Reached 7-day streak</p>
-                      <p className="text-xs text-gray-600">1 week ago</p>
-                    </div>
-                    <Badge variant="secondary">+100 pts</Badge>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Actions */}
+              <div className="space-y-3">
+                <Button
+                  variant="outline"
+                  className="w-full border-gray-600 text-white hover:bg-gray-800"
+                  onClick={() => setShowUpload(true)}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload Video
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-gray-600 text-white hover:bg-gray-800"
+                  onClick={() => setShowStudentProfile(true)}
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  Complete Profile
+                </Button>
+              </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800">
+        <div className="flex items-center justify-around py-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`flex flex-col items-center gap-1 p-2 ${
+              activeTab === 'home' ? 'text-blue-400' : 'text-gray-400'
+            }`}
+            onClick={() => setActiveTab('home')}
+          >
+            <Home className="h-6 w-6" />
+            <span className="text-xs">Home</span>
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`flex flex-col items-center gap-1 p-2 ${
+              activeTab === 'teachers' ? 'text-blue-400' : 'text-gray-400'
+            }`}
+            onClick={() => setActiveTab('teachers')}
+          >
+            <Users className="h-6 w-6" />
+            <span className="text-xs">Teachers</span>
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`flex flex-col items-center gap-1 p-2 ${
+              activeTab === 'bookmarks' ? 'text-blue-400' : 'text-gray-400'
+            }`}
+            onClick={() => setActiveTab('bookmarks')}
+          >
+            <Bookmark className="h-6 w-6" />
+            <span className="text-xs">Saved</span>
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`flex flex-col items-center gap-1 p-2 ${
+              activeTab === 'profile' ? 'text-blue-400' : 'text-gray-400'
+            }`}
+            onClick={() => setActiveTab('profile')}
+          >
+            <User className="h-6 w-6" />
+            <span className="text-xs">Profile</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
