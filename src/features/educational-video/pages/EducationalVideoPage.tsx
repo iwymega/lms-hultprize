@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Video,
   Upload,
@@ -19,131 +19,154 @@ import {
   Mail,
   Phone,
   PlayCircle,
-  Award
-} from 'lucide-react';
-import { VideoFeed } from '../components/VideoFeed';
-import { VideoUpload } from '../components/VideoUpload';
-import { StudentProfileForm } from '../../matching/components/StudentProfileForm';
+  Award,
+} from "lucide-react";
+import { VideoFeed } from "../components/VideoFeed";
+import { VideoUpload } from "../components/VideoUpload";
+import { StudentProfileForm } from "../../matching/components/StudentProfileForm";
 import {
   EducationalVideo,
   VideoFeedItem,
   VideoUploadData,
   GradeLevel,
   DifficultyLevel,
-  UserProgress
-} from '../types';
+  UserProgress,
+} from "../types";
 
 // Mock data for demonstration
 const mockVideos: EducationalVideo[] = [
   {
-    video_id: '1',
-    title: 'Introduction to Quadratic Equations',
-    description: 'Learn how to solve quadratic equations using the quadratic formula. Perfect for algebra students!',
-    video_url: '/videos/quadratic-equations.mp4',
-    thumbnail_url: '/thumbnails/quadratic.jpg',
+    video_id: "1",
+    title: "Introduction to Quadratic Equations",
+    description:
+      "Learn how to solve quadratic equations using the quadratic formula. Perfect for algebra students!",
+    video_url: "/videos/quadratic-equations.mp4",
+    thumbnail_url: "/thumbnails/quadratic.jpg",
     duration: 180,
-    subject: 'Mathematics',
-    topic: 'Quadratic Equations',
+    subject: "Mathematics",
+    topic: "Quadratic Equations",
     grade_level: GradeLevel.HIGH,
     difficulty: DifficultyLevel.INTERMEDIATE,
-    tags: ['algebra', 'equations', 'math', 'tutorial'],
-    creator_id: 'teacher_1',
-    creator_type: 'teacher',
+    tags: ["algebra", "equations", "math", "tutorial"],
+    creator_id: "teacher_1",
+    creator_type: "teacher",
     views: 1250,
     likes: 89,
     shares: 23,
     comments_count: 12,
     is_featured: true,
     is_private: false,
-    created_at: new Date('2024-01-15'),
-    updated_at: new Date('2024-01-15')
+    created_at: new Date("2024-01-15"),
+    updated_at: new Date("2024-01-15"),
   },
   {
-    video_id: '2',
-    title: 'Photosynthesis Explained Simply',
-    description: 'A clear explanation of how plants make food through photosynthesis. Great for biology beginners.',
-    video_url: '/videos/photosynthesis.mp4',
-    thumbnail_url: '/thumbnails/photosynthesis.jpg',
+    video_id: "2",
+    title: "Photosynthesis Explained Simply",
+    description:
+      "A clear explanation of how plants make food through photosynthesis. Great for biology beginners.",
+    video_url: "/videos/photosynthesis.mp4",
+    thumbnail_url: "/thumbnails/photosynthesis.jpg",
     duration: 240,
-    subject: 'Biology',
-    topic: 'Photosynthesis',
+    subject: "Biology",
+    topic: "Photosynthesis",
     grade_level: GradeLevel.MIDDLE,
     difficulty: DifficultyLevel.BEGINNER,
-    tags: ['biology', 'plants', 'science', 'explanation'],
-    creator_id: 'teacher_2',
-    creator_type: 'teacher',
+    tags: ["biology", "plants", "science", "explanation"],
+    creator_id: "teacher_2",
+    creator_type: "teacher",
     views: 2100,
     likes: 156,
     shares: 45,
     comments_count: 28,
     is_featured: false,
     is_private: false,
-    created_at: new Date('2024-01-14'),
-    updated_at: new Date('2024-01-14')
+    created_at: new Date("2024-01-14"),
+    updated_at: new Date("2024-01-14"),
   },
   {
-    video_id: '3',
-    title: 'My Journey Learning Python',
-    description: 'A student shares their experience learning Python programming from scratch.',
-    video_url: '/videos/python-journey.mp4',
-    thumbnail_url: '/thumbnails/python.jpg',
+    video_id: "3",
+    title: "My Journey Learning Python",
+    description:
+      "A student shares their experience learning Python programming from scratch.",
+    video_url: "/videos/python-journey.mp4",
+    thumbnail_url: "/thumbnails/python.jpg",
     duration: 320,
-    subject: 'Computer Science',
-    topic: 'Python Programming',
+    subject: "Computer Science",
+    topic: "Python Programming",
     grade_level: GradeLevel.HIGH,
     difficulty: DifficultyLevel.BEGINNER,
-    tags: ['python', 'programming', 'coding', 'student-project'],
-    creator_id: 'student_1',
-    creator_type: 'student',
+    tags: ["python", "programming", "coding", "student-project"],
+    creator_id: "student_1",
+    creator_type: "student",
     views: 890,
     likes: 67,
     shares: 18,
     comments_count: 15,
     is_featured: false,
     is_private: false,
-    created_at: new Date('2024-01-13'),
-    updated_at: new Date('2024-01-13')
-  }
+    created_at: new Date("2024-01-13"),
+    updated_at: new Date("2024-01-13"),
+  },
 ];
 
 const mockCreators = {
-  'teacher_1': { id: 'teacher_1', name: 'Dr. Sarah Johnson', avatar: '/avatars/sarah.jpg', type: 'teacher' as const, rating: 4.8 },
-  'teacher_2': { id: 'teacher_2', name: 'Prof. Michael Chen', avatar: '/avatars/michael.jpg', type: 'teacher' as const, rating: 4.9 },
-  'student_1': { id: 'student_1', name: 'Alex Rivera', avatar: '/avatars/alex.jpg', type: 'student' as const, rating: undefined }
+  teacher_1: {
+    id: "teacher_1",
+    name: "Dr. Sarah Johnson",
+    avatar: "/avatars/sarah.jpg",
+    type: "teacher" as const,
+    rating: 4.8,
+  },
+  teacher_2: {
+    id: "teacher_2",
+    name: "Prof. Michael Chen",
+    avatar: "/avatars/michael.jpg",
+    type: "teacher" as const,
+    rating: 4.9,
+  },
+  student_1: {
+    id: "student_1",
+    name: "Alex Rivera",
+    avatar: "/avatars/alex.jpg",
+    type: "student" as const,
+    rating: undefined,
+  },
 };
 
 const mockUserProgress: UserProgress = {
-  user_id: 'current_user',
+  user_id: "current_user",
   total_points: 1250,
   level: 3,
   badges: [
     {
-      badge_id: 'first_video',
-      name: 'First Video',
-      description: 'Uploaded your first educational video',
-      icon_url: '/badges/first-video.png',
-      earned_at: new Date('2024-01-10'),
-      category: 'achievement'
+      badge_id: "first_video",
+      name: "First Video",
+      description: "Uploaded your first educational video",
+      icon_url: "/badges/first-video.png",
+      earned_at: new Date("2024-01-10"),
+      category: "achievement",
     },
     {
-      badge_id: 'helpful_teacher',
-      name: 'Helpful Teacher',
-      description: 'Received 50+ likes on your videos',
-      icon_url: '/badges/helpful-teacher.png',
-      earned_at: new Date('2024-01-12'),
-      category: 'engagement'
-    }
+      badge_id: "helpful_teacher",
+      name: "Helpful Teacher",
+      description: "Received 50+ likes on your videos",
+      icon_url: "/badges/helpful-teacher.png",
+      earned_at: new Date("2024-01-12"),
+      category: "engagement",
+    },
   ],
-  completed_challenges: ['math_challenge_1', 'biology_quiz_1'],
+  completed_challenges: ["math_challenge_1", "biology_quiz_1"],
   streak_days: 7,
-  weekly_goal_progress: 85
+  weekly_goal_progress: 85,
 };
 
 export function EducationalVideoPage() {
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState("home");
   const [showUpload, setShowUpload] = useState(false);
   const [showStudentProfile, setShowStudentProfile] = useState(false);
-  const [showTeacherProfile, setShowTeacherProfile] = useState<string | null>(null);
+  const [showTeacherProfile, setShowTeacherProfile] = useState<string | null>(
+    null
+  );
   const [videos, setVideos] = useState<VideoFeedItem[]>([]);
   const [bookmarkedVideos, setBookmarkedVideos] = useState<VideoFeedItem[]>([]);
 
@@ -151,88 +174,96 @@ export function EducationalVideoPage() {
 
   // Initialize videos with mock data
   useEffect(() => {
-    const videoFeedItems: VideoFeedItem[] = mockVideos.map(video => ({
+    const videoFeedItems: VideoFeedItem[] = mockVideos.map((video) => ({
       video,
       creator: mockCreators[video.creator_id as keyof typeof mockCreators] || {
         id: video.creator_id,
-        name: 'Unknown Creator',
+        name: "Unknown Creator",
         type: video.creator_type,
-        rating: undefined
+        rating: undefined,
       },
       isLiked: Math.random() > 0.7, // Mock user interactions
       isBookmarked: Math.random() > 0.8,
       userInteraction: {
         liked: Math.random() > 0.7,
         bookmarked: Math.random() > 0.8,
-        watched: Math.random() > 0.5
-      }
+        watched: Math.random() > 0.5,
+      },
     }));
 
     setVideos(videoFeedItems);
   }, []);
 
   const handleVideoLike = async (videoId: string) => {
-    setVideos(prev => prev.map(item => {
-      if (item.video.video_id === videoId) {
-        const newLiked = !item.userInteraction.liked;
-        return {
-          ...item,
-          video: {
-            ...item.video,
-            likes: newLiked ? item.video.likes + 1 : item.video.likes - 1
-          },
-          userInteraction: {
-            ...item.userInteraction,
-            liked: newLiked
-          }
-        };
-      }
-      return item;
-    }));
+    setVideos((prev) =>
+      prev.map((item) => {
+        if (item.video.video_id === videoId) {
+          const newLiked = !item.userInteraction.liked;
+          return {
+            ...item,
+            video: {
+              ...item.video,
+              likes: newLiked ? item.video.likes + 1 : item.video.likes - 1,
+            },
+            userInteraction: {
+              ...item.userInteraction,
+              liked: newLiked,
+            },
+          };
+        }
+        return item;
+      })
+    );
   };
 
   const handleVideoBookmark = async (videoId: string) => {
-    setVideos(prev => prev.map(item => {
-      if (item.video.video_id === videoId) {
-        return {
-          ...item,
-          userInteraction: {
-            ...item.userInteraction,
-            bookmarked: !item.userInteraction.bookmarked
-          }
-        };
-      }
-      return item;
-    }));
+    setVideos((prev) =>
+      prev.map((item) => {
+        if (item.video.video_id === videoId) {
+          return {
+            ...item,
+            userInteraction: {
+              ...item.userInteraction,
+              bookmarked: !item.userInteraction.bookmarked,
+            },
+          };
+        }
+        return item;
+      })
+    );
   };
 
   const handleVideoShare = async (videoId: string) => {
     // Mock share functionality
-    navigator.clipboard.writeText(`Check out this educational video: ${window.location.origin}/video/${videoId}`);
-    alert('Video link copied to clipboard!');
+    navigator.clipboard.writeText(
+      `Check out this educational video: ${window.location.origin}/video/${videoId}`
+    );
+    alert("Video link copied to clipboard!");
   };
 
   const handleVideoComment = async (videoId: string, _comment: string) => {
-    setVideos(prev => prev.map(item => {
-      if (item.video.video_id === videoId) {
-        return {
-          ...item,
-          video: {
-            ...item.video,
-            comments_count: item.video.comments_count + 1
-          }
-        };
-      }
-      return item;
-    }));
+    setVideos((prev) =>
+      prev.map((item) => {
+        if (item.video.video_id === videoId) {
+          return {
+            ...item,
+            video: {
+              ...item.video,
+              comments_count: item.video.comments_count + 1,
+            },
+          };
+        }
+        return item;
+      })
+    );
   };
 
   const handleVideoUpload = async (uploadData: VideoUploadData) => {
     // Mock upload - in real app, this would upload to server
-    console.log('Uploading video:', uploadData);
+    console.log("Uploading video:", uploadData);
 
     // Simulate successful upload
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Add new video to feed
     const newVideo: EducationalVideo = {
@@ -240,15 +271,17 @@ export function EducationalVideoPage() {
       title: uploadData.title,
       description: uploadData.description,
       video_url: URL.createObjectURL(uploadData.video_file),
-      thumbnail_url: uploadData.thumbnail_file ? URL.createObjectURL(uploadData.thumbnail_file) : '/thumbnails/default.jpg',
+      thumbnail_url: uploadData.thumbnail_file
+        ? URL.createObjectURL(uploadData.thumbnail_file)
+        : "/thumbnails/default.jpg",
       duration: 180, // Mock duration
       subject: uploadData.subject,
       topic: uploadData.topic,
       grade_level: uploadData.grade_level,
       difficulty: uploadData.difficulty,
       tags: uploadData.tags,
-      creator_id: 'current_user',
-      creator_type: 'student',
+      creator_id: "current_user",
+      creator_type: "student",
       views: 0,
       likes: 0,
       shares: 0,
@@ -256,59 +289,63 @@ export function EducationalVideoPage() {
       is_featured: false,
       is_private: uploadData.is_private,
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
     };
 
     const newVideoItem: VideoFeedItem = {
       video: newVideo,
       creator: {
-        id: 'current_user',
-        name: 'You',
+        id: "current_user",
+        name: "You",
         avatar: undefined,
-        type: 'student',
-        rating: undefined
+        type: "student",
+        rating: undefined,
       },
       isLiked: false,
       isBookmarked: false,
       userInteraction: {
         liked: false,
         bookmarked: false,
-        watched: false
-      }
+        watched: false,
+      },
     };
 
-    setVideos(prev => [newVideoItem, ...prev]);
+    setVideos((prev) => [newVideoItem, ...prev]);
     setShowUpload(false);
   };
 
   const handleLoadMore = async () => {
     // Mock loading more videos
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Add more mock videos
-    const additionalVideos = mockVideos.map(video => ({
+    const additionalVideos = mockVideos.map((video) => ({
       ...video,
-      video_id: `${video.video_id}_extra_${Date.now()}`
+      video_id: `${video.video_id}_extra_${Date.now()}`,
     }));
 
-    const additionalVideoItems: VideoFeedItem[] = additionalVideos.map(video => ({
-      video,
-      creator: mockCreators[video.creator_id as keyof typeof mockCreators] || {
-        id: video.creator_id,
-        name: 'Unknown Creator',
-        type: video.creator_type,
-        rating: undefined
-      },
-      isLiked: false,
-      isBookmarked: false,
-      userInteraction: {
-        liked: false,
-        bookmarked: false,
-        watched: false
-      }
-    }));
+    const additionalVideoItems: VideoFeedItem[] = additionalVideos.map(
+      (video) => ({
+        video,
+        creator: mockCreators[
+          video.creator_id as keyof typeof mockCreators
+        ] || {
+          id: video.creator_id,
+          name: "Unknown Creator",
+          type: video.creator_type,
+          rating: undefined,
+        },
+        isLiked: false,
+        isBookmarked: false,
+        userInteraction: {
+          liked: false,
+          bookmarked: false,
+          watched: false,
+        },
+      })
+    );
 
-    setVideos(prev => [...prev, ...additionalVideoItems]);
+    setVideos((prev) => [...prev, ...additionalVideoItems]);
   };
 
   if (showStudentProfile) {
@@ -323,9 +360,7 @@ export function EducationalVideoPage() {
             ← Back to Videos
           </Button>
         </div>
-        <StudentProfileForm
-          onComplete={() => setShowStudentProfile(false)}
-        />
+        <StudentProfileForm onComplete={() => setShowStudentProfile(false)} />
       </div>
     );
   }
@@ -353,70 +388,73 @@ export function EducationalVideoPage() {
   // Mock teachers data (extended for educational video context)
   const mockTeachers = [
     {
-      teacher_id: 'teacher_1',
-      name: 'Dr. Sarah Johnson',
-      email: 'sarah.johnson@school.edu',
-      expertise_areas: ['Mathematics', 'Physics'],
-      qualifications: ['PhD in Mathematics', '10+ years teaching experience'],
+      teacher_id: "teacher_1",
+      name: "Dr. Sarah Johnson",
+      email: "sarah.johnson@school.edu",
+      expertise_areas: ["Mathematics", "Physics"],
+      qualifications: ["PhD in Mathematics", "10+ years teaching experience"],
       availability: [
-        { day_of_week: 1, start_time: '09:00', end_time: '12:00' },
-        { day_of_week: 1, start_time: '14:00', end_time: '17:00' },
-        { day_of_week: 2, start_time: '09:00', end_time: '12:00' },
-        { day_of_week: 2, start_time: '14:00', end_time: '17:00' },
-        { day_of_week: 3, start_time: '09:00', end_time: '12:00' },
-        { day_of_week: 4, start_time: '14:00', end_time: '17:00' },
-        { day_of_week: 5, start_time: '09:00', end_time: '12:00' }
+        { day_of_week: 1, start_time: "09:00", end_time: "12:00" },
+        { day_of_week: 1, start_time: "14:00", end_time: "17:00" },
+        { day_of_week: 2, start_time: "09:00", end_time: "12:00" },
+        { day_of_week: 2, start_time: "14:00", end_time: "17:00" },
+        { day_of_week: 3, start_time: "09:00", end_time: "12:00" },
+        { day_of_week: 4, start_time: "14:00", end_time: "17:00" },
+        { day_of_week: 5, start_time: "09:00", end_time: "12:00" },
       ] as any,
-      teaching_style: 'DIRECT_INSTRUCTION' as any,
+      teaching_style: "DIRECT_INSTRUCTION" as any,
       rating: 4.8,
       total_sessions: 150,
-      status: 'AVAILABLE' as any,
-      created_at: new Date('2020-01-15'),
-      updated_at: new Date('2024-01-15'),
+      status: "AVAILABLE" as any,
+      created_at: new Date("2020-01-15"),
+      updated_at: new Date("2024-01-15"),
       // Extended properties for educational video
-      profile_image: '/avatars/sarah.jpg',
-      bio: 'Passionate mathematics educator with a PhD from MIT. Specializing in making complex concepts accessible to all students.',
-      languages: ['English', 'Spanish'],
-      certifications: ['Certified Math Teacher', 'STEM Education Specialist'],
+      profile_image: "/avatars/sarah.jpg",
+      bio: "Passionate mathematics educator with a PhD from MIT. Specializing in making complex concepts accessible to all students.",
+      languages: ["English", "Spanish"],
+      certifications: ["Certified Math Teacher", "STEM Education Specialist"],
       is_verified: true,
       hourly_rate: 50,
       total_reviews: 89,
-      total_students: 150
+      total_students: 150,
     },
     {
-      teacher_id: 'teacher_2',
-      name: 'Prof. Michael Chen',
-      email: 'michael.chen@university.edu',
-      expertise_areas: ['Biology', 'Chemistry', 'Environmental Science'],
-      qualifications: ['Professor of Biology', 'Published researcher in molecular biology'],
+      teacher_id: "teacher_2",
+      name: "Prof. Michael Chen",
+      email: "michael.chen@university.edu",
+      expertise_areas: ["Biology", "Chemistry", "Environmental Science"],
+      qualifications: [
+        "Professor of Biology",
+        "Published researcher in molecular biology",
+      ],
       availability: [
-        { day_of_week: 1, start_time: '10:00', end_time: '14:00' },
-        { day_of_week: 2, start_time: '10:00', end_time: '14:00' },
-        { day_of_week: 2, start_time: '15:00', end_time: '18:00' },
-        { day_of_week: 3, start_time: '10:00', end_time: '14:00' },
-        { day_of_week: 4, start_time: '15:00', end_time: '18:00' },
-        { day_of_week: 5, start_time: '10:00', end_time: '14:00' }
+        { day_of_week: 1, start_time: "10:00", end_time: "14:00" },
+        { day_of_week: 2, start_time: "10:00", end_time: "14:00" },
+        { day_of_week: 2, start_time: "15:00", end_time: "18:00" },
+        { day_of_week: 3, start_time: "10:00", end_time: "14:00" },
+        { day_of_week: 4, start_time: "15:00", end_time: "18:00" },
+        { day_of_week: 5, start_time: "10:00", end_time: "14:00" },
       ] as any,
-      teaching_style: 'EXPERIENTIAL' as any,
+      teaching_style: "EXPERIENTIAL" as any,
       rating: 4.9,
       total_sessions: 200,
-      status: 'AVAILABLE' as any,
-      created_at: new Date('2019-08-20'),
-      updated_at: new Date('2024-01-14'),
+      status: "AVAILABLE" as any,
+      created_at: new Date("2019-08-20"),
+      updated_at: new Date("2024-01-14"),
       // Extended properties for educational video
-      profile_image: '/avatars/michael.jpg',
-      bio: 'Award-winning biology professor passionate about making science accessible and exciting for students of all ages.',
-      languages: ['English', 'Mandarin'],
-      certifications: ['AP Biology Teacher', 'Research Scientist'],
+      profile_image: "/avatars/michael.jpg",
+      bio: "Award-winning biology professor passionate about making science accessible and exciting for students of all ages.",
+      languages: ["English", "Mandarin"],
+      certifications: ["AP Biology Teacher", "Research Scientist"],
       is_verified: true,
       hourly_rate: 65,
       total_reviews: 120,
-      total_students: 200
-    }
+      total_students: 200,
+    },
   ];
 
   const renderTeacherProfile = (teacherId: string) => {
-    const teacher = mockTeachers.find(t => t.teacher_id === teacherId);
+    const teacher = mockTeachers.find((t) => t.teacher_id === teacherId);
     if (!teacher) return null;
 
     return (
@@ -438,12 +476,16 @@ export function EducationalVideoPage() {
           <div className="flex items-start gap-4">
             <Avatar className="h-20 w-20">
               <AvatarImage src={teacher.profile_image} />
-              <AvatarFallback className="text-lg">{teacher.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback className="text-lg">
+                {teacher.name.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h2 className="text-xl font-bold">{teacher.name}</h2>
-                {teacher.is_verified && <CheckCircle className="h-5 w-5 text-blue-500" />}
+                {teacher.is_verified && (
+                  <CheckCircle className="h-5 w-5 text-blue-500" />
+                )}
               </div>
               <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
                 <div className="flex items-center gap-1">
@@ -454,7 +496,7 @@ export function EducationalVideoPage() {
                 <span>{teacher.total_students} students</span>
               </div>
               <div className="flex flex-wrap gap-1 mb-3">
-                {teacher.expertise_areas.map(subject => (
+                {teacher.expertise_areas.map((subject) => (
                   <Badge key={subject} variant="secondary" className="text-xs">
                     {subject}
                   </Badge>
@@ -492,7 +534,9 @@ export function EducationalVideoPage() {
                 <div className="border rounded-lg p-4 bg-gradient-to-br from-blue-50 to-purple-50">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold">Premium Access</h3>
-                    <Badge className="bg-yellow-500">${teacher.hourly_rate}/month</Badge>
+                    <Badge className="bg-yellow-500">
+                      ${teacher.hourly_rate}/month
+                    </Badge>
                   </div>
                   <ul className="text-sm text-gray-600 space-y-1 mb-4">
                     <li>• All public and private videos</li>
@@ -501,9 +545,7 @@ export function EducationalVideoPage() {
                     <li>• Priority Q&A responses</li>
                     <li>• Progress tracking</li>
                   </ul>
-                  <Button className="w-full">
-                    Subscribe Premium
-                  </Button>
+                  <Button className="w-full">Subscribe Premium</Button>
                 </div>
               </div>
             </CardContent>
@@ -519,15 +561,23 @@ export function EducationalVideoPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button variant="outline" className="h-auto p-4 flex flex-col items-center gap-2">
+                <Button
+                  variant="outline"
+                  className="h-auto p-4 flex flex-col items-center gap-2"
+                >
                   <Mail className="h-6 w-6" />
                   <div className="text-center">
                     <div className="font-medium">Send Message</div>
-                    <div className="text-sm text-gray-600">Direct messaging</div>
+                    <div className="text-sm text-gray-600">
+                      Direct messaging
+                    </div>
                   </div>
                 </Button>
 
-                <Button variant="outline" className="h-auto p-4 flex flex-col items-center gap-2">
+                <Button
+                  variant="outline"
+                  className="h-auto p-4 flex flex-col items-center gap-2"
+                >
                   <Phone className="h-6 w-6" />
                   <div className="text-center">
                     <div className="font-medium">Book Session</div>
@@ -535,19 +585,29 @@ export function EducationalVideoPage() {
                   </div>
                 </Button>
 
-                <Button variant="outline" className="h-auto p-4 flex flex-col items-center gap-2">
+                <Button
+                  variant="outline"
+                  className="h-auto p-4 flex flex-col items-center gap-2"
+                >
                   <Users className="h-6 w-6" />
                   <div className="text-center">
                     <div className="font-medium">Group Class</div>
-                    <div className="text-sm text-gray-600">Join group sessions</div>
+                    <div className="text-sm text-gray-600">
+                      Join group sessions
+                    </div>
                   </div>
                 </Button>
 
-                <Button variant="outline" className="h-auto p-4 flex flex-col items-center gap-2">
+                <Button
+                  variant="outline"
+                  className="h-auto p-4 flex flex-col items-center gap-2"
+                >
                   <Video className="h-6 w-6" />
                   <div className="text-center">
                     <div className="font-medium">Live Session</div>
-                    <div className="text-sm text-gray-600">Real-time tutoring</div>
+                    <div className="text-sm text-gray-600">
+                      Real-time tutoring
+                    </div>
                   </div>
                 </Button>
               </div>
@@ -561,23 +621,50 @@ export function EducationalVideoPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((dayName, index) => {
+                {[
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday",
+                ].map((dayName, index) => {
                   interface AvailabilitySlot {
                     day_of_week: number;
                     start_time: string;
                     end_time: string;
                   }
 
-                                    const daySchedules = teacher.availability.filter((schedule: AvailabilitySlot) => schedule.day_of_week === index);
+                  const daySchedules = teacher.availability.filter(
+                    (schedule: AvailabilitySlot) =>
+                      schedule.day_of_week === index
+                  );
                   return (
-                    <div key={dayName} className="flex justify-between items-center">
+                    <div
+                      key={dayName}
+                      className="flex justify-between items-center"
+                    >
                       <span className="capitalize font-medium">{dayName}</span>
                       <div className="flex gap-1">
-                        {daySchedules.map((schedule: { start_time: string; end_time: string; day_of_week: number }, idx: number) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
-                            {schedule.start_time}-{schedule.end_time}
-                          </Badge>
-                        ))}
+                        {daySchedules.map(
+                          (
+                            schedule: {
+                              start_time: string;
+                              end_time: string;
+                              day_of_week: number;
+                            },
+                            idx: number
+                          ) => (
+                            <Badge
+                              key={idx}
+                              variant="outline"
+                              className="text-xs"
+                            >
+                              {schedule.start_time}-{schedule.end_time}
+                            </Badge>
+                          )
+                        )}
                       </div>
                     </div>
                   );
@@ -594,12 +681,14 @@ export function EducationalVideoPage() {
             <CardContent className="space-y-3">
               <div>
                 <h4 className="font-medium mb-1">Education</h4>
-                <p className="text-sm text-gray-600">{teacher.qualifications}</p>
+                <p className="text-sm text-gray-600">
+                  {teacher.qualifications}
+                </p>
               </div>
               <div>
                 <h4 className="font-medium mb-1">Certifications</h4>
                 <div className="flex flex-wrap gap-2">
-                  {teacher.certifications.map(cert => (
+                  {teacher.certifications.map((cert) => (
                     <Badge key={cert} variant="secondary" className="text-xs">
                       {cert}
                     </Badge>
@@ -609,7 +698,7 @@ export function EducationalVideoPage() {
               <div>
                 <h4 className="font-medium mb-1">Languages</h4>
                 <div className="flex gap-2">
-                  {teacher.languages.map(lang => (
+                  {teacher.languages.map((lang) => (
                     <Badge key={lang} variant="outline" className="text-xs">
                       {lang}
                     </Badge>
@@ -649,7 +738,7 @@ export function EducationalVideoPage() {
               variant="ghost"
               size="sm"
               className="text-white hover:bg-white/20"
-              onClick={() => setActiveTab('search')}
+              onClick={() => setActiveTab("search")}
             >
               <Search className="h-5 w-5" />
             </Button>
@@ -659,16 +748,19 @@ export function EducationalVideoPage() {
 
       {/* Main Content */}
       <div className="h-screen">
-        {activeTab === 'home' && (
+        {activeTab === "home" && (
           <VideoFeed
             videos={videos}
             onVideoLike={handleVideoLike}
             onVideoBookmark={(videoId) => {
               handleVideoBookmark(videoId);
               // Add to bookmarked videos
-              const video = videos.find(v => v.video.video_id === videoId);
-              if (video && !bookmarkedVideos.find(bv => bv.video.video_id === videoId)) {
-                setBookmarkedVideos(prev => [...prev, video]);
+              const video = videos.find((v) => v.video.video_id === videoId);
+              if (
+                video &&
+                !bookmarkedVideos.find((bv) => bv.video.video_id === videoId)
+              ) {
+                setBookmarkedVideos((prev) => [...prev, video]);
               }
             }}
             onVideoShare={handleVideoShare}
@@ -679,22 +771,29 @@ export function EducationalVideoPage() {
           />
         )}
 
-        {activeTab === 'teachers' && (
+        {activeTab === "teachers" && (
           <div className="h-screen overflow-y-auto pt-16 pb-20">
             <div className="p-4 space-y-4">
               <h2 className="text-xl font-bold mb-4">Featured Teachers</h2>
-              {mockTeachers.map(teacher => (
-                <Card key={teacher.teacher_id} className="bg-gray-900 border-gray-800">
+              {mockTeachers.map((teacher) => (
+                <Card
+                  key={teacher.teacher_id}
+                  className="bg-gray-900 border-gray-800"
+                >
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3 mb-3">
                       <Avatar className="h-12 w-12">
                         <AvatarImage src={teacher.profile_image} />
-                        <AvatarFallback>{teacher.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback>
+                          {teacher.name.charAt(0)}
+                        </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold">{teacher.name}</h3>
-                          {teacher.is_verified && <CheckCircle className="h-4 w-4 text-blue-400" />}
+                          {teacher.is_verified && (
+                            <CheckCircle className="h-4 w-4 text-blue-400" />
+                          )}
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-400">
                           <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
@@ -706,30 +805,47 @@ export function EducationalVideoPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setShowTeacherProfile(teacher.teacher_id)}
+                        onClick={() =>
+                          setShowTeacherProfile(teacher.teacher_id)
+                        }
                         className="border-gray-600 text-white hover:bg-gray-800"
                       >
                         View Profile
                       </Button>
                     </div>
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {teacher.expertise_areas.slice(0, 3).map(subject => (
-                        <Badge key={subject} variant="secondary" className="text-xs bg-gray-800">
+                      {teacher.expertise_areas.slice(0, 3).map((subject) => (
+                        <Badge
+                          key={subject}
+                          variant="secondary"
+                          className="text-xs bg-gray-800"
+                        >
                           {subject}
                         </Badge>
                       ))}
                     </div>
-                    <p className="text-sm text-gray-400 line-clamp-2 mb-3">{teacher.bio}</p>
+                    <p className="text-sm text-gray-400 line-clamp-2 mb-3">
+                      {teacher.bio}
+                    </p>
                     <div className="flex items-center justify-between">
                       <div className="text-sm">
                         <span className="text-gray-400">From </span>
-                        <span className="font-semibold text-green-400">${teacher.hourly_rate}/hr</span>
+                        <span className="font-semibold text-green-400">
+                          ${teacher.hourly_rate}/hr
+                        </span>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="border-gray-600">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-gray-600"
+                        >
                           <Mail className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                        <Button
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700"
+                        >
                           Subscribe
                         </Button>
                       </div>
@@ -741,20 +857,27 @@ export function EducationalVideoPage() {
           </div>
         )}
 
-        {activeTab === 'bookmarks' && (
+        {activeTab === "bookmarks" && (
           <div className="h-screen overflow-y-auto pt-16 pb-20">
             <div className="p-4">
               <h2 className="text-xl font-bold mb-4">Bookmarked Videos</h2>
               {bookmarkedVideos.length === 0 ? (
                 <div className="text-center py-12">
                   <Bookmark className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-400 mb-2">No bookmarked videos yet</h3>
-                  <p className="text-gray-500">Bookmark videos to save them for later</p>
+                  <h3 className="text-lg font-semibold text-gray-400 mb-2">
+                    No bookmarked videos yet
+                  </h3>
+                  <p className="text-gray-500">
+                    Bookmark videos to save them for later
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {bookmarkedVideos.map(item => (
-                    <Card key={item.video.video_id} className="bg-gray-900 border-gray-800 overflow-hidden">
+                  {bookmarkedVideos.map((item) => (
+                    <Card
+                      key={item.video.video_id}
+                      className="bg-gray-900 border-gray-800 overflow-hidden"
+                    >
                       <div className="flex">
                         <div className="w-32 h-24 bg-gray-800 relative flex-shrink-0">
                           <img
@@ -767,10 +890,16 @@ export function EducationalVideoPage() {
                           </div>
                         </div>
                         <CardContent className="flex-1 p-3">
-                          <h3 className="font-semibold line-clamp-2 mb-1">{item.video.title}</h3>
-                          <p className="text-sm text-gray-400 line-clamp-1 mb-2">{item.creator.name}</p>
+                          <h3 className="font-semibold line-clamp-2 mb-1">
+                            {item.video.title}
+                          </h3>
+                          <p className="text-sm text-gray-400 line-clamp-1 mb-2">
+                            {item.creator.name}
+                          </p>
                           <div className="flex items-center justify-between text-xs text-gray-500">
-                            <span>{item.video.views.toLocaleString()} views</span>
+                            <span>
+                              {item.video.views.toLocaleString()} views
+                            </span>
                             <span>{item.video.likes} likes</span>
                           </div>
                         </CardContent>
@@ -783,7 +912,7 @@ export function EducationalVideoPage() {
           </div>
         )}
 
-        {activeTab === 'profile' && (
+        {activeTab === "profile" && (
           <div className="h-screen overflow-y-auto pt-16 pb-20">
             <div className="p-4 space-y-6">
               {/* Profile Header */}
@@ -792,21 +921,29 @@ export function EducationalVideoPage() {
                   <AvatarFallback className="text-2xl">U</AvatarFallback>
                 </Avatar>
                 <h2 className="text-xl font-bold mb-1">Your Profile</h2>
-                <p className="text-gray-400">Student • Level {mockUserProgress.level}</p>
+                <p className="text-gray-400">
+                  Student • Level {mockUserProgress.level}
+                </p>
               </div>
 
               {/* Stats */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-gray-900 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-400">{mockUserProgress.total_points}</div>
+                  <div className="text-2xl font-bold text-blue-400">
+                    {mockUserProgress.total_points}
+                  </div>
                   <div className="text-sm text-gray-400">Points</div>
                 </div>
                 <div className="text-center p-4 bg-gray-900 rounded-lg">
-                  <div className="text-2xl font-bold text-green-400">{mockUserProgress.streak_days}</div>
+                  <div className="text-2xl font-bold text-green-400">
+                    {mockUserProgress.streak_days}
+                  </div>
                   <div className="text-sm text-gray-400">Day Streak</div>
                 </div>
                 <div className="text-center p-4 bg-gray-900 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-400">{mockUserProgress.badges.length}</div>
+                  <div className="text-2xl font-bold text-purple-400">
+                    {mockUserProgress.badges.length}
+                  </div>
                   <div className="text-sm text-gray-400">Badges</div>
                 </div>
               </div>
@@ -815,11 +952,16 @@ export function EducationalVideoPage() {
               <div>
                 <h3 className="font-semibold mb-3">Your Badges</h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {mockUserProgress.badges.map(badge => (
-                    <div key={badge.badge_id} className="bg-gray-900 p-3 rounded-lg text-center">
+                  {mockUserProgress.badges.map((badge) => (
+                    <div
+                      key={badge.badge_id}
+                      className="bg-gray-900 p-3 rounded-lg text-center"
+                    >
                       <Award className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
                       <div className="font-medium text-sm">{badge.name}</div>
-                      <div className="text-xs text-gray-400">{badge.description}</div>
+                      <div className="text-xs text-gray-400">
+                        {badge.description}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -856,9 +998,9 @@ export function EducationalVideoPage() {
             variant="ghost"
             size="sm"
             className={`flex flex-col items-center gap-1 p-2 ${
-              activeTab === 'home' ? 'text-blue-400' : 'text-gray-400'
+              activeTab === "home" ? "text-blue-400" : "text-gray-400"
             }`}
-            onClick={() => setActiveTab('home')}
+            onClick={() => setActiveTab("home")}
           >
             <Home className="h-6 w-6" />
             <span className="text-xs">Home</span>
@@ -868,9 +1010,9 @@ export function EducationalVideoPage() {
             variant="ghost"
             size="sm"
             className={`flex flex-col items-center gap-1 p-2 ${
-              activeTab === 'teachers' ? 'text-blue-400' : 'text-gray-400'
+              activeTab === "teachers" ? "text-blue-400" : "text-gray-400"
             }`}
-            onClick={() => setActiveTab('teachers')}
+            onClick={() => setActiveTab("teachers")}
           >
             <Users className="h-6 w-6" />
             <span className="text-xs">Teachers</span>
@@ -880,9 +1022,9 @@ export function EducationalVideoPage() {
             variant="ghost"
             size="sm"
             className={`flex flex-col items-center gap-1 p-2 ${
-              activeTab === 'bookmarks' ? 'text-blue-400' : 'text-gray-400'
+              activeTab === "bookmarks" ? "text-blue-400" : "text-gray-400"
             }`}
-            onClick={() => setActiveTab('bookmarks')}
+            onClick={() => setActiveTab("bookmarks")}
           >
             <Bookmark className="h-6 w-6" />
             <span className="text-xs">Saved</span>
@@ -892,9 +1034,9 @@ export function EducationalVideoPage() {
             variant="ghost"
             size="sm"
             className={`flex flex-col items-center gap-1 p-2 ${
-              activeTab === 'profile' ? 'text-blue-400' : 'text-gray-400'
+              activeTab === "profile" ? "text-blue-400" : "text-gray-400"
             }`}
-            onClick={() => setActiveTab('profile')}
+            onClick={() => setActiveTab("profile")}
           >
             <User className="h-6 w-6" />
             <span className="text-xs">Profile</span>
