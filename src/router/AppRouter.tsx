@@ -19,6 +19,7 @@ import PostPage from "@/features/post/pages/PostPage";
 import CreatePostPage from "@/features/post/pages/CreatePostPage";
 import EditPostPage from "@/features/post/pages/EditPostPage";
 import FileManagerPage from "@/features/file-manager/pages/FileManagerPage";
+import { EducationalVideoPage } from "@/features/educational-video/pages/EducationalVideoPage";
 
 type ProtectedRoute = {
     path: string;
@@ -144,6 +145,13 @@ export const ROUTES: Record<string, AppRoute> = {
     FILE_MANAGER: {
         path: "/file-manager",
         element: <FileManagerPage />,
+        // protected: true,
+        // roles: ["superadmin"],
+        // permissions: [],
+    },
+    EDUCATIONAL_VIDEO: {
+        path: "/educational-video",
+        element: <EducationalVideoPage />,
         // protected: true,
         // roles: ["superadmin"],
         // permissions: [],
