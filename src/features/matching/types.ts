@@ -26,6 +26,8 @@ export interface Teacher {
   rating: number;
   total_sessions: number;
   status: TeacherStatus;
+  materials: TeacherMaterial[];
+  session_pricing: SessionPricing;
   created_at: Date;
   updated_at: Date;
 }
@@ -140,4 +142,74 @@ export interface MatchingResult {
 export interface ProfileCompletionData {
   student?: Partial<Student>;
   teacher?: Partial<Teacher>;
+}
+
+// Teacher Materials and Pricing Types
+export interface TeacherMaterial {
+  material_id: string;
+  teacher_id: string;
+  title: string;
+  description: string;
+  type: MaterialType;
+  subject: string;
+  grade_level: string;
+  file_url?: string;
+  video_url?: string;
+  youtube_url?: string; // For YouTube Shorts and videos
+  price: number; // 0 for free
+  is_active: boolean;
+  downloads_count: number;
+  rating: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface SessionPricing {
+  one_on_one_price: number; // per hour
+  group_price: number; // per hour per student
+  max_group_size: number;
+  currency: string;
+  discount_packages?: PricingPackage[];
+}
+
+export interface PricingPackage {
+  package_id: string;
+  name: string;
+  session_count: number;
+  total_price: number;
+  discount_percentage: number;
+  description: string;
+}
+
+export enum MaterialType {
+  PDF = 'pdf',
+  QUIZ = 'quiz',
+  VIDEO = 'video',
+  WORKSHEET = 'worksheet',
+  PRESENTATION = 'presentation'
+}
+
+// Session Booking Types
+export interface SessionBooking {
+  booking_id: string;
+  teacher_id: string;
+  student_id: string;
+  session_type: 'one_on_one' | 'group';
+  participants?: string[]; // for group sessions
+  scheduled_date: Date;
+  duration_hours: number;
+  price: number;
+  status: BookingStatus;
+  meeting_link?: string;
+  notes?: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export enum BookingStatus {
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+  NO_SHOW = 'no_show'
 }

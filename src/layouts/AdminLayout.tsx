@@ -3,7 +3,7 @@ import { ROUTES } from '@/router/AppRouter'
 import SideBar from '@/shared/components/sidebar/SideBar'
 import SidebarDrawer from '@/shared/components/sidebar/SidebarDrawer'
 import TopBar from '@/shared/components/topbar/TopBar'
-import { BarChart3, ChartBar, Clock, Computer, CreditCard, Lock, Settings, ShieldUser, Users, FileText, FolderOpen, Video } from 'lucide-react'
+import { BarChart3, ChartBar, Clock, Computer, CreditCard, Lock, Settings, ShieldUser, Users, FileText, FolderOpen, Video, Brain } from 'lucide-react'
 import React, { ElementType } from 'react'
 import { useTranslation } from 'react-i18next'
 // import { Link } from 'react-router'
@@ -19,12 +19,13 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
         {
             label: t('sidebar.main'),
             items: [
-                { icon: Clock as ElementType, text: t('menu.dashboard'), url: '/' },
+                // { icon: Clock as ElementType, text: t('menu.dashboard'), url: '/' },
                 { icon: Video as ElementType, text: 'Educational Videos', url: ROUTES.EDUCATIONAL_VIDEO.path },
-                { icon: Computer as ElementType, text: t('menu.penjualan'), url: '/penjualan' },
-                { icon: BarChart3 as ElementType, text: t('menu.inventory-stock'), url: '/inventory-stock' },
-                { icon: CreditCard as ElementType, text: t('menu.hutang-piutang'), url: '/hutang-piutang' },
-                { icon: ChartBar as ElementType, text: t('menu.laporan-analitik'), url: '/laporan-analitik' },
+                { icon: Brain as ElementType, text: 'Science Quizzes', url: ROUTES.QUIZ.path },
+                // { icon: Computer as ElementType, text: t('menu.penjualan'), url: '/penjualan' },
+                // { icon: BarChart3 as ElementType, text: t('menu.inventory-stock'), url: '/inventory-stock' },
+                // { icon: CreditCard as ElementType, text: t('menu.hutang-piutang'), url: '/hutang-piutang' },
+                // { icon: ChartBar as ElementType, text: t('menu.laporan-analitik'), url: '/laporan-analitik' },
             ],
         },
         {
