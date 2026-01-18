@@ -34,7 +34,7 @@ export const SearchTab: React.FC<SearchTabProps> = ({
   return (
     <div className="h-screen">
       {/* Search Header */}
-      <div className="pt-16 pb-4 px-4 bg-black">
+      <div className="pt-16 pb-4 px-4 bg-gradient-to-r from-[#1B263B] to-[#415A77]">
         <div className="flex items-center gap-3 mb-4">
           <Search className="h-5 w-5 text-gray-400" />
           <input

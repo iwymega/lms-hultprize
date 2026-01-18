@@ -74,7 +74,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         <div className="space-y-3">
           <Button
             variant="outline"
-            className="w-full border-gray-600 text-white hover:bg-gray-800"
+            className="w-full border-[#E0E1DD]/30 text-[#E0E1DD] hover:bg-[#E0E1DD]/10 hover:border-[#E0E1DD]/50 backdrop-blur-sm"
             onClick={onUploadVideo}
           >
             <Upload className="h-4 w-4 mr-2" />
@@ -82,7 +82,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           </Button>
           <Button
             variant="outline"
-            className="w-full border-gray-600 text-white hover:bg-gray-800"
+            className="w-full border-[#E0E1DD]/30 text-[#E0E1DD] hover:bg-[#E0E1DD]/10 hover:border-[#E0E1DD]/50 backdrop-blur-sm"
             onClick={onCompleteProfile}
           >
             <User className="h-4 w-4 mr-2" />

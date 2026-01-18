@@ -36,8 +36,8 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
       {/* Gradient Background */}
       <div className={`absolute inset-0 bg-gradient-to-br ${
         isBlueTheme
-          ? 'from-blue-500/10 to-purple-500/10'
-          : 'from-emerald-500/10 to-teal-500/10'
+          ? 'from-[#1B263B]/30 to-[#415A77]/20'
+          : 'from-[#1B263B]/25 to-[#415A77]/15'
       }`} />
 
       <CardContent className="relative p-6">
@@ -46,12 +46,18 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
           <div className="relative">
             <Avatar className="h-16 w-16 ring-2 ring-white/20 shadow-lg">
               <AvatarImage src={teacher.profile_image} />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-bold text-lg">
+              <AvatarFallback className={`${
+                isBlueTheme
+                  ? 'bg-gradient-to-br from-slate-600 to-slate-700'
+                  : 'bg-gradient-to-br from-stone-600 to-stone-700'
+              } text-white font-bold text-lg border border-white/20`}>
                 {teacher.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
             {teacher.is_verified && (
-              <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
+              <div className={`absolute -bottom-1 -right-1 ${
+                isBlueTheme ? 'bg-amber-500' : 'bg-orange-500'
+              } rounded-full p-1 border border-white/20`}>
                 <CheckCircle className="h-3 w-3 text-white" />
               </div>
             )}
@@ -83,8 +89,8 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
                   key={subject}
                   className={`text-xs font-medium ${
                     isBlueTheme
-                      ? 'bg-blue-500/20 text-blue-300 border-blue-500/30'
-                      : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                      ? 'bg-[#E0E1DD]/20 text-[#1B263B] border-[#E0E1DD]/40'
+                      : 'bg-[#415A77]/20 text-[#E0E1DD] border-[#415A77]/40'
                   } border backdrop-blur-sm`}
                 >
                   {subject}
@@ -118,9 +124,9 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
                   size="sm"
                   className={`${
                     isBlueTheme
-                      ? 'bg-blue-500 hover:bg-blue-600'
-                      : 'bg-emerald-500 hover:bg-emerald-600'
-                  } text-white shadow-lg`}
+                      ? 'bg-[#1B263B] hover:bg-[#415A77] text-[#E0E1DD]'
+                      : 'bg-[#415A77] hover:bg-[#1B263B] text-[#E0E1DD]'
+                  } shadow-lg border border-[#E0E1DD]/30`}
                   onClick={() => onViewProfile(teacher.teacher_id)}
                 >
                   View Profile
@@ -144,9 +150,9 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
             size="sm"
             className={`flex-1 ${
               isBlueTheme
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
-                : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600'
-            } text-white shadow-lg`}
+                ? 'bg-[#E0E1DD] hover:bg-[#E0E1DD]/90 text-[#1B263B]'
+                : 'bg-[#E0E1DD] hover:bg-[#E0E1DD]/90 text-[#1B263B]'
+            } shadow-lg border border-[#1B263B]/20`}
           >
             <Crown className="h-4 w-4 mr-2" />
             Subscribe

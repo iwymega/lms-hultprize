@@ -30,7 +30,7 @@ export const TeachersTab: React.FC<TeachersTabProps> = ({
   hasMore = false
 }) => {
   return (
-    <div className="h-screen overflow-y-auto pt-16 pb-20 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="h-screen overflow-y-auto pt-16 pb-20 bg-gradient-to-br from-[#1B263B] via-[#415A77] to-[#1B263B]">
       {/* Header Section */}
       <TeachersHeader />
 

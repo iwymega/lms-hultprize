@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Video,
-  Upload,
   Search,
   Bookmark,
   Star,
@@ -18,8 +17,6 @@ import {
   Crown,
   Mail,
   Phone,
-  PlayCircle,
-  Award,
 } from "lucide-react";
 import { VideoFeed } from "../components/VideoFeed";
 import { VideoUpload } from "../components/VideoUpload";
@@ -598,7 +595,7 @@ export function EducationalVideoPage() {
                     <li>• Basic Q&A in comments</li>
                     <li>• Limited study materials</li>
                   </ul>
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full bg-white text-gray-900 hover:bg-gray-100" variant="outline">
                     Subscribe Free
                   </Button>
                 </div>
@@ -617,7 +614,7 @@ export function EducationalVideoPage() {
                     <li>• Priority Q&A responses</li>
                     <li>• Progress tracking</li>
                   </ul>
-                  <Button className="w-full">Subscribe Premium</Button>
+                  <Button className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-lg border border-white/20">Subscribe Premium</Button>
                 </div>
               </div>
             </CardContent>
@@ -635,7 +632,7 @@ export function EducationalVideoPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Button
                   variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2"
+                  className="h-auto p-4 flex flex-col items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <Mail className="h-6 w-6" />
                   <div className="text-center">
@@ -648,7 +645,7 @@ export function EducationalVideoPage() {
 
                 <Button
                   variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2"
+                  className="h-auto p-4 flex flex-col items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <Phone className="h-6 w-6" />
                   <div className="text-center">
@@ -659,7 +656,7 @@ export function EducationalVideoPage() {
 
                 <Button
                   variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2"
+                  className="h-auto p-4 flex flex-col items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <Users className="h-6 w-6" />
                   <div className="text-center">
@@ -672,7 +669,7 @@ export function EducationalVideoPage() {
 
                 <Button
                   variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2"
+                  className="h-auto p-4 flex flex-col items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <Video className="h-6 w-6" />
                   <div className="text-center">
@@ -789,7 +786,7 @@ export function EducationalVideoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#1B263B] via-[#415A77] to-[#1B263B] text-white">
       {/* Top Header */}
       <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
         <div className="flex items-center justify-between">
