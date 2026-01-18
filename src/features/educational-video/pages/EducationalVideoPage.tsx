@@ -788,17 +788,17 @@ export function EducationalVideoPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1B263B] via-[#415A77] to-[#1B263B] text-white">
       {/* Top Header */}
-      <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
+      <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4 sm:p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Video className="h-6 w-6 text-blue-400" />
-            <span className="font-bold text-lg">EduTok</span>
+            <Video className="h-6 w-6 text-[#E0E1DD]" />
+            <span className="font-bold text-lg sm:text-xl">EduTok</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 min-h-[44px] sm:min-h-[36px]"
               onClick={() => setShowUpload(true)}
             >
               <Plus className="h-5 w-5" />
@@ -806,7 +806,7 @@ export function EducationalVideoPage() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 min-h-[44px] sm:min-h-[36px]"
               onClick={() => setActiveTab("search")}
             >
               <Search className="h-5 w-5" />
@@ -889,12 +889,12 @@ export function EducationalVideoPage() {
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800">
-        <div className="flex items-center justify-around py-2">
+        <div className="flex items-center justify-around py-2 px-2">
           <Button
             variant="ghost"
             size="sm"
-            className={`flex flex-col items-center gap-1 p-2 ${
-              activeTab === "home" ? "text-blue-400" : "text-gray-400"
+            className={`flex flex-col items-center gap-1 p-3 min-h-[60px] w-full max-w-[80px] ${
+              activeTab === "home" ? "text-[#E0E1DD]" : "text-gray-400"
             }`}
             onClick={() => setActiveTab("home")}
           >
@@ -905,8 +905,8 @@ export function EducationalVideoPage() {
           <Button
             variant="ghost"
             size="sm"
-            className={`flex flex-col items-center gap-1 p-2 ${
-              activeTab === "teachers" ? "text-blue-400" : "text-gray-400"
+            className={`flex flex-col items-center gap-1 p-3 min-h-[60px] w-full max-w-[80px] ${
+              activeTab === "teachers" ? "text-[#E0E1DD]" : "text-gray-400"
             }`}
             onClick={() => setActiveTab("teachers")}
           >
@@ -917,8 +917,8 @@ export function EducationalVideoPage() {
           <Button
             variant="ghost"
             size="sm"
-            className={`flex flex-col items-center gap-1 p-2 ${
-              activeTab === "bookmarks" ? "text-blue-400" : "text-gray-400"
+            className={`flex flex-col items-center gap-1 p-3 min-h-[60px] w-full max-w-[80px] ${
+              activeTab === "bookmarks" ? "text-[#E0E1DD]" : "text-gray-400"
             }`}
             onClick={() => setActiveTab("bookmarks")}
           >
@@ -929,8 +929,8 @@ export function EducationalVideoPage() {
           <Button
             variant="ghost"
             size="sm"
-            className={`flex flex-col items-center gap-1 p-2 ${
-              activeTab === "profile" ? "text-blue-400" : "text-gray-400"
+            className={`flex flex-col items-center gap-1 p-3 min-h-[60px] w-full max-w-[80px] ${
+              activeTab === "profile" ? "text-[#E0E1DD]" : "text-gray-400"
             }`}
             onClick={() => setActiveTab("profile")}
           >

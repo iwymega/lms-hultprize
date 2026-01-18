@@ -17,7 +17,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
 }) => {
   return (
     <div className="h-screen overflow-y-auto pt-16 pb-20">
-      <div className="p-4 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Profile Header */}
         <div className="text-center">
           <Avatar className="h-20 w-20 mx-auto mb-4">

@@ -12,8 +12,8 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({
 }) => {
   return (
     <div className="h-screen overflow-y-auto pt-16 pb-20 bg-gradient-to-br from-[#1B263B] via-[#415A77] to-[#1B263B]">
-      <div className="p-4">
-        <h2 className="text-xl font-bold mb-4">Bookmarked Videos</h2>
+      <div className="p-4 sm:p-6">
+        <h2 className="text-xl font-bold mb-4 sm:mb-6">Bookmarked Videos</h2>
         {bookmarkedVideos.length === 0 ? (
           <div className="text-center py-12">
             <Bookmark className="h-16 w-16 mx-auto text-gray-600 mb-4" />

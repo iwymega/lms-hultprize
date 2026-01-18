@@ -40,8 +40,8 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
           : 'from-[#1B263B]/25 to-[#415A77]/15'
       }`} />
 
-      <CardContent className="relative p-6">
-        <div className="flex items-start gap-4 mb-4">
+      <CardContent className="relative p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start gap-4 mb-4">
           {/* Avatar with Glow Effect */}
           <div className="relative">
             <Avatar className="h-16 w-16 ring-2 ring-white/20 shadow-lg">
@@ -137,14 +137,15 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
         </div>
 
         {/* Bottom Action Bar */}
-        <div className="flex gap-3 pt-4 border-t border-white/10">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 border-t border-white/10">
           <Button
             variant="ghost"
             size="sm"
-            className="flex-1 text-white hover:bg-white/10 border border-white/20"
+            className="flex-1 text-white hover:bg-white/10 border border-white/20 min-h-[44px] sm:min-h-[36px]"
           >
             <MessageSquare className="h-4 w-4 mr-2" />
-            Message
+            <span className="hidden sm:inline">Message</span>
+            <span className="sm:hidden">Message</span>
           </Button>
           <Button
             size="sm"
@@ -152,10 +153,11 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
               isBlueTheme
                 ? 'bg-[#E0E1DD] hover:bg-[#E0E1DD]/90 text-[#1B263B]'
                 : 'bg-[#E0E1DD] hover:bg-[#E0E1DD]/90 text-[#1B263B]'
-            } shadow-lg border border-[#1B263B]/20`}
+            } shadow-lg border border-[#1B263B]/20 min-h-[44px] sm:min-h-[36px]`}
           >
             <Crown className="h-4 w-4 mr-2" />
-            Subscribe
+            <span className="hidden sm:inline">Subscribe</span>
+            <span className="sm:hidden">Subscribe</span>
           </Button>
         </div>
       </CardContent>

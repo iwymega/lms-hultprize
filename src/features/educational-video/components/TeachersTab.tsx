@@ -35,8 +35,8 @@ export const TeachersTab: React.FC<TeachersTabProps> = ({
       <TeachersHeader />
 
       {/* Teachers Grid */}
-      <div className="p-4">
-        <div className="grid gap-4">
+      <div className="p-4 sm:p-6">
+        <div className="grid gap-4 sm:gap-6">
           {teachers.map((teacher, index) => (
             <TeacherCard
               key={teacher.teacher_id}

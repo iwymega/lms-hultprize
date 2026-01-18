@@ -34,22 +34,22 @@ export const SearchTab: React.FC<SearchTabProps> = ({
   return (
     <div className="h-screen">
       {/* Search Header */}
-      <div className="pt-16 pb-4 px-4 bg-gradient-to-r from-[#1B263B] to-[#415A77]">
+      <div className="pt-16 pb-4 px-4 sm:px-6 bg-gradient-to-r from-[#1B263B] to-[#415A77]">
         <div className="flex items-center gap-3 mb-4">
-          <Search className="h-5 w-5 text-gray-400" />
+          <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search videos, subjects, teachers..."
-            className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+            className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 sm:py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#E0E1DD] min-h-[44px] sm:min-h-[36px] text-base"
           />
           {searchQuery && (
             <Button
               variant="ghost"
               size="sm"
               onClick={onClearSearch}
-              className="text-gray-400 hover:text-white"
+              className="text-gray-400 hover:text-white flex-shrink-0 min-h-[44px] sm:min-h-[36px]"
             >
               Clear
             </Button>
