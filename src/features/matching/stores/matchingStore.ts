@@ -378,6 +378,13 @@ function generateMockTeachers(): Teacher[] {
       rating: 4.8,
       total_sessions: 150,
       status: TeacherStatus.AVAILABLE,
+      materials: [],
+      session_pricing: {
+        one_on_one_price: 50,
+        group_price: 25,
+        max_group_size: 5,
+        currency: 'USD'
+      },
       created_at: new Date(),
       updated_at: new Date()
     },
@@ -398,6 +405,13 @@ function generateMockTeachers(): Teacher[] {
       rating: 4.9,
       total_sessions: 200,
       status: TeacherStatus.AVAILABLE,
+      materials: [],
+      session_pricing: {
+        one_on_one_price: 60,
+        group_price: 30,
+        max_group_size: 4,
+        currency: 'USD'
+      },
       created_at: new Date(),
       updated_at: new Date()
     },
@@ -418,6 +432,13 @@ function generateMockTeachers(): Teacher[] {
       rating: 4.7,
       total_sessions: 120,
       status: TeacherStatus.AVAILABLE,
+      materials: [],
+      session_pricing: {
+        one_on_one_price: 45,
+        group_price: 20,
+        max_group_size: 6,
+        currency: 'USD'
+      },
       created_at: new Date(),
       updated_at: new Date()
     }

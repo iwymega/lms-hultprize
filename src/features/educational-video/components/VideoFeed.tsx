@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +8,6 @@ import {
   Share,
   Bookmark,
   Play,
-  Pause,
   Volume2,
   VolumeX,
   MoreVertical,
@@ -18,10 +16,8 @@ import {
   Eye
 } from 'lucide-react';
 import {
-  EducationalVideo,
   VideoFeedItem,
   VideoPlayerState,
-  VideoComment,
   GradeLevel,
   DifficultyLevel
 } from '../types';
@@ -128,11 +124,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
     }
   };
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+
 
   const getGradeLevelColor = (level: GradeLevel) => {
     switch (level) {

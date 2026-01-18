@@ -16,8 +16,7 @@ const QuizPage: React.FC = () => {
     error,
     fetchQuizzes,
     updateFilters,
-    userStreak,
-    userProgress
+    userStreak
   } = useQuizStore();
 
   useEffect(() => {

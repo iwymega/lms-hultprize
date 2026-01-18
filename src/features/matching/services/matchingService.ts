@@ -7,8 +7,7 @@ import {
   MATCH_WEIGHTS,
   MatchingResult,
   LearningStyle,
-  TeachingStyle,
-  Schedule
+  TeachingStyle
 } from '../types';
 
 export class MatchingService {

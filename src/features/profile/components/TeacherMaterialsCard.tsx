@@ -3,18 +3,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TeacherMaterial, SessionPricing, MaterialType } from '@/features/matching/types';
-import { FileText, Video, Youtube, DollarSign, Calendar, Users, Clock } from 'lucide-react';
+import { FileText, Video, Youtube, DollarSign, Calendar, Users } from 'lucide-react';
 
 interface TeacherMaterialsCardProps {
   materials: TeacherMaterial[];
   sessionPricing: SessionPricing;
-  teacherId: string;
 }
 
 const TeacherMaterialsCard: React.FC<TeacherMaterialsCardProps> = ({
   materials,
-  sessionPricing,
-  teacherId
+  sessionPricing
 }) => {
   const getMaterialIcon = (type: MaterialType) => {
     switch (type) {

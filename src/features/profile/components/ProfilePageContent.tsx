@@ -172,11 +172,10 @@ const ProfilePageContent: React.FC = () => {
 
                         {isTeacher && (
                             <TabsContent value="materials" className="mt-6">
-                                <TeacherMaterialsCard
-                                    materials={mockTeacherData.materials}
-                                    sessionPricing={mockTeacherData.session_pricing}
-                                    teacherId={user?.id || ''}
-                                />
+            <TeacherMaterialsCard
+              materials={mockTeacherData.materials}
+              sessionPricing={mockTeacherData.session_pricing}
+            />
                             </TabsContent>
                         )}
                     </Tabs>
