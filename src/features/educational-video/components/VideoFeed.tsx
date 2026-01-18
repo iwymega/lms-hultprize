@@ -73,10 +73,18 @@ const VideoCard: React.FC<VideoCardProps> = ({
   useEffect(() => {
     if (videoRef.current) {
       if (isActive) {
-        videoRef.current.play().catch(() => {
-          // Handle autoplay restrictions
-          setPlayerState(prev => ({ ...prev, isPlaying: false }));
-        });
+        // Try to play, but handle autoplay restrictions
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setPlayerState(prev => ({ ...prev, isPlaying: true }));
+            })
+            .catch(() => {
+              // Autoplay failed, keep paused
+              setPlayerState(prev => ({ ...prev, isPlaying: false }));
+            });
+        }
       } else {
         videoRef.current.pause();
         setPlayerState(prev => ({ ...prev, isPlaying: false }));
@@ -377,11 +385,16 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({
 
   const handleScroll = useCallback((e: WheelEvent) => {
     e.preventDefault();
+    e.stopPropagation();
 
-    if (e.deltaY > 0 && currentVideoIndex < videos.length - 1) {
-      setCurrentVideoIndex(prev => prev + 1);
-    } else if (e.deltaY < 0 && currentVideoIndex > 0) {
-      setCurrentVideoIndex(prev => prev - 1);
+    const deltaThreshold = 50; // Minimum scroll distance to trigger navigation
+
+    if (Math.abs(e.deltaY) > deltaThreshold) {
+      if (e.deltaY > 0 && currentVideoIndex < videos.length - 1) {
+        setCurrentVideoIndex(prev => prev + 1);
+      } else if (e.deltaY < 0 && currentVideoIndex > 0) {
+        setCurrentVideoIndex(prev => prev - 1);
+      }
     }
   }, [currentVideoIndex, videos.length]);
 

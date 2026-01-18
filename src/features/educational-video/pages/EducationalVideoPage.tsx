@@ -33,15 +33,15 @@ import {
   UserProgress,
 } from "../types";
 
-// Mock data for demonstration
+// Mock data for demonstration - using sample videos for testing
 const mockVideos: EducationalVideo[] = [
   {
     video_id: "1",
     title: "Introduction to Quadratic Equations",
     description:
       "Learn how to solve quadratic equations using the quadratic formula. Perfect for algebra students!",
-    video_url: "/videos/quadratic-equations.mp4",
-    thumbnail_url: "/thumbnails/quadratic.jpg",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    thumbnail_url: "https://i.ytimg.com/vi/YE7VzlLtp-4/maxresdefault.jpg",
     duration: 180,
     subject: "Mathematics",
     topic: "Quadratic Equations",
@@ -64,8 +64,8 @@ const mockVideos: EducationalVideo[] = [
     title: "Photosynthesis Explained Simply",
     description:
       "A clear explanation of how plants make food through photosynthesis. Great for biology beginners.",
-    video_url: "/videos/photosynthesis.mp4",
-    thumbnail_url: "/thumbnails/photosynthesis.jpg",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    thumbnail_url: "https://i.ytimg.com/vi/3nZzTxq7z2E/maxresdefault.jpg",
     duration: 240,
     subject: "Biology",
     topic: "Photosynthesis",
@@ -88,8 +88,8 @@ const mockVideos: EducationalVideo[] = [
     title: "My Journey Learning Python",
     description:
       "A student shares their experience learning Python programming from scratch.",
-    video_url: "/videos/python-journey.mp4",
-    thumbnail_url: "/thumbnails/python.jpg",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    thumbnail_url: "https://i.ytimg.com/vi/hvL1339luv0/maxresdefault.jpg",
     duration: 320,
     subject: "Computer Science",
     topic: "Python Programming",
@@ -106,6 +106,54 @@ const mockVideos: EducationalVideo[] = [
     is_private: false,
     created_at: new Date("2024-01-13"),
     updated_at: new Date("2024-01-13"),
+  },
+  {
+    video_id: "4",
+    title: "Physics: Newton's Laws of Motion",
+    description:
+      "Understanding the fundamental principles of motion and force in physics.",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    thumbnail_url: "https://i.ytimg.com/vi/8ZYL9cJwRzM/maxresdefault.jpg",
+    duration: 280,
+    subject: "Physics",
+    topic: "Newton's Laws",
+    grade_level: GradeLevel.HIGH,
+    difficulty: DifficultyLevel.INTERMEDIATE,
+    tags: ["physics", "motion", "newton", "laws"],
+    creator_id: "teacher_1",
+    creator_type: "teacher",
+    views: 1850,
+    likes: 134,
+    shares: 31,
+    comments_count: 19,
+    is_featured: true,
+    is_private: false,
+    created_at: new Date("2024-01-12"),
+    updated_at: new Date("2024-01-12"),
+  },
+  {
+    video_id: "5",
+    title: "Chemistry: Periodic Table Basics",
+    description:
+      "Learn about the organization and patterns in the periodic table of elements.",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+    thumbnail_url: "https://i.ytimg.com/vi/0RRVV4Diomg/maxresdefault.jpg",
+    duration: 220,
+    subject: "Chemistry",
+    topic: "Periodic Table",
+    grade_level: GradeLevel.MIDDLE,
+    difficulty: DifficultyLevel.BEGINNER,
+    tags: ["chemistry", "periodic-table", "elements", "science"],
+    creator_id: "teacher_2",
+    creator_type: "teacher",
+    views: 1420,
+    likes: 98,
+    shares: 27,
+    comments_count: 16,
+    is_featured: false,
+    is_private: false,
+    created_at: new Date("2024-01-11"),
+    updated_at: new Date("2024-01-11"),
   },
 ];
 
@@ -169,6 +217,8 @@ export function EducationalVideoPage() {
   );
   const [videos, setVideos] = useState<VideoFeedItem[]>([]);
   const [bookmarkedVideos, setBookmarkedVideos] = useState<VideoFeedItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredVideos, setFilteredVideos] = useState<VideoFeedItem[]>([]);
 
   // const { currentStudent, setCurrentStudent } = useMatchingStore(); // Not used in this component
 
@@ -192,7 +242,25 @@ export function EducationalVideoPage() {
     }));
 
     setVideos(videoFeedItems);
+    setFilteredVideos(videoFeedItems); // Initialize filtered videos
   }, []);
+
+  // Handle search functionality
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredVideos(videos);
+    } else {
+      const filtered = videos.filter((item) =>
+        item.video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.video.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.video.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.video.topic.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.video.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        item.creator.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredVideos(filtered);
+    }
+  }, [searchQuery, videos]);
 
   const handleVideoLike = async (videoId: string) => {
     setVideos((prev) =>
@@ -769,6 +837,94 @@ export function EducationalVideoPage() {
             hasMore={videos.length < 20}
             isLoading={false}
           />
+        )}
+
+        {activeTab === "search" && (
+          <div className="h-screen">
+            {/* Search Header */}
+            <div className="pt-16 pb-4 px-4 bg-black">
+              <div className="flex items-center gap-3 mb-4">
+                <Search className="h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search videos, subjects, teachers..."
+                  className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSearchQuery("")}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
+
+              {/* Search Results Info */}
+              <div className="text-sm text-gray-400">
+                {searchQuery ? (
+                  <span>
+                    Found {filteredVideos.length} video{filteredVideos.length !== 1 ? 's' : ''} for "{searchQuery}"
+                  </span>
+                ) : (
+                  <span>Enter a search term to find videos</span>
+                )}
+              </div>
+            </div>
+
+            {/* Search Results */}
+            {searchQuery ? (
+              filteredVideos.length > 0 ? (
+                <VideoFeed
+                  videos={filteredVideos}
+                  onVideoLike={handleVideoLike}
+                  onVideoBookmark={(videoId) => {
+                    handleVideoBookmark(videoId);
+                    const video = videos.find((v) => v.video.video_id === videoId);
+                    if (
+                      video &&
+                      !bookmarkedVideos.find((bv) => bv.video.video_id === videoId)
+                    ) {
+                      setBookmarkedVideos((prev) => [...prev, video]);
+                    }
+                  }}
+                  onVideoShare={handleVideoShare}
+                  onVideoComment={handleVideoComment}
+                  onLoadMore={handleLoadMore}
+                  hasMore={false}
+                  isLoading={false}
+                />
+              ) : (
+                <div className="h-screen flex items-center justify-center bg-black">
+                  <div className="text-center">
+                    <Search className="h-16 w-16 mx-auto text-gray-600 mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-400 mb-2">
+                      No videos found
+                    </h3>
+                    <p className="text-gray-500">
+                      Try searching for different keywords
+                    </p>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div className="h-screen flex items-center justify-center bg-black">
+                <div className="text-center">
+                  <Search className="h-16 w-16 mx-auto text-gray-600 mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-400 mb-2">
+                    Search for educational videos
+                  </h3>
+                  <p className="text-gray-500">
+                    Find videos by subject, topic, or teacher name
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         )}
 
         {activeTab === "teachers" && (
