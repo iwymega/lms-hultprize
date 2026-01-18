@@ -24,6 +24,10 @@ import {
 import { VideoFeed } from "../components/VideoFeed";
 import { VideoUpload } from "../components/VideoUpload";
 import { StudentProfileForm } from "../../matching/components/StudentProfileForm";
+import { TeachersTab } from "../components/TeachersTab";
+import { SearchTab } from "../components/SearchTab";
+import { BookmarksTab } from "../components/BookmarksTab";
+import { ProfileTab } from "../components/ProfileTab";
 import {
   EducationalVideo,
   VideoFeedItem,
@@ -840,310 +844,49 @@ export function EducationalVideoPage() {
         )}
 
         {activeTab === "search" && (
-          <div className="h-screen">
-            {/* Search Header */}
-            <div className="pt-16 pb-4 px-4 bg-black">
-              <div className="flex items-center gap-3 mb-4">
-                <Search className="h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search videos, subjects, teachers..."
-                  className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-                />
-                {searchQuery && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSearchQuery("")}
-                    className="text-gray-400 hover:text-white"
-                  >
-                    Clear
-                  </Button>
-                )}
-              </div>
-
-              {/* Search Results Info */}
-              <div className="text-sm text-gray-400">
-                {searchQuery ? (
-                  <span>
-                    Found {filteredVideos.length} video{filteredVideos.length !== 1 ? 's' : ''} for "{searchQuery}"
-                  </span>
-                ) : (
-                  <span>Enter a search term to find videos</span>
-                )}
-              </div>
-            </div>
-
-            {/* Search Results */}
-            {searchQuery ? (
-              filteredVideos.length > 0 ? (
-                <VideoFeed
-                  videos={filteredVideos}
-                  onVideoLike={handleVideoLike}
-                  onVideoBookmark={(videoId) => {
-                    handleVideoBookmark(videoId);
-                    const video = videos.find((v) => v.video.video_id === videoId);
-                    if (
-                      video &&
-                      !bookmarkedVideos.find((bv) => bv.video.video_id === videoId)
-                    ) {
-                      setBookmarkedVideos((prev) => [...prev, video]);
-                    }
-                  }}
-                  onVideoShare={handleVideoShare}
-                  onVideoComment={handleVideoComment}
-                  onLoadMore={handleLoadMore}
-                  hasMore={false}
-                  isLoading={false}
-                />
-              ) : (
-                <div className="h-screen flex items-center justify-center bg-black">
-                  <div className="text-center">
-                    <Search className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-400 mb-2">
-                      No videos found
-                    </h3>
-                    <p className="text-gray-500">
-                      Try searching for different keywords
-                    </p>
-                  </div>
-                </div>
-              )
-            ) : (
-              <div className="h-screen flex items-center justify-center bg-black">
-                <div className="text-center">
-                  <Search className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-400 mb-2">
-                    Search for educational videos
-                  </h3>
-                  <p className="text-gray-500">
-                    Find videos by subject, topic, or teacher name
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
+          <SearchTab
+            searchQuery={searchQuery}
+            filteredVideos={filteredVideos}
+            onSearchChange={setSearchQuery}
+            onClearSearch={() => setSearchQuery("")}
+            onVideoLike={handleVideoLike}
+            onVideoBookmark={(videoId) => {
+              handleVideoBookmark(videoId);
+              const video = videos.find((v) => v.video.video_id === videoId);
+              if (
+                video &&
+                !bookmarkedVideos.find((bv) => bv.video.video_id === videoId)
+              ) {
+                setBookmarkedVideos((prev) => [...prev, video]);
+              }
+            }}
+            onVideoShare={handleVideoShare}
+            onVideoComment={handleVideoComment}
+            onLoadMore={handleLoadMore}
+            hasMore={false}
+            isLoading={false}
+          />
         )}
 
         {activeTab === "teachers" && (
-          <div className="h-screen overflow-y-auto pt-16 pb-20">
-            <div className="p-4 space-y-4">
-              <h2 className="text-xl font-bold mb-4">Featured Teachers</h2>
-              {mockTeachers.map((teacher) => (
-                <Card
-                  key={teacher.teacher_id}
-                  className="bg-gray-900 border-gray-800"
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={teacher.profile_image} />
-                        <AvatarFallback>
-                          {teacher.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold">{teacher.name}</h3>
-                          {teacher.is_verified && (
-                            <CheckCircle className="h-4 w-4 text-blue-400" />
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-400">
-                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                          <span>{teacher.rating}</span>
-                          <span>•</span>
-                          <span>{teacher.total_students} students</span>
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          setShowTeacherProfile(teacher.teacher_id)
-                        }
-                        className="border-gray-600 text-white hover:bg-gray-800"
-                      >
-                        View Profile
-                      </Button>
-                    </div>
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {teacher.expertise_areas.slice(0, 3).map((subject) => (
-                        <Badge
-                          key={subject}
-                          variant="secondary"
-                          className="text-xs bg-gray-800"
-                        >
-                          {subject}
-                        </Badge>
-                      ))}
-                    </div>
-                    <p className="text-sm text-gray-400 line-clamp-2 mb-3">
-                      {teacher.bio}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm">
-                        <span className="text-gray-400">From </span>
-                        <span className="font-semibold text-green-400">
-                          ${teacher.hourly_rate}/hr
-                        </span>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-gray-600"
-                        >
-                          <Mail className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          className="bg-blue-600 hover:bg-blue-700"
-                        >
-                          Subscribe
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
+          <TeachersTab
+            teachers={mockTeachers}
+            onViewTeacherProfile={setShowTeacherProfile}
+            onLoadMore={() => console.log("Load more teachers")}
+            hasMore={true}
+          />
         )}
 
         {activeTab === "bookmarks" && (
-          <div className="h-screen overflow-y-auto pt-16 pb-20">
-            <div className="p-4">
-              <h2 className="text-xl font-bold mb-4">Bookmarked Videos</h2>
-              {bookmarkedVideos.length === 0 ? (
-                <div className="text-center py-12">
-                  <Bookmark className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-400 mb-2">
-                    No bookmarked videos yet
-                  </h3>
-                  <p className="text-gray-500">
-                    Bookmark videos to save them for later
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {bookmarkedVideos.map((item) => (
-                    <Card
-                      key={item.video.video_id}
-                      className="bg-gray-900 border-gray-800 overflow-hidden"
-                    >
-                      <div className="flex">
-                        <div className="w-32 h-24 bg-gray-800 relative flex-shrink-0">
-                          <img
-                            src={item.video.thumbnail_url}
-                            alt={item.video.title}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                            <PlayCircle className="h-8 w-8 text-white" />
-                          </div>
-                        </div>
-                        <CardContent className="flex-1 p-3">
-                          <h3 className="font-semibold line-clamp-2 mb-1">
-                            {item.video.title}
-                          </h3>
-                          <p className="text-sm text-gray-400 line-clamp-1 mb-2">
-                            {item.creator.name}
-                          </p>
-                          <div className="flex items-center justify-between text-xs text-gray-500">
-                            <span>
-                              {item.video.views.toLocaleString()} views
-                            </span>
-                            <span>{item.video.likes} likes</span>
-                          </div>
-                        </CardContent>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+          <BookmarksTab bookmarkedVideos={bookmarkedVideos} />
         )}
 
         {activeTab === "profile" && (
-          <div className="h-screen overflow-y-auto pt-16 pb-20">
-            <div className="p-4 space-y-6">
-              {/* Profile Header */}
-              <div className="text-center">
-                <Avatar className="h-20 w-20 mx-auto mb-4">
-                  <AvatarFallback className="text-2xl">U</AvatarFallback>
-                </Avatar>
-                <h2 className="text-xl font-bold mb-1">Your Profile</h2>
-                <p className="text-gray-400">
-                  Student • Level {mockUserProgress.level}
-                </p>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-gray-900 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-400">
-                    {mockUserProgress.total_points}
-                  </div>
-                  <div className="text-sm text-gray-400">Points</div>
-                </div>
-                <div className="text-center p-4 bg-gray-900 rounded-lg">
-                  <div className="text-2xl font-bold text-green-400">
-                    {mockUserProgress.streak_days}
-                  </div>
-                  <div className="text-sm text-gray-400">Day Streak</div>
-                </div>
-                <div className="text-center p-4 bg-gray-900 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-400">
-                    {mockUserProgress.badges.length}
-                  </div>
-                  <div className="text-sm text-gray-400">Badges</div>
-                </div>
-              </div>
-
-              {/* Badges */}
-              <div>
-                <h3 className="font-semibold mb-3">Your Badges</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {mockUserProgress.badges.map((badge) => (
-                    <div
-                      key={badge.badge_id}
-                      className="bg-gray-900 p-3 rounded-lg text-center"
-                    >
-                      <Award className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
-                      <div className="font-medium text-sm">{badge.name}</div>
-                      <div className="text-xs text-gray-400">
-                        {badge.description}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="space-y-3">
-                <Button
-                  variant="outline"
-                  className="w-full border-gray-600 text-white hover:bg-gray-800"
-                  onClick={() => setShowUpload(true)}
-                >
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload Video
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full border-gray-600 text-white hover:bg-gray-800"
-                  onClick={() => setShowStudentProfile(true)}
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  Complete Profile
-                </Button>
-              </div>
-            </div>
-          </div>
+          <ProfileTab
+            userProgress={mockUserProgress}
+            onUploadVideo={() => setShowUpload(true)}
+            onCompleteProfile={() => setShowStudentProfile(true)}
+          />
         )}
       </div>
 
