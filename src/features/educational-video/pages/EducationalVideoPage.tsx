@@ -17,6 +17,7 @@ import {
   Crown,
   Mail,
   Phone,
+  Award,
 } from "lucide-react";
 import { VideoFeed } from "../components/VideoFeed";
 import { VideoUpload } from "../components/VideoUpload";
@@ -25,6 +26,7 @@ import { TeachersTab } from "../components/TeachersTab";
 import { SearchTab } from "../components/SearchTab";
 import { BookmarksTab } from "../components/BookmarksTab";
 import { ProfileTab } from "../components/ProfileTab";
+import { QuizTab } from "../components/QuizTab";
 import {
   EducationalVideo,
   VideoFeedItem,
@@ -885,57 +887,78 @@ export function EducationalVideoPage() {
             onCompleteProfile={() => setShowStudentProfile(true)}
           />
         )}
+
+        {activeTab === "quiz" && (
+          <QuizTab />
+        )}
       </div>
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800">
-        <div className="flex items-center justify-around py-2 px-2">
+        <div className="flex items-center justify-around py-2 px-1 sm:px-2">
           <Button
             variant="ghost"
             size="sm"
-            className={`flex flex-col items-center gap-1 p-3 min-h-[60px] w-full max-w-[80px] ${
+            className={`flex flex-col items-center gap-1 p-2 sm:p-3 min-h-[60px] w-full max-w-[70px] sm:max-w-[80px] ${
               activeTab === "home" ? "text-[#E0E1DD]" : "text-gray-400"
             }`}
             onClick={() => setActiveTab("home")}
           >
-            <Home className="h-6 w-6" />
-            <span className="text-xs">Home</span>
+            <Home className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="text-xs hidden sm:inline">Home</span>
+            <span className="text-xs sm:hidden">Home</span>
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
-            className={`flex flex-col items-center gap-1 p-3 min-h-[60px] w-full max-w-[80px] ${
+            className={`flex flex-col items-center gap-1 p-2 sm:p-3 min-h-[60px] w-full max-w-[70px] sm:max-w-[80px] ${
               activeTab === "teachers" ? "text-[#E0E1DD]" : "text-gray-400"
             }`}
             onClick={() => setActiveTab("teachers")}
           >
-            <Users className="h-6 w-6" />
-            <span className="text-xs">Teachers</span>
+            <Users className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="text-xs hidden sm:inline">Teachers</span>
+            <span className="text-xs sm:hidden">Teach</span>
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
-            className={`flex flex-col items-center gap-1 p-3 min-h-[60px] w-full max-w-[80px] ${
+            className={`flex flex-col items-center gap-1 p-2 sm:p-3 min-h-[60px] w-full max-w-[70px] sm:max-w-[80px] ${
+              activeTab === "quiz" ? "text-[#E0E1DD]" : "text-gray-400"
+            }`}
+            onClick={() => setActiveTab("quiz")}
+          >
+            <Award className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="text-xs hidden sm:inline">Quiz</span>
+            <span className="text-xs sm:hidden">Quiz</span>
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`flex flex-col items-center gap-1 p-2 sm:p-3 min-h-[60px] w-full max-w-[70px] sm:max-w-[80px] ${
               activeTab === "bookmarks" ? "text-[#E0E1DD]" : "text-gray-400"
             }`}
             onClick={() => setActiveTab("bookmarks")}
           >
-            <Bookmark className="h-6 w-6" />
-            <span className="text-xs">Saved</span>
+            <Bookmark className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="text-xs hidden sm:inline">Saved</span>
+            <span className="text-xs sm:hidden">Saved</span>
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
-            className={`flex flex-col items-center gap-1 p-3 min-h-[60px] w-full max-w-[80px] ${
+            className={`flex flex-col items-center gap-1 p-2 sm:p-3 min-h-[60px] w-full max-w-[70px] sm:max-w-[80px] ${
               activeTab === "profile" ? "text-[#E0E1DD]" : "text-gray-400"
             }`}
             onClick={() => setActiveTab("profile")}
           >
-            <User className="h-6 w-6" />
-            <span className="text-xs">Profile</span>
+            <User className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="text-xs hidden sm:inline">Profile</span>
+            <span className="text-xs sm:hidden">Profile</span>
           </Button>
         </div>
       </div>
