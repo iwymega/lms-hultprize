@@ -6,6 +6,7 @@ import AuthProvider from './auth/context/AuthProvider';
 import { Toaster } from 'sonner';
 import AppRouter from './router/AppRouter';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import AppLoader from './AppLoader';
 
 import './i18n';
 import { NotificationProvider } from './shared/components/notification/context/NotificationContext';
@@ -31,7 +32,9 @@ createRoot(document.getElementById('root')!).render(
         <NotificationProvider>
           <ChatProvider>
             <QuizProvider>
-              <AppRouter />
+              <AppLoader>
+                <AppRouter />
+              </AppLoader>
             </QuizProvider>
           </ChatProvider>
         </NotificationProvider>

@@ -1,76 +1,54 @@
-import React, { useEffect, useRef } from 'react';
+import React from "react";
+import { BookOpen, Trophy, Users } from "lucide-react";
 
 interface Props {
-    text?: string;
-    time?: number;
+  text?: string;
+  time?: number;
 }
 
-const FullPageLoader: React.FC<Props> = ({ text, time }) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const loadingText = text || 'Loading...';
+const FullPageLoader: React.FC<Props> = () => {
+  return (
+    <div className="fixed inset-0 bg-gradient-to-br from-[#030712] to-[#162456] z-[9999] flex flex-col items-center justify-center min-h-screen text-white font-sans">
+      {/* Lightning Icon */}
+      <div className="mb-4">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="blue">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+      </div>
 
-    useEffect(() => {
-        if (!containerRef.current) return;
+      {/* Title */}
+      <div className="text-center mb-8">
+        <h1 className="text-6xl font-bold m-0">SMATCH</h1>
+        <p className="text-2xl mt-2 mb-0">Study and More</p>
+      </div>
 
-        const letters = containerRef.current.querySelectorAll('.loading-letter');
-
-        const animations = Array.from(letters).map((letter, i) =>
-            letter.animate(
-                [
-                    { transform: 'translateY(0)', easing: 'ease-out' },
-                    { transform: 'translateY(-15px)', easing: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)' }, // overshoot
-                    { transform: 'translateY(0)', easing: 'ease-in' },
-                ],
-                {
-                    duration: time || 1000,
-                    iterations: Infinity,
-                    delay: i * 120,
-                }
-            )
-        );
-
-        return () => {
-            animations.forEach(anim => anim.cancel());
-        };
-    }, []);
-
-    return (
-        <div
-            style={{
-                position: 'fixed',
-                inset: 0,
-                backgroundColor: 'white',
-                zIndex: 9999,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            <img
-                src="/loader.gif"
-                alt="Loading..."
-                style={{ width: 200, height: 200, objectFit: 'contain', borderRadius: '50%' }}
-            />
-            <div
-                ref={containerRef}
-                style={{
-                    marginTop: '1rem',
-                    fontSize: '1.5rem',
-                    fontWeight: 'bold',
-                    color: '#333',
-                    display: 'flex',
-                    gap: '0.1em',
-                }}
-            >
-                {loadingText.split('').map((char, i) => (
-                    <span key={i} className="loading-letter text-blue-500" style={{ display: 'inline-block' }}>
-                        {char}
-                    </span>
-                ))}
-            </div>
+      {/* Icons Row */}
+      <div className="flex gap-4 items-center mb-8">
+        {/* Learn Circle */}
+        <div className="w-20 h-20 rounded-full bg-blue-500 flex items-center justify-center text-sm font-bold">
+          <BookOpen size={32} color="white" />
         </div>
-    );
+
+        {/* Compete Circle */}
+        <div className="w-20 h-20 rounded-full bg-purple-500 flex items-center justify-center text-sm font-bold">
+          <Trophy size={32} color="white" />
+        </div>
+
+        {/* Connect Circle */}
+        <div className="w-20 h-20 rounded-full bg-cyan-400 flex items-center justify-center text-sm font-bold">
+          <Users size={32} color="white" />
+        </div>
+      </div>
+
+      {/* Loading Progress */}
+      <div className="text-center">
+        <p className="text-xl mb-4">Loading... 60%</p>
+        <div className="w-[300px] h-2.5 bg-gray-600 rounded overflow-hidden">
+          <div className="w-3/5 h-full bg-cyan-400 rounded"></div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default FullPageLoader;
