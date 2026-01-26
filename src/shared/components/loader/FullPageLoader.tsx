@@ -9,11 +9,13 @@ interface Props {
 const FullPageLoader: React.FC<Props> = () => {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-[#030712] to-[#162456] z-[9999] flex flex-col items-center justify-center min-h-screen text-white font-sans">
-      {/* Lightning Icon */}
+      {/* SMATCH Logo */}
       <div className="mb-4">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="blue">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-        </svg>
+        <img
+          src="/smatch.png"
+          alt="SMATCH Logo"
+          className="w-16 h-16 object-contain"
+        />
       </div>
 
       {/* Title */}

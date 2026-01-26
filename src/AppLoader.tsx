@@ -19,7 +19,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ children }) => {
     }, []);
 
     if (isLoading) {
-        return <FullPageLoader text="Memuat LMS Hult Prize..." />;
+        return <FullPageLoader text="Memuat SMATCH..." />;
     }
 
     return <>{children}</>;
