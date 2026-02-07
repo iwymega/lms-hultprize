@@ -28,6 +28,7 @@ interface VideoFeedProps {
   onVideoBookmark: (videoId: string) => void;
   onVideoShare: (videoId: string) => void;
   onVideoComment: (videoId: string, comment: string) => void;
+  onViewTeacherProfile?: (teacherId: string) => void;
   onLoadMore?: () => void;
   hasMore?: boolean;
   isLoading?: boolean;
@@ -40,6 +41,7 @@ interface VideoCardProps {
   onBookmark: () => void;
   onShare: () => void;
   onComment: (comment: string) => void;
+  onViewTeacherProfile?: (teacherId: string) => void;
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({
@@ -48,7 +50,8 @@ const VideoCard: React.FC<VideoCardProps> = ({
   onLike,
   onBookmark,
   onShare,
-  onComment
+  onComment,
+  onViewTeacherProfile
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playerState, setPlayerState] = useState<VideoPlayerState>({
@@ -191,7 +194,16 @@ const VideoCard: React.FC<VideoCardProps> = ({
                 <AvatarFallback>{creator.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-semibold text-sm">{creator.name}</p>
+                {creator.type === 'teacher' && onViewTeacherProfile ? (
+                  <button
+                    onClick={() => onViewTeacherProfile(video.creator_id)}
+                    className="font-semibold text-sm text-left hover:underline"
+                  >
+                    {creator.name}
+                  </button>
+                ) : (
+                  <p className="font-semibold text-sm">{creator.name}</p>
+                )}
                 <div className="flex items-center gap-2">
                   {creator.type === 'teacher' && creator.rating && (
                     <div className="flex items-center">
@@ -368,6 +380,7 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({
   onVideoBookmark,
   onVideoShare,
   onVideoComment,
+  onViewTeacherProfile,
   onLoadMore,
   hasMore = false,
   isLoading = false
@@ -446,6 +459,7 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({
             onBookmark={() => onVideoBookmark(videoItem.video.video_id)}
             onShare={() => onVideoShare(videoItem.video.video_id)}
             onComment={(comment) => onVideoComment(videoItem.video.video_id, comment)}
+            onViewTeacherProfile={onViewTeacherProfile}
           />
         </div>
       ))}

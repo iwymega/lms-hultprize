@@ -18,6 +18,9 @@ import {
   Mail,
   Phone,
   Award,
+  FileText,
+  HelpCircle,
+  Calendar,
 } from "lucide-react";
 import { VideoFeed } from "../components/VideoFeed";
 import { VideoUpload } from "../components/VideoUpload";
@@ -163,17 +166,38 @@ const mockVideos: EducationalVideo[] = [
 const mockCreators = {
   teacher_1: {
     id: "teacher_1",
-    name: "Dr. Sarah Johnson",
-    avatar: "/avatars/sarah.jpg",
+    name: "Naoto Masunaga",
+    avatar: "/avatars/naoto.jpg",
     type: "teacher" as const,
     rating: 4.8,
   },
   teacher_2: {
     id: "teacher_2",
-    name: "Prof. Michael Chen",
-    avatar: "/avatars/michael.jpg",
+    name: "Gung Mahendra",
+    avatar: "/avatars/gung.jpg",
     type: "teacher" as const,
     rating: 4.9,
+  },
+  teacher_3: {
+    id: "teacher_3",
+    name: "Rohit Jagan",
+    avatar: "/avatars/rohit.jpg",
+    type: "teacher" as const,
+    rating: 4.7,
+  },
+  teacher_4: {
+    id: "teacher_4",
+    name: "Ku Kasen",
+    avatar: "/avatars/ku.jpg",
+    type: "teacher" as const,
+    rating: 4.6,
+  },
+  teacher_5: {
+    id: "teacher_5",
+    name: "Sami Rajjal",
+    avatar: "/avatars/sami.jpg",
+    type: "teacher" as const,
+    rating: 4.5,
   },
   student_1: {
     id: "student_1",
@@ -460,18 +484,14 @@ export function EducationalVideoPage() {
   const mockTeachers = [
     {
       teacher_id: "teacher_1",
-      name: "Dr. Sarah Johnson",
-      email: "sarah.johnson@school.edu",
-      expertise_areas: ["Mathematics", "Physics"],
-      qualifications: ["PhD in Mathematics", "10+ years teaching experience"],
+      name: "Naoto Masunaga",
+      email: "naoto.masunaga@example.com",
+      expertise_areas: ["Mathematics", "Physics", "Calculus"],
+      qualifications: ["PhD Mathematics", "10 years teaching experience"],
       availability: [
-        { day_of_week: 1, start_time: "09:00", end_time: "12:00" },
-        { day_of_week: 1, start_time: "14:00", end_time: "17:00" },
-        { day_of_week: 2, start_time: "09:00", end_time: "12:00" },
-        { day_of_week: 2, start_time: "14:00", end_time: "17:00" },
-        { day_of_week: 3, start_time: "09:00", end_time: "12:00" },
-        { day_of_week: 4, start_time: "14:00", end_time: "17:00" },
-        { day_of_week: 5, start_time: "09:00", end_time: "12:00" },
+        { day_of_week: 1, start_time: "09:00", end_time: "17:00" },
+        { day_of_week: 3, start_time: "10:00", end_time: "16:00" },
+        { day_of_week: 5, start_time: "14:00", end_time: "20:00" }
       ] as any,
       teaching_style: "DIRECT_INSTRUCTION" as any,
       rating: 4.8,
@@ -480,9 +500,9 @@ export function EducationalVideoPage() {
       created_at: new Date("2020-01-15"),
       updated_at: new Date("2024-01-15"),
       // Extended properties for educational video
-      profile_image: "/avatars/sarah.jpg",
-      bio: "Passionate mathematics educator with a PhD from MIT. Specializing in making complex concepts accessible to all students.",
-      languages: ["English", "Spanish"],
+      profile_image: "/avatars/naoto.jpg",
+      bio: "Passionate mathematics educator specializing in making complex concepts accessible to all students.",
+      languages: ["English", "Japanese"],
       certifications: ["Certified Math Teacher", "STEM Education Specialist"],
       is_verified: true,
       hourly_rate: 50,
@@ -491,20 +511,14 @@ export function EducationalVideoPage() {
     },
     {
       teacher_id: "teacher_2",
-      name: "Prof. Michael Chen",
-      email: "michael.chen@university.edu",
-      expertise_areas: ["Biology", "Chemistry", "Environmental Science"],
-      qualifications: [
-        "Professor of Biology",
-        "Published researcher in molecular biology",
-      ],
+      name: "Gung Mahendra",
+      email: "gung.mahendra@example.com",
+      expertise_areas: ["Computer Science", "Programming", "Data Structures"],
+      qualifications: ["MS Computer Science", "Software Engineer at Google"],
       availability: [
-        { day_of_week: 1, start_time: "10:00", end_time: "14:00" },
-        { day_of_week: 2, start_time: "10:00", end_time: "14:00" },
-        { day_of_week: 2, start_time: "15:00", end_time: "18:00" },
-        { day_of_week: 3, start_time: "10:00", end_time: "14:00" },
-        { day_of_week: 4, start_time: "15:00", end_time: "18:00" },
-        { day_of_week: 5, start_time: "10:00", end_time: "14:00" },
+        { day_of_week: 2, start_time: "13:00", end_time: "19:00" },
+        { day_of_week: 4, start_time: "15:00", end_time: "21:00" },
+        { day_of_week: 6, start_time: "10:00", end_time: "16:00" }
       ] as any,
       teaching_style: "EXPERIENTIAL" as any,
       rating: 4.9,
@@ -513,14 +527,95 @@ export function EducationalVideoPage() {
       created_at: new Date("2019-08-20"),
       updated_at: new Date("2024-01-14"),
       // Extended properties for educational video
-      profile_image: "/avatars/michael.jpg",
-      bio: "Award-winning biology professor passionate about making science accessible and exciting for students of all ages.",
-      languages: ["English", "Mandarin"],
-      certifications: ["AP Biology Teacher", "Research Scientist"],
+      profile_image: "/avatars/gung.jpg",
+      bio: "Award-winning computer science educator passionate about making programming accessible and exciting.",
+      languages: ["English", "Indonesian"],
+      certifications: ["AP Computer Science Teacher", "Google Certified Developer"],
       is_verified: true,
-      hourly_rate: 65,
+      hourly_rate: 60,
       total_reviews: 120,
       total_students: 200,
+    },
+    {
+      teacher_id: "teacher_3",
+      name: "Rohit Jagan",
+      email: "rohit.jagan@example.com",
+      expertise_areas: ["English Literature", "Writing", "Grammar"],
+      qualifications: ["MA English Literature", "Published Author"],
+      availability: [
+        { day_of_week: 1, start_time: "08:00", end_time: "12:00" },
+        { day_of_week: 2, start_time: "18:00", end_time: "22:00" },
+        { day_of_week: 3, start_time: "09:00", end_time: "15:00" }
+      ] as any,
+      teaching_style: "INQUIRY_BASED" as any,
+      rating: 4.7,
+      total_sessions: 120,
+      status: "AVAILABLE" as any,
+      created_at: new Date("2021-03-10"),
+      updated_at: new Date("2024-01-13"),
+      // Extended properties for educational video
+      profile_image: "/avatars/rohit.jpg",
+      bio: "Published author and literature educator helping students discover the beauty of language and storytelling.",
+      languages: ["English", "Hindi"],
+      certifications: ["Certified English Teacher", "Creative Writing Instructor"],
+      is_verified: true,
+      hourly_rate: 45,
+      total_reviews: 95,
+      total_students: 120,
+    },
+    {
+      teacher_id: "teacher_4",
+      name: "Ku Kasen",
+      email: "ku.kasen@example.com",
+      expertise_areas: ["History", "Geography", "Economics"],
+      qualifications: ["PhD History", "Researcher at National University"],
+      availability: [
+        { day_of_week: 1, start_time: "10:00", end_time: "16:00" },
+        { day_of_week: 4, start_time: "14:00", end_time: "20:00" },
+        { day_of_week: 6, start_time: "09:00", end_time: "15:00" }
+      ] as any,
+      teaching_style: "DIRECT_INSTRUCTION" as any,
+      rating: 4.6,
+      total_sessions: 180,
+      status: "AVAILABLE" as any,
+      created_at: new Date("2018-11-05"),
+      updated_at: new Date("2024-01-12"),
+      // Extended properties for educational video
+      profile_image: "/avatars/ku.jpg",
+      bio: "History researcher and educator bringing the past to life through engaging storytelling and critical analysis.",
+      languages: ["English", "Thai"],
+      certifications: ["AP History Teacher", "Research Historian"],
+      is_verified: true,
+      hourly_rate: 40,
+      total_reviews: 110,
+      total_students: 180,
+    },
+    {
+      teacher_id: "teacher_5",
+      name: "Sami Rajjal",
+      email: "sami.rajjal@example.com",
+      expertise_areas: ["Art", "Music", "Languages"],
+      qualifications: ["MFA Fine Arts", "Professional Artist"],
+      availability: [
+        { day_of_week: 2, start_time: "11:00", end_time: "17:00" },
+        { day_of_week: 3, start_time: "16:00", end_time: "22:00" },
+        { day_of_week: 5, start_time: "12:00", end_time: "18:00" }
+      ] as any,
+      teaching_style: "EXPERIENTIAL" as any,
+      rating: 4.5,
+      total_sessions: 90,
+      status: "AVAILABLE" as any,
+      created_at: new Date("2022-07-15"),
+      updated_at: new Date("2024-01-11"),
+      // Extended properties for educational video
+      profile_image: "/avatars/sami.jpg",
+      bio: "Professional artist and creative educator inspiring students to express themselves through various art forms.",
+      languages: ["English", "Arabic"],
+      certifications: ["Certified Art Teacher", "Professional Artist Certification"],
+      is_verified: true,
+      hourly_rate: 55,
+      total_reviews: 75,
+      total_students: 90,
     },
   ];
 
@@ -744,6 +839,216 @@ export function EducationalVideoPage() {
             </CardContent>
           </Card>
 
+          {/* Materials Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Study Materials
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center gap-3 mb-2">
+                      <FileText className="h-5 w-5 text-blue-500" />
+                      <div>
+                        <h4 className="font-medium">Practice Worksheets</h4>
+                        <p className="text-sm text-gray-600">15 downloadable worksheets</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" className="w-full">
+                      Download All
+                    </Button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center gap-3 mb-2">
+                      <FileText className="h-5 w-5 text-green-500" />
+                      <div>
+                        <h4 className="font-medium">Reference Guides</h4>
+                        <p className="text-sm text-gray-600">8 comprehensive guides</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" className="w-full">
+                      View Guides
+                    </Button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center gap-3 mb-2">
+                      <FileText className="h-5 w-5 text-purple-500" />
+                      <div>
+                        <h4 className="font-medium">Formula Sheets</h4>
+                        <p className="text-sm text-gray-600">Quick reference sheets</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" className="w-full">
+                      Get Sheets
+                    </Button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center gap-3 mb-2">
+                      <FileText className="h-5 w-5 text-orange-500" />
+                      <div>
+                        <h4 className="font-medium">Project Templates</h4>
+                        <p className="text-sm text-gray-600">Ready-to-use templates</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" className="w-full">
+                      Browse Templates
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quizzes Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <HelpCircle className="h-5 w-5" />
+                Practice Quizzes
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <h4 className="font-medium">Basic Concepts Quiz</h4>
+                        <p className="text-sm text-gray-600">20 questions • 15 minutes</p>
+                      </div>
+                      <Badge variant="secondary">Beginner</Badge>
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm">4.6 (124 attempts)</span>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      Start Quiz
+                    </Button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <h4 className="font-medium">Advanced Problem Solving</h4>
+                        <p className="text-sm text-gray-600">25 questions • 25 minutes</p>
+                      </div>
+                      <Badge variant="secondary">Advanced</Badge>
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm">4.8 (89 attempts)</span>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      Start Quiz
+                    </Button>
+                  </div>
+
+                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <h4 className="font-medium">Mixed Review Quiz</h4>
+                        <p className="text-sm text-gray-600">30 questions • 30 minutes</p>
+                      </div>
+                      <Badge variant="secondary">All Levels</Badge>
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm">4.7 (156 attempts)</span>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      Start Quiz
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Schedule Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Teaching Schedule
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday",
+                  ].map((dayName, index) => {
+                    interface AvailabilitySlot {
+                      day_of_week: number;
+                      start_time: string;
+                      end_time: string;
+                    }
+
+                    const daySchedules = teacher.availability.filter(
+                      (schedule: AvailabilitySlot) =>
+                        schedule.day_of_week === index
+                    );
+                    return (
+                      <div
+                        key={dayName}
+                        className="flex justify-between items-center p-3 border rounded-lg"
+                      >
+                        <span className="capitalize font-medium">{dayName}</span>
+                        <div className="flex gap-1 flex-wrap">
+                          {daySchedules.map(
+                            (
+                              schedule: {
+                                start_time: string;
+                                end_time: string;
+                                day_of_week: number;
+                              },
+                              idx: number
+                            ) => (
+                              <Badge
+                                key={idx}
+                                variant="outline"
+                                className="text-xs"
+                              >
+                                {schedule.start_time}-{schedule.end_time}
+                              </Badge>
+                            )
+                          )}
+                          {daySchedules.length === 0 && (
+                            <span className="text-sm text-gray-500">Unavailable</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium mb-2">Booking Information</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Sessions are booked in 1-hour increments</li>
+                    <li>• 24-hour cancellation policy</li>
+                    <li>• Payment required at booking time</li>
+                    <li>• Sessions can be rescheduled up to 12 hours in advance</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Qualifications */}
           <Card>
             <CardHeader>
@@ -836,6 +1141,7 @@ export function EducationalVideoPage() {
             }}
             onVideoShare={handleVideoShare}
             onVideoComment={handleVideoComment}
+            onViewTeacherProfile={setShowTeacherProfile}
             onLoadMore={handleLoadMore}
             hasMore={videos.length < 20}
             isLoading={false}
@@ -919,7 +1225,7 @@ export function EducationalVideoPage() {
           >
             <Users className="h-5 w-5 sm:h-6 sm:w-6" />
             <span className="text-xs hidden sm:inline">Teachers</span>
-            <span className="text-xs sm:hidden">Teach</span>
+            <span className="text-xs sm:hidden">Teachers</span>
           </Button>
 
           <Button
