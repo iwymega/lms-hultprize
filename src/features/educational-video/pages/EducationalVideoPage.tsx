@@ -3,24 +3,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Video,
   Search,
   Bookmark,
-  Star,
+  // Star,
   Home,
   User,
   Users,
-  MessageSquare,
+  // MessageSquare,
   Plus,
-  CheckCircle,
-  Crown,
-  Mail,
-  Phone,
+  // CheckCircle,
+  // Crown,
+  // Mail,
+  // Phone,
   Award,
   FileText,
   HelpCircle,
-  Calendar,
+  // Calendar,
 } from "lucide-react";
 import { VideoFeed } from "../components/VideoFeed";
 import { VideoUpload } from "../components/VideoUpload";
@@ -639,415 +640,210 @@ export function EducationalVideoPage() {
 
         <div className="p-4 space-y-6">
           {/* Teacher Header */}
-          <div className="flex items-start gap-4">
-            <Avatar className="h-20 w-20">
+          <div className="text-center">
+            <Avatar className="h-20 w-20 mx-auto mb-4">
               <AvatarImage src={teacher.profile_image} />
               <AvatarFallback className="text-lg">
                 {teacher.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl font-bold">{teacher.name}</h2>
-                {teacher.is_verified && (
-                  <CheckCircle className="h-5 w-5 text-blue-500" />
-                )}
+            <h2 className="text-2xl font-bold mb-1">{teacher.name}</h2>
+            <p className="text-lg text-gray-600 mb-2">{teacher.expertise_areas[0]}</p>
+
+            {/* Stats */}
+            <div className="flex justify-center gap-8 mb-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-yellow-500">{teacher.rating}</div>
+                <div className="text-sm text-gray-600">Rating</div>
               </div>
-              <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span>{teacher.rating}</span>
-                  <span>({teacher.total_reviews} reviews)</span>
-                </div>
-                <span>{teacher.total_students} students</span>
+              <div className="text-center">
+                <div className="text-2xl font-bold">{(teacher.total_students * 10).toLocaleString()}</div>
+                <div className="text-sm text-gray-600">Followers</div>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3">
-                {teacher.expertise_areas.map((subject) => (
-                  <Badge key={subject} variant="secondary" className="text-xs">
-                    {subject}
-                  </Badge>
-                ))}
+              <div className="text-center">
+                <div className="text-2xl font-bold">{Math.floor(teacher.total_sessions / 3)}</div>
+                <div className="text-sm text-gray-600">Videos</div>
               </div>
-              <p className="text-sm text-gray-700">{teacher.bio}</p>
+            </div>
+
+            {/* Bio */}
+            <p className="text-gray-700 mb-6 max-w-md mx-auto">{teacher.bio}</p>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 justify-center mb-6">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6">
+                Subscribe for Updates
+              </Button>
+              <Button variant="outline" className="px-6">
+                Contact Teacher
+              </Button>
             </div>
           </div>
 
-          {/* Subscription Options */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Crown className="h-5 w-5 text-yellow-500" />
-                Subscription Plans
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">Free Access</h3>
-                    <Badge variant="outline">Free</Badge>
-                  </div>
-                  <ul className="text-sm text-gray-600 space-y-1 mb-4">
-                    <li>• Access to public videos</li>
-                    <li>• Basic Q&A in comments</li>
-                    <li>• Limited study materials</li>
-                  </ul>
-                  <Button className="w-full bg-white text-gray-900 hover:bg-gray-100" variant="outline">
-                    Subscribe Free
-                  </Button>
-                </div>
+          {/* Tabs for Materials & Quizzes and Tutoring Schedule */}
+          <Tabs defaultValue="materials" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="materials">Materials & Quizzes</TabsTrigger>
+              <TabsTrigger value="schedule">Tutoring Schedule</TabsTrigger>
+            </TabsList>
 
-                <div className="border rounded-lg p-4 bg-gradient-to-br from-blue-50 to-purple-50">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">Premium Access</h3>
-                    <Badge className="bg-yellow-500">
-                      ${teacher.hourly_rate}/month
-                    </Badge>
-                  </div>
-                  <ul className="text-sm text-gray-600 space-y-1 mb-4">
-                    <li>• All public and private videos</li>
-                    <li>• Direct messaging with teacher</li>
-                    <li>• Exclusive study materials</li>
-                    <li>• Priority Q&A responses</li>
-                    <li>• Progress tracking</li>
-                  </ul>
-                  <Button className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-lg border border-white/20">Subscribe Premium</Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Contact Options */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5" />
-                Contact Teacher
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button
-                  variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  <Mail className="h-6 w-6" />
-                  <div className="text-center">
-                    <div className="font-medium">Send Message</div>
-                    <div className="text-sm text-gray-600">
-                      Direct messaging
-                    </div>
-                  </div>
-                </Button>
-
-                <Button
-                  variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  <Phone className="h-6 w-6" />
-                  <div className="text-center">
-                    <div className="font-medium">Book Session</div>
-                    <div className="text-sm text-gray-600">1-on-1 tutoring</div>
-                  </div>
-                </Button>
-
-                <Button
-                  variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  <Users className="h-6 w-6" />
-                  <div className="text-center">
-                    <div className="font-medium">Group Class</div>
-                    <div className="text-sm text-gray-600">
-                      Join group sessions
-                    </div>
-                  </div>
-                </Button>
-
-                <Button
-                  variant="outline"
-                  className="h-auto p-4 flex flex-col items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  <Video className="h-6 w-6" />
-                  <div className="text-center">
-                    <div className="font-medium">Live Session</div>
-                    <div className="text-sm text-gray-600">
-                      Real-time tutoring
-                    </div>
-                  </div>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Availability */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Availability</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                  "Sunday",
-                ].map((dayName, index) => {
-                  interface AvailabilitySlot {
-                    day_of_week: number;
-                    start_time: string;
-                    end_time: string;
-                  }
-
-                  const daySchedules = teacher.availability.filter(
-                    (schedule: AvailabilitySlot) =>
-                      schedule.day_of_week === index
-                  );
-                  return (
-                    <div
-                      key={dayName}
-                      className="flex justify-between items-center"
-                    >
-                      <span className="capitalize font-medium">{dayName}</span>
-                      <div className="flex gap-1">
-                        {daySchedules.map(
-                          (
-                            schedule: {
-                              start_time: string;
-                              end_time: string;
-                              day_of_week: number;
-                            },
-                            idx: number
-                          ) => (
-                            <Badge
-                              key={idx}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {schedule.start_time}-{schedule.end_time}
-                            </Badge>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Materials Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Study Materials
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center gap-3 mb-2">
-                      <FileText className="h-5 w-5 text-blue-500" />
-                      <div>
-                        <h4 className="font-medium">Practice Worksheets</h4>
-                        <p className="text-sm text-gray-600">15 downloadable worksheets</p>
-                      </div>
-                    </div>
-                    <Button variant="outline" size="sm" className="w-full">
-                      Download All
-                    </Button>
-                  </div>
-
-                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center gap-3 mb-2">
-                      <FileText className="h-5 w-5 text-green-500" />
-                      <div>
-                        <h4 className="font-medium">Reference Guides</h4>
-                        <p className="text-sm text-gray-600">8 comprehensive guides</p>
-                      </div>
-                    </div>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View Guides
-                    </Button>
-                  </div>
-
-                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center gap-3 mb-2">
-                      <FileText className="h-5 w-5 text-purple-500" />
-                      <div>
-                        <h4 className="font-medium">Formula Sheets</h4>
-                        <p className="text-sm text-gray-600">Quick reference sheets</p>
-                      </div>
-                    </div>
-                    <Button variant="outline" size="sm" className="w-full">
-                      Get Sheets
-                    </Button>
-                  </div>
-
-                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center gap-3 mb-2">
-                      <FileText className="h-5 w-5 text-orange-500" />
-                      <div>
-                        <h4 className="font-medium">Project Templates</h4>
-                        <p className="text-sm text-gray-600">Ready-to-use templates</p>
-                      </div>
-                    </div>
-                    <Button variant="outline" size="sm" className="w-full">
-                      Browse Templates
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quizzes Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <HelpCircle className="h-5 w-5" />
-                Practice Quizzes
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <h4 className="font-medium">Basic Concepts Quiz</h4>
-                        <p className="text-sm text-gray-600">20 questions • 15 minutes</p>
-                      </div>
-                      <Badge variant="secondary">Beginner</Badge>
-                    </div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm">4.6 (124 attempts)</span>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Start Quiz
-                    </Button>
-                  </div>
-
-                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <h4 className="font-medium">Advanced Problem Solving</h4>
-                        <p className="text-sm text-gray-600">25 questions • 25 minutes</p>
-                      </div>
-                      <Badge variant="secondary">Advanced</Badge>
-                    </div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm">4.8 (89 attempts)</span>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Start Quiz
-                    </Button>
-                  </div>
-
-                  <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <h4 className="font-medium">Mixed Review Quiz</h4>
-                        <p className="text-sm text-gray-600">30 questions • 30 minutes</p>
-                      </div>
-                      <Badge variant="secondary">All Levels</Badge>
-                    </div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm">4.7 (156 attempts)</span>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Start Quiz
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Schedule Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Teaching Schedule
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                    "Sunday",
-                  ].map((dayName, index) => {
-                    interface AvailabilitySlot {
-                      day_of_week: number;
-                      start_time: string;
-                      end_time: string;
-                    }
-
-                    const daySchedules = teacher.availability.filter(
-                      (schedule: AvailabilitySlot) =>
-                        schedule.day_of_week === index
-                    );
-                    return (
-                      <div
-                        key={dayName}
-                        className="flex justify-between items-center p-3 border rounded-lg"
-                      >
-                        <span className="capitalize font-medium">{dayName}</span>
-                        <div className="flex gap-1 flex-wrap">
-                          {daySchedules.map(
-                            (
-                              schedule: {
-                                start_time: string;
-                                end_time: string;
-                                day_of_week: number;
-                              },
-                              idx: number
-                            ) => (
-                              <Badge
-                                key={idx}
-                                variant="outline"
-                                className="text-xs"
-                              >
-                                {schedule.start_time}-{schedule.end_time}
-                              </Badge>
-                            )
-                          )}
-                          {daySchedules.length === 0 && (
-                            <span className="text-sm text-gray-500">Unavailable</span>
-                          )}
+            <TabsContent value="materials" className="space-y-6">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center gap-3 mb-2">
+                        <FileText className="h-5 w-5 text-blue-500" />
+                        <div>
+                          <h4 className="font-medium">Practice Worksheets</h4>
+                          <p className="text-sm text-gray-600">15 downloadable worksheets</p>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                      <Button variant="outline" size="sm" className="w-full">
+                        Download All
+                      </Button>
+                    </div>
 
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-medium mb-2">Booking Information</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• Sessions are booked in 1-hour increments</li>
-                    <li>• 24-hour cancellation policy</li>
-                    <li>• Payment required at booking time</li>
-                    <li>• Sessions can be rescheduled up to 12 hours in advance</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                    <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center gap-3 mb-2">
+                        <HelpCircle className="h-5 w-5 text-green-500" />
+                        <div>
+                          <h4 className="font-medium">Basic Concepts Quiz</h4>
+                          <p className="text-sm text-gray-600">20 questions • 15 minutes</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm" className="w-full">
+                        Start Quiz
+                      </Button>
+                    </div>
+
+                    <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center gap-3 mb-2">
+                        <FileText className="h-5 w-5 text-purple-500" />
+                        <div>
+                          <h4 className="font-medium">Reference Guides</h4>
+                          <p className="text-sm text-gray-600">8 comprehensive guides</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm" className="w-full">
+                        View Guides
+                      </Button>
+                    </div>
+
+                    <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center gap-3 mb-2">
+                        <HelpCircle className="h-5 w-5 text-orange-500" />
+                        <div>
+                          <h4 className="font-medium">Advanced Problem Solving</h4>
+                          <p className="text-sm text-gray-600">25 questions • 25 minutes</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm" className="w-full">
+                        Start Quiz
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="schedule" className="space-y-6">
+              <Card>
+                <CardContent className="pt-6 space-y-6">
+                  {/* One-on-One Sessions */}
+                  <div>
+                    <h3 className="font-semibold mb-4 flex items-center gap-2">
+                      <User className="h-5 w-5" />
+                      One-on-One Sessions
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div>
+                          <h4 className="font-medium">Monday</h4>
+                          <p className="text-sm text-gray-600">14:00 - 15:00</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">¥8,000</p>
+                          <p className="text-sm text-gray-600">per session</p>
+                        </div>
+                        <Button size="sm">Book Session</Button>
+                      </div>
+
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div>
+                          <h4 className="font-medium">Wednesday</h4>
+                          <p className="text-sm text-gray-600">16:00 - 17:00</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">¥8,000</p>
+                          <p className="text-sm text-gray-600">per session</p>
+                        </div>
+                        <Button size="sm">Book Session</Button>
+                      </div>
+
+                      <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
+                        <div>
+                          <h4 className="font-medium">Friday</h4>
+                          <p className="text-sm text-gray-600">10:00 - 11:00</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-gray-500">Fully Booked</p>
+                        </div>
+                        <Button size="sm" disabled>Fully Booked</Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Group Sessions */}
+                  <div>
+                    <h3 className="font-semibold mb-4 flex items-center gap-2">
+                      <Users className="h-5 w-5" />
+                      Group Sessions
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div>
+                          <h4 className="font-medium">Tuesday</h4>
+                          <p className="text-sm text-gray-600">18:00 - 19:30</p>
+                          <p className="text-xs text-gray-500">Max 8 students</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">¥3,000</p>
+                          <p className="text-sm text-gray-600">per session</p>
+                        </div>
+                        <Button size="sm">Join Group</Button>
+                      </div>
+
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div>
+                          <h4 className="font-medium">Thursday</h4>
+                          <p className="text-sm text-gray-600">18:00 - 19:30</p>
+                          <p className="text-xs text-gray-500">Max 8 students</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">¥3,000</p>
+                          <p className="text-sm text-gray-600">per session</p>
+                        </div>
+                        <Button size="sm">Join Group</Button>
+                      </div>
+
+                      <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
+                        <div>
+                          <h4 className="font-medium">Saturday</h4>
+                          <p className="text-sm text-gray-600">13:00 - 14:30</p>
+                          <p className="text-xs text-gray-500">Max 8 students</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-gray-500">Fully Booked</p>
+                        </div>
+                        <Button size="sm" disabled>Fully Booked</Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
 
           {/* Qualifications */}
           <Card>
