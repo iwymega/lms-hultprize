@@ -1,5 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import axios from 'axios'; // <-- Import axios
 
 // Perbarui tipe data notifikasi untuk menyertakan status 'isRead'
@@ -31,7 +30,6 @@ export const useNotifications = (): NotificationContextType => {
 };
 
 const SOCKET_SERVER_URL = "https://realtime-data.gotrasoft.com"; // URL tanpa trailing slash
-const NOTIFICATION_ROOM_ID = "my_test_room";
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
