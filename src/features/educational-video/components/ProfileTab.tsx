@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, Trophy, Flame, Star } from "lucide-react";
 import {
   BarChart,
@@ -44,6 +44,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({}) => {
         {/* Profile Header */}
         <div className="text-center">
           <Avatar className="h-20 w-20 mx-auto mb-4">
+            <AvatarImage src="/foto2.jpeg" />
             <AvatarFallback className="text-2xl">GM</AvatarFallback>
           </Avatar>
           <h2 className="text-xl font-bold mb-1">@Gung Mahendra</h2>
