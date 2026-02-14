@@ -37,33 +37,34 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
     const [unreadCount, setUnreadCount] = useState<number>(0);
 
-    useEffect(() => {
-        const socket: Socket = io(SOCKET_SERVER_URL);
-
-        socket.on('connect', () => {
-            console.log('[NOTIF_SOCKET] Terhubung, bergabung ke room:', NOTIFICATION_ROOM_ID);
-            socket.emit('join_room', { room_id: NOTIFICATION_ROOM_ID });
-        });
-
-        socket.on('data_history', (response: { history: NotificationItem[] }) => {
-            console.log('[NOTIF_SOCKET] Menerima riwayat notifikasi:', response.history);
-            // Asumsikan semua riwayat sudah dibaca
-            const historyItems = response.history.map(item => ({ ...item, isRead: true }));
-            setNotifications(historyItems.slice().reverse());
-        });
-
-        socket.on('new_data', (data: NotificationItem) => {
-            console.log('[NOTIF_SOCKET] Notifikasi baru diterima:', data);
-            // Tandai notifikasi baru sebagai belum dibaca
-            setNotifications(prev => [{ ...data, isRead: false }, ...prev]);
-            setUnreadCount(prev => prev + 1);
-        });
-
-        return () => {
-            console.log('[NOTIF_SOCKET] Membersihkan koneksi socket notifikasi.');
-            socket.disconnect();
-        };
-    }, []);
+    // WebSocket connection disabled - causing connection errors
+    // useEffect(() => {
+    //     const socket: Socket = io(SOCKET_SERVER_URL);
+    //
+    //     socket.on('connect', () => {
+    //         console.log('[NOTIF_SOCKET] Terhubung, bergabung ke room:', NOTIFICATION_ROOM_ID);
+    //         socket.emit('join_room', { room_id: NOTIFICATION_ROOM_ID });
+    //     });
+    //
+    //     socket.on('data_history', (response: { history: NotificationItem[] }) => {
+    //         console.log('[NOTIF_SOCKET] Menerima riwayat notifikasi:', response.history);
+    //         // Asumsikan semua riwayat sudah dibaca
+    //         const historyItems = response.history.map(item => ({ ...item, isRead: true }));
+    //         setNotifications(historyItems.slice().reverse());
+    //     });
+    //
+    //     socket.on('new_data', (data: NotificationItem) => {
+    //         console.log('[NOTIF_SOCKET] Notifikasi baru diterima:', data);
+    //         // Tandai notifikasi baru sebagai belum dibaca
+    //         setNotifications(prev => [{ ...data, isRead: false }, ...prev]);
+    //         setUnreadCount(prev => prev + 1);
+    //     });
+    //
+    //     return () => {
+    //         console.log('[NOTIF_SOCKET] Membersihkan koneksi socket notifikasi.');
+    //         socket.disconnect();
+    //     };
+    // }, []);
 
     // Fungsi untuk mereset HANYA badge angka, dipanggil saat dropdown dibuka
     const clearUnreadBadge = useCallback(() => {

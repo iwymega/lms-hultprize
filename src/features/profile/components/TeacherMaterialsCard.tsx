@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TeacherMaterial, SessionPricing, MaterialType } from '@/features/matching/types';
-import { FileText, Video, Youtube, DollarSign, Calendar, Users } from 'lucide-react';
+import { FileText, Video, DollarSign, Calendar, Users } from 'lucide-react';
 
 interface TeacherMaterialsCardProps {
   materials: TeacherMaterial[];
@@ -145,9 +145,6 @@ const TeacherMaterialsCard: React.FC<TeacherMaterialsCardProps> = ({
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1">
-                        {material.youtube_url && (
-                          <Youtube className="h-4 w-4 text-red-500" />
-                        )}
                         {material.video_url && (
                           <Video className="h-4 w-4 text-blue-500" />
                         )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -338,14 +338,20 @@ export function EducationalVideoPage() {
     setShowUpload(false);
   };
 
+  // Counter for unique IDs
+  const loadMoreCounter = useRef(0);
+
   const handleLoadMore = async () => {
     // Mock loading more videos
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Add more mock videos
-    const additionalVideos = mockVideos.map((video) => ({
+    // Add more mock videos with unique IDs
+    loadMoreCounter.current += 1;
+    const uniqueId = `${Date.now()}_${loadMoreCounter.current}_${Math.random().toString(36).substr(2, 9)}`;
+    const additionalVideos = mockVideos.map((video, index) => ({
       ...video,
-      video_id: `${video.video_id}_extra_${Date.now()}`,
+      video_id: `extra_${uniqueId}_${index}`,
+      title: `${video.title} (Extra ${index + 1})`,
     }));
 
     const additionalVideoItems: VideoFeedItem[] = additionalVideos.map(
