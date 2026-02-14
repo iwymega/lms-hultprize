@@ -37,6 +37,7 @@ interface VideoFeedProps {
 interface VideoCardProps {
   videoItem: VideoFeedItem;
   isActive: boolean;
+  hasUserInteracted: boolean;
   onLike: () => void;
   onBookmark: () => void;
   onShare: () => void;
@@ -65,6 +66,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
   });
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   const { video, creator, userInteraction } = videoItem;
 
@@ -72,6 +74,10 @@ const VideoCard: React.FC<VideoCardProps> = ({
   useEffect(() => {
     if (videoRef.current) {
       if (isActive) {
+        // Ensure video is muted for autoplay (required by most browsers)
+        videoRef.current.muted = true;
+        setPlayerState(prev => ({ ...prev, isMuted: true }));
+
         // Try to play, but handle autoplay restrictions
         const playPromise = videoRef.current.play();
         if (playPromise !== undefined) {
@@ -80,7 +86,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
               setPlayerState(prev => ({ ...prev, isPlaying: true }));
             })
             .catch(() => {
-              // Autoplay failed, keep paused
+              // Autoplay failed, keep paused but show play button
               setPlayerState(prev => ({ ...prev, isPlaying: false }));
             });
         }
@@ -95,12 +101,19 @@ const VideoCard: React.FC<VideoCardProps> = ({
     if (videoRef.current) {
       if (playerState.isPlaying) {
         videoRef.current.pause();
+        setPlayerState(prev => ({ ...prev, isPlaying: false }));
       } else {
+        // Enable unmuted playback after user interaction
+        if (!hasUserInteracted) {
+          setHasUserInteracted(true);
+          videoRef.current.muted = false;
+          setPlayerState(prev => ({ ...prev, isMuted: false }));
+        }
         videoRef.current.play();
+        setPlayerState(prev => ({ ...prev, isPlaying: true }));
       }
-      setPlayerState(prev => ({ ...prev, isPlaying: !prev.isPlaying }));
     }
-  }, [playerState.isPlaying]);
+  }, [playerState.isPlaying, hasUserInteracted]);
 
   const toggleMute = useCallback(() => {
     if (videoRef.current) {
@@ -386,6 +399,7 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({
   isLoading = false
 }) => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback((e: WheelEvent) => {
@@ -431,6 +445,25 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({
     }
   }, [currentVideoIndex, videos.length, hasMore, onLoadMore, isLoading]);
 
+  // Enable autoplay after user interaction
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      setHasUserInteracted(true);
+    };
+
+    // Add listeners for common user interactions
+    const events = ['click', 'touchstart', 'keydown', 'scroll'];
+    events.forEach(event => {
+      document.addEventListener(event, handleUserInteraction, { once: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, handleUserInteraction);
+      });
+    };
+  }, []);
+
   if (videos.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-100">
@@ -455,6 +488,7 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({
           <VideoCard
             videoItem={videoItem}
             isActive={index === currentVideoIndex}
+            hasUserInteracted={hasUserInteracted}
             onLike={() => onVideoLike(videoItem.video.video_id)}
             onBookmark={() => onVideoBookmark(videoItem.video.video_id)}
             onShare={() => onVideoShare(videoItem.video.video_id)}
