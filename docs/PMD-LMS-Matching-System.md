@@ -1,4 +1,4 @@
-# Product Management Document: LMS Student-Teacher Matching System
+# Product Management Document: SMATCH Student-Teacher Matching System
 
 ## 1. Ringkasan Eksekutif (Executive Summary)
 

@@ -2,11 +2,11 @@
 
 ## Overview
 
-This document outlines the product management strategy for the LMS Hult Prize project.
+This document outlines the product management strategy for the SMATCH project.
 
 ## Current Status
 
-- Project: LMS Student-Teacher Matching System
+- Project: SMATCH Student-Teacher Matching System
 - Status: Development Phase
 - Team: Development Team
 

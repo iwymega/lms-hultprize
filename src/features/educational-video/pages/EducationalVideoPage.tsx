@@ -40,21 +40,21 @@ import {
   UserProgress,
 } from "../types";
 
-// Mock data for demonstration - using sample videos for testing
+// Mock data for demonstration - using local videos only
 const mockVideos: EducationalVideo[] = [
   {
     video_id: "1",
-    title: "Introduction to Quadratic Equations",
+    title: "Educational Video 1",
     description:
-      "Learn how to solve quadratic equations using the quadratic formula. Perfect for algebra students!",
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    thumbnail_url: "https://i.ytimg.com/vi/YE7VzlLtp-4/maxresdefault.jpg",
+      "First educational video content for learning and development.",
+    video_url: "/video1.mp4",
+    thumbnail_url: "/thumbnails/video1.jpg",
     duration: 180,
-    subject: "Mathematics",
-    topic: "Quadratic Equations",
+    subject: "General Education",
+    topic: "Learning Content",
     grade_level: GradeLevel.HIGH,
     difficulty: DifficultyLevel.INTERMEDIATE,
-    tags: ["algebra", "equations", "math", "tutorial"],
+    tags: ["education", "learning", "tutorial"],
     creator_id: "teacher_1",
     creator_type: "teacher",
     views: 1250,
@@ -68,17 +68,17 @@ const mockVideos: EducationalVideo[] = [
   },
   {
     video_id: "2",
-    title: "Photosynthesis Explained Simply",
+    title: "Educational Video 2",
     description:
-      "A clear explanation of how plants make food through photosynthesis. Great for biology beginners.",
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    thumbnail_url: "https://i.ytimg.com/vi/3nZzTxq7z2E/maxresdefault.jpg",
+      "Second educational video content for comprehensive learning experience.",
+    video_url: "/video2.mp4",
+    thumbnail_url: "/thumbnails/video2.jpg",
     duration: 240,
-    subject: "Biology",
-    topic: "Photosynthesis",
-    grade_level: GradeLevel.MIDDLE,
-    difficulty: DifficultyLevel.BEGINNER,
-    tags: ["biology", "plants", "science", "explanation"],
+    subject: "General Education",
+    topic: "Advanced Learning",
+    grade_level: GradeLevel.HIGH,
+    difficulty: DifficultyLevel.INTERMEDIATE,
+    tags: ["education", "learning", "advanced"],
     creator_id: "teacher_2",
     creator_type: "teacher",
     views: 2100,
@@ -89,78 +89,6 @@ const mockVideos: EducationalVideo[] = [
     is_private: false,
     created_at: new Date("2024-01-14"),
     updated_at: new Date("2024-01-14"),
-  },
-  {
-    video_id: "3",
-    title: "My Journey Learning Python",
-    description:
-      "A student shares their experience learning Python programming from scratch.",
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    thumbnail_url: "https://i.ytimg.com/vi/hvL1339luv0/maxresdefault.jpg",
-    duration: 320,
-    subject: "Computer Science",
-    topic: "Python Programming",
-    grade_level: GradeLevel.HIGH,
-    difficulty: DifficultyLevel.BEGINNER,
-    tags: ["python", "programming", "coding", "student-project"],
-    creator_id: "student_1",
-    creator_type: "student",
-    views: 890,
-    likes: 67,
-    shares: 18,
-    comments_count: 15,
-    is_featured: false,
-    is_private: false,
-    created_at: new Date("2024-01-13"),
-    updated_at: new Date("2024-01-13"),
-  },
-  {
-    video_id: "4",
-    title: "Physics: Newton's Laws of Motion",
-    description:
-      "Understanding the fundamental principles of motion and force in physics.",
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    thumbnail_url: "https://i.ytimg.com/vi/8ZYL9cJwRzM/maxresdefault.jpg",
-    duration: 280,
-    subject: "Physics",
-    topic: "Newton's Laws",
-    grade_level: GradeLevel.HIGH,
-    difficulty: DifficultyLevel.INTERMEDIATE,
-    tags: ["physics", "motion", "newton", "laws"],
-    creator_id: "teacher_1",
-    creator_type: "teacher",
-    views: 1850,
-    likes: 134,
-    shares: 31,
-    comments_count: 19,
-    is_featured: true,
-    is_private: false,
-    created_at: new Date("2024-01-12"),
-    updated_at: new Date("2024-01-12"),
-  },
-  {
-    video_id: "5",
-    title: "Chemistry: Periodic Table Basics",
-    description:
-      "Learn about the organization and patterns in the periodic table of elements.",
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    thumbnail_url: "https://i.ytimg.com/vi/0RRVV4Diomg/maxresdefault.jpg",
-    duration: 220,
-    subject: "Chemistry",
-    topic: "Periodic Table",
-    grade_level: GradeLevel.MIDDLE,
-    difficulty: DifficultyLevel.BEGINNER,
-    tags: ["chemistry", "periodic-table", "elements", "science"],
-    creator_id: "teacher_2",
-    creator_type: "teacher",
-    views: 1420,
-    likes: 98,
-    shares: 27,
-    comments_count: 16,
-    is_featured: false,
-    is_private: false,
-    created_at: new Date("2024-01-11"),
-    updated_at: new Date("2024-01-11"),
   },
 ];
 
@@ -895,7 +823,7 @@ export function EducationalVideoPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Video className="h-6 w-6 text-[#E0E1DD]" />
-            <span className="font-bold text-lg sm:text-xl">EduTok</span>
+            <span className="font-bold text-lg sm:text-xl">SMATCH</span>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
             <Button
