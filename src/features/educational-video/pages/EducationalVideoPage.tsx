@@ -440,7 +440,7 @@ export function EducationalVideoPage() {
       languages: ["English", "Japanese"],
       certifications: ["Certified Math Teacher", "STEM Education Specialist"],
       is_verified: true,
-      hourly_rate: 50,
+      hourly_rate: 55000,
       total_reviews: 89,
       total_students: 150,
     },
@@ -467,7 +467,7 @@ export function EducationalVideoPage() {
       languages: ["English", "Indonesian"],
       certifications: ["AP Computer Science Teacher", "Google Certified Developer"],
       is_verified: true,
-      hourly_rate: 60,
+      hourly_rate: 60000,
       total_reviews: 120,
       total_students: 200,
     },
@@ -494,7 +494,7 @@ export function EducationalVideoPage() {
       languages: ["English", "Hindi"],
       certifications: ["Certified English Teacher", "Creative Writing Instructor"],
       is_verified: true,
-      hourly_rate: 45,
+      hourly_rate: 45000,
       total_reviews: 95,
       total_students: 120,
     },
@@ -521,7 +521,7 @@ export function EducationalVideoPage() {
       languages: ["English", "Thai"],
       certifications: ["AP History Teacher", "Research Historian"],
       is_verified: true,
-      hourly_rate: 40,
+      hourly_rate: 40000,
       total_reviews: 110,
       total_students: 180,
     },
@@ -548,7 +548,7 @@ export function EducationalVideoPage() {
       languages: ["English", "Arabic"],
       certifications: ["Certified Art Teacher", "Professional Artist Certification"],
       is_verified: true,
-      hourly_rate: 55,
+      hourly_rate: 55000,
       total_reviews: 75,
       total_students: 90,
     },
@@ -697,7 +697,7 @@ export function EducationalVideoPage() {
                           <p className="text-sm text-gray-600">14:00 - 15:00</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold">¥8,000</p>
+                          <p className="font-semibold">Rp. 55.000</p>
                           <p className="text-sm text-gray-600">per session</p>
                         </div>
                         <Button size="sm">Book Session</Button>
@@ -709,7 +709,7 @@ export function EducationalVideoPage() {
                           <p className="text-sm text-gray-600">16:00 - 17:00</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold">¥8,000</p>
+                          <p className="font-semibold">Rp. 55.000</p>
                           <p className="text-sm text-gray-600">per session</p>
                         </div>
                         <Button size="sm">Book Session</Button>
@@ -742,7 +742,7 @@ export function EducationalVideoPage() {
                           <p className="text-xs text-gray-500">Max 8 students</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold">¥3,000</p>
+                          <p className="font-semibold">Rp. 55.000</p>
                           <p className="text-sm text-gray-600">per session</p>
                         </div>
                         <Button size="sm">Join Group</Button>
@@ -755,7 +755,7 @@ export function EducationalVideoPage() {
                           <p className="text-xs text-gray-500">Max 8 students</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold">¥3,000</p>
+                          <p className="font-semibold">Rp. 55.000</p>
                           <p className="text-sm text-gray-600">per session</p>
                         </div>
                         <Button size="sm">Join Group</Button>

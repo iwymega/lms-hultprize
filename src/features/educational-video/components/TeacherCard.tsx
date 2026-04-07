@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Star, CheckCircle, Mail, MessageSquare, Crown } from 'lucide-react';
+import { formatter } from '@/lib/utils';
 
 interface Teacher {
   teacher_id: string;
@@ -107,7 +108,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-bold text-white">
-                  ${teacher.hourly_rate}
+                  {formatter.format(teacher.hourly_rate)}
                 </span>
                 <span className="text-sm text-gray-300">/hour</span>
               </div>
