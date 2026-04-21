@@ -21,6 +21,8 @@ import {
   Award,
   FileText,
   HelpCircle,
+  Volume2,
+  VolumeX,
   // Calendar,
 } from "lucide-react";
 import { VideoFeed } from "../components/VideoFeed";
@@ -263,6 +265,7 @@ export function EducationalVideoPage() {
   const [showTeacherProfile, setShowTeacherProfile] = useState<string | null>(
     null
   );
+  const [isGlobalMuted, setIsGlobalMuted] = useState(true);
   const [videos, setVideos] = useState<VideoFeedItem[]>([]);
   const [bookmarkedVideos, setBookmarkedVideos] = useState<VideoFeedItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -923,22 +926,39 @@ export function EducationalVideoPage() {
             <Video className="h-6 w-6 text-[#E0E1DD]" />
             <span className="font-bold text-lg sm:text-xl">SMATCH</span>
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md p-1.5 rounded-full border border-white/10 shadow-lg">
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20 min-h-[44px] sm:min-h-[36px]"
-              onClick={() => setShowUpload(true)}
+              className="text-white hover:bg-white/20 rounded-full w-9 h-9 p-0 flex items-center justify-center transition-all active:scale-90"
+              onClick={() => setIsGlobalMuted(!isGlobalMuted)}
+              title={isGlobalMuted ? "Unmute" : "Mute"}
             >
-              <Plus className="h-5 w-5" />
+              {isGlobalMuted ? (
+                <VolumeX className="h-[18px] w-[18px]" />
+              ) : (
+                <Volume2 className="h-[18px] w-[18px]" />
+              )}
             </Button>
+            <div className="w-[1px] h-4 bg-white/10 mx-0.5" />
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20 min-h-[44px] sm:min-h-[36px]"
+              className="text-white hover:bg-white/20 rounded-full w-9 h-9 p-0 flex items-center justify-center transition-all active:scale-90"
               onClick={() => setActiveTab("search")}
+              title="Search"
             >
-              <Search className="h-5 w-5" />
+              <Search className="h-[18px] w-[18px]" />
+            </Button>
+            <div className="w-[1px] h-4 bg-white/10 mx-0.5" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20 rounded-full w-9 h-9 p-0 flex items-center justify-center transition-all active:scale-90"
+              onClick={() => setShowUpload(true)}
+              title="Upload Video"
+            >
+              <Plus className="h-[18px] w-[18px]" />
             </Button>
           </div>
         </div>
@@ -949,6 +969,7 @@ export function EducationalVideoPage() {
         {activeTab === "home" && (
           <VideoFeed
             videos={videos}
+            isGlobalMuted={isGlobalMuted}
             onVideoLike={handleVideoLike}
             onVideoBookmark={(videoId) => {
               handleVideoBookmark(videoId);

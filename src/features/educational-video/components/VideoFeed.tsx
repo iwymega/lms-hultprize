@@ -8,8 +8,8 @@ import {
   Share,
   Bookmark,
   Play,
-  Volume2,
-  VolumeX,
+  // Volume2,
+  // VolumeX,
   MoreVertical,
   Award,
   Star,
@@ -32,6 +32,7 @@ interface VideoFeedProps {
   onLoadMore?: () => void;
   hasMore?: boolean;
   isLoading?: boolean;
+  isGlobalMuted?: boolean;
 }
 
 interface VideoCardProps {
@@ -43,6 +44,7 @@ interface VideoCardProps {
   onShare: () => void;
   onComment: (comment: string) => void;
   onViewTeacherProfile?: (teacherId: string) => void;
+  isGlobalMuted: boolean;
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({
@@ -52,7 +54,8 @@ const VideoCard: React.FC<VideoCardProps> = ({
   onBookmark,
   onShare,
   onComment,
-  onViewTeacherProfile
+  onViewTeacherProfile,
+  isGlobalMuted
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playerState, setPlayerState] = useState<VideoPlayerState>({
@@ -66,17 +69,25 @@ const VideoCard: React.FC<VideoCardProps> = ({
   });
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  // const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   const { video, creator, userInteraction } = videoItem;
+
+  // Handle global mute
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isGlobalMuted;
+      setPlayerState(prev => ({ ...prev, isMuted: isGlobalMuted }));
+    }
+  }, [isGlobalMuted]);
 
   // Auto-play/pause based on visibility
   useEffect(() => {
     if (videoRef.current) {
       if (isActive) {
-        // Ensure video is muted for autoplay (required by most browsers)
-        videoRef.current.muted = true;
-        setPlayerState(prev => ({ ...prev, isMuted: true }));
+        // Respect global mute state
+        videoRef.current.muted = isGlobalMuted;
+        setPlayerState(prev => ({ ...prev, isMuted: isGlobalMuted }));
 
         // Try to play, but handle autoplay restrictions
         const playPromise = videoRef.current.play();
@@ -103,24 +114,18 @@ const VideoCard: React.FC<VideoCardProps> = ({
         videoRef.current.pause();
         setPlayerState(prev => ({ ...prev, isPlaying: false }));
       } else {
-        // Enable unmuted playback after user interaction
-        if (!hasUserInteracted) {
-          setHasUserInteracted(true);
-          videoRef.current.muted = false;
-          setPlayerState(prev => ({ ...prev, isMuted: false }));
-        }
         videoRef.current.play();
         setPlayerState(prev => ({ ...prev, isPlaying: true }));
       }
     }
-  }, [playerState.isPlaying, hasUserInteracted]);
+  }, [playerState.isPlaying]);
 
-  const toggleMute = useCallback(() => {
-    if (videoRef.current) {
-      videoRef.current.muted = !playerState.isMuted;
-      setPlayerState(prev => ({ ...prev, isMuted: !prev.isMuted }));
-    }
-  }, [playerState.isMuted]);
+  // const toggleMute = useCallback(() => {
+  //   if (videoRef.current) {
+  //     videoRef.current.muted = !playerState.isMuted;
+  //     setPlayerState(prev => ({ ...prev, isMuted: !prev.isMuted }));
+  //   }
+  // }, [playerState.isMuted]);
 
   const handleTimeUpdate = useCallback(() => {
     if (videoRef.current) {
@@ -341,19 +346,6 @@ const VideoCard: React.FC<VideoCardProps> = ({
         />
       </div>
 
-      {/* Volume Control */}
-      <Button
-        variant="ghost"
-        size="sm"
-        className="absolute top-4 right-4 rounded-full bg-black/50 text-white hover:bg-black/70"
-        onClick={toggleMute}
-      >
-        {playerState.isMuted ? (
-          <VolumeX className="h-4 w-4" />
-        ) : (
-          <Volume2 className="h-4 w-4" />
-        )}
-      </Button>
 
       {/* Comments Panel */}
       {showComments && (
@@ -396,7 +388,8 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({
   onViewTeacherProfile,
   onLoadMore,
   hasMore = false,
-  isLoading = false
+  isLoading = false,
+  isGlobalMuted = true
 }) => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
@@ -494,6 +487,7 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({
             onShare={() => onVideoShare(videoItem.video.video_id)}
             onComment={(comment) => onVideoComment(videoItem.video.video_id, comment)}
             onViewTeacherProfile={onViewTeacherProfile}
+            isGlobalMuted={isGlobalMuted}
           />
         </div>
       ))}
